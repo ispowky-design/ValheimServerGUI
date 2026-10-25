@@ -180,6 +180,15 @@
   <data name="ServerControls_OpenSaveFolder_Tip" xml:space="preserve">
     <value>⟦ServerControls_OpenSaveFolder_Tip⟧</value>
   </data>
+  <data name="ServerControls_WorldMap_Tip" xml:space="preserve">
+    <value>⟦ServerControls_WorldMap_Tip⟧</value>
+  </data>
+  <data name="Validation_WorldMapNoSeed" xml:space="preserve">
+    <value>⟦Validation_WorldMapNoSeed⟧</value>
+  </data>
+  <data name="Validation_WorldMapFailed" xml:space="preserve">
+    <value>⟦Validation_WorldMapFailed {0}⟧</value>
+  </data>
   <data name="ServerControls_SelectWorld_Label" xml:space="preserve">
     <value>⟦ServerControls_SelectWorld_Label⟧</value>
   </data>

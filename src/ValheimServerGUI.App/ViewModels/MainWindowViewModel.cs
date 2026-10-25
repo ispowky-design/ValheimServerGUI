@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -417,6 +418,45 @@ public partial class MainWindowViewModel : ViewModelBase
             ErrorReported?.Invoke(string.Format(Strings.Validation_OpenSaveFolderFailed, ex.Message));
         }
     }
+
+    /// <summary>
+    /// Opens the selected local world on valheim-map.world. The seed comes from the world's latest complete save,
+    /// read-only, so a running server is never disturbed.
+    /// </summary>
+    [RelayCommand]
+    private void ViewWorldMap()
+    {
+        var world = Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName;
+        var saveFolder = ResolveSaveDataDirectory();
+        if (string.IsNullOrWhiteSpace(world) || saveFolder is null)
+        {
+            ErrorReported?.Invoke(Strings.Validation_WorldMapNoSeed);
+            return;
+        }
+
+        string? seed;
+        try
+        {
+            seed = WorldMetadataReader.ReadFromWorldFolder(saveFolder.GetLocalWorldFolder(world)).SeedName;
+        }
+        catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException)
+        {
+            _logger.Warning("Could not read the seed of world {world}: {message}", world, ex.Message);
+            ErrorReported?.Invoke(string.Format(Strings.Validation_WorldMapFailed, ex.Message));
+            return;
+        }
+
+        if (seed is null)
+        {
+            ErrorReported?.Invoke(Strings.Validation_WorldMapNoSeed);
+            return;
+        }
+
+        _shell.OpenWebAddress(BuildWorldMapUrl(seed));
+    }
+
+    internal static string BuildWorldMapUrl(string seed)
+        => string.Format(CultureInfo.InvariantCulture, AppConstants.UrlWorldMapFormat, Uri.EscapeDataString(seed));
 
 
     [RelayCommand]

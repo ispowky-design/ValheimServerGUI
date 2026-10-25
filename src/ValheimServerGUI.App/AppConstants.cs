@@ -29,6 +29,8 @@ internal static class AppConstants
     public const string UrlTipJar = "https://runeberry.com/tips";
     public const string UrlSourceCode = "https://forge.nuffle.me/runeberry/ValheimServerGUI";
     public const string UrlValheimGameSite = "https://www.valheimgame.com/";
+    /// <summary>Community seed map viewer; <c>{0}</c> is the escaped world seed name.</summary>
+    public const string UrlWorldMapFormat = "https://valheim-map.world/?seed={0}&offset=0%2C0&zoom=0.6";
 
     /// <summary>FAQ entry explaining why character names may show wrong ("Character names wrong?" link).</summary>
     public const string UrlHelpCharacterNames =
