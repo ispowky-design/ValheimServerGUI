@@ -122,6 +122,9 @@
   <data name="MainWindow_Tab_Players" xml:space="preserve">
     <value>⟦MainWindow_Tab_Players⟧</value>
   </data>
+  <data name="MainWindow_Tab_Backups" xml:space="preserve">
+    <value>⟦MainWindow_Tab_Backups⟧</value>
+  </data>
   <data name="MainWindow_Tab_Logs" xml:space="preserve">
     <value>⟦MainWindow_Tab_Logs⟧</value>
   </data>
@@ -407,6 +410,115 @@
   </data>
   <data name="Players_UnknownName" xml:space="preserve">
     <value>⟦Players_UnknownName⟧</value>
+  </data>
+  <!-- Backups tab -->
+  <data name="Backups_World_Label" xml:space="preserve">
+    <value>⟦Backups_World_Label⟧</value>
+  </data>
+  <data name="Backups_World_None" xml:space="preserve">
+    <value>⟦Backups_World_None⟧</value>
+  </data>
+  <data name="Backups_BackUpNow" xml:space="preserve">
+    <value>⟦Backups_BackUpNow⟧</value>
+  </data>
+  <data name="Backups_BackUpNow_Tip" xml:space="preserve">
+    <value>⟦Backups_BackUpNow_Tip⟧</value>
+  </data>
+  <data name="Backups_Restore" xml:space="preserve">
+    <value>⟦Backups_Restore⟧</value>
+  </data>
+  <data name="Backups_Restore_Tip" xml:space="preserve">
+    <value>⟦Backups_Restore_Tip⟧</value>
+  </data>
+  <data name="Backups_Delete" xml:space="preserve">
+    <value>⟦Backups_Delete⟧</value>
+  </data>
+  <data name="Backups_Delete_Tip" xml:space="preserve">
+    <value>⟦Backups_Delete_Tip⟧</value>
+  </data>
+  <data name="Backups_OpenFolder_Tip" xml:space="preserve">
+    <value>⟦Backups_OpenFolder_Tip⟧</value>
+  </data>
+  <data name="Backups_Refresh_Tip" xml:space="preserve">
+    <value>⟦Backups_Refresh_Tip⟧</value>
+  </data>
+  <data name="Backups_Column_Created" xml:space="preserve">
+    <value>⟦Backups_Column_Created⟧</value>
+  </data>
+  <data name="Backups_Column_Kind" xml:space="preserve">
+    <value>⟦Backups_Column_Kind⟧</value>
+  </data>
+  <data name="Backups_Column_Size" xml:space="preserve">
+    <value>⟦Backups_Column_Size⟧</value>
+  </data>
+  <data name="Backups_EmptyText" xml:space="preserve">
+    <value>⟦Backups_EmptyText⟧</value>
+  </data>
+  <data name="Backups_NoWorldText" xml:space="preserve">
+    <value>⟦Backups_NoWorldText⟧</value>
+  </data>
+  <data name="Backups_Help" xml:space="preserve">
+    <value>⟦Backups_Help⟧</value>
+  </data>
+  <data name="Backups_Status_Working" xml:space="preserve">
+    <value>⟦Backups_Status_Working⟧</value>
+  </data>
+  <data name="Backups_Status_Created" xml:space="preserve">
+    <value>⟦Backups_Status_Created {0}⟧</value>
+  </data>
+  <data name="Backups_Status_Restored" xml:space="preserve">
+    <value>⟦Backups_Status_Restored {0:g}⟧</value>
+  </data>
+  <data name="Backups_Status_RestoredWithSafety" xml:space="preserve">
+    <value>⟦Backups_Status_RestoredWithSafety {0:g} {1}⟧</value>
+  </data>
+  <data name="Backups_Status_Deleted" xml:space="preserve">
+    <value>⟦Backups_Status_Deleted⟧</value>
+  </data>
+  <data name="Backups_Size_KB" xml:space="preserve">
+    <value>⟦Backups_Size_KB {0:N0}⟧</value>
+  </data>
+  <data name="Backups_Size_MB" xml:space="preserve">
+    <value>⟦Backups_Size_MB {0:N1}⟧</value>
+  </data>
+  <data name="Backups_Kind_Manual" xml:space="preserve">
+    <value>⟦Backups_Kind_Manual⟧</value>
+  </data>
+  <data name="Backups_Kind_Automatic" xml:space="preserve">
+    <value>⟦Backups_Kind_Automatic⟧</value>
+  </data>
+  <data name="Backups_WorldInUse" xml:space="preserve">
+    <value>⟦Backups_WorldInUse⟧</value>
+  </data>
+  <data name="Prompt_RestoreBackup_Title" xml:space="preserve">
+    <value>⟦Prompt_RestoreBackup_Title⟧</value>
+  </data>
+  <data name="Prompt_RestoreBackup_Message" xml:space="preserve">
+    <value>⟦Prompt_RestoreBackup_Message {0} {1:g}⟧</value>
+  </data>
+  <data name="Prompt_DeleteBackup_Title" xml:space="preserve">
+    <value>⟦Prompt_DeleteBackup_Title⟧</value>
+  </data>
+  <data name="Prompt_DeleteBackup_Message" xml:space="preserve">
+    <value>⟦Prompt_DeleteBackup_Message {0:g}⟧</value>
+  </data>
+  <data name="Prompt_BackupFailed_Title" xml:space="preserve">
+    <value>⟦Prompt_BackupFailed_Title⟧</value>
+  </data>
+  <data name="Backups_Error_WorldNotFound" xml:space="preserve">
+    <value>⟦Backups_Error_WorldNotFound {0}⟧</value>
+  </data>
+  <data name="Backups_Error_BackupNotFound" xml:space="preserve">
+    <value>⟦Backups_Error_BackupNotFound {0}⟧</value>
+  </data>
+  <data name="Backups_Error_BackupEmpty" xml:space="preserve">
+    <value>⟦Backups_Error_BackupEmpty {0}⟧</value>
+  </data>
+  <data name="Backups_Error_ForeignEntry" xml:space="preserve">
+    <value>⟦Backups_Error_ForeignEntry {0} {1}⟧</value>
+  </data>
+  <data name="Backups_Error_DeleteAutomatic" xml:space="preserve">
+    <value>⟦Backups_Error_DeleteAutomatic⟧</value>
   </data>
   <!-- Server status -->
   <data name="ServerStatus_Stopped" xml:space="preserve">

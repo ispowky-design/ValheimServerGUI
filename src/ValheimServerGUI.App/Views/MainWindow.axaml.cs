@@ -46,6 +46,8 @@ public partial class MainWindow : Window
         viewModel.Players.AddPlayerPrompt = options => new AddPlayerWindow(options).ShowDialog<AddPlayerResult?>(this);
         viewModel.UnsavedChangesPrompt = () => DialogGuards.ConfirmSaveDiscardCancelAsync(this);
         viewModel.MessagePrompt = ShowMessageAsync;
+        viewModel.Backups.ConfirmPrompt = (title, body) => MessageBox.ConfirmAsync(this, title, body);
+        viewModel.Backups.ErrorReported = msg => _ = ShowMessageAsync(Strings.Prompt_BackupFailed_Title, msg);
         viewModel.ImportConfirmPrompt = body =>
             MessageBox.ConfirmAsync(this, Strings.Import_Title, body, Strings.Common_Continue, Strings.Common_Cancel);
         viewModel.WorldSettingsChangePrompt = body =>
@@ -229,6 +231,7 @@ public partial class MainWindow : Window
         if (ViewModel is null) return;
         ViewModel.Details.SetActive(DetailsTab.IsSelected);
         ViewModel.Players.SetActive(PlayersTab.IsSelected);
+        ViewModel.Backups.SetActive(BackupsTab.IsSelected);
     }
 
     private Task<CloudImportChoice> ShowCloudImportAsync(string worldName)

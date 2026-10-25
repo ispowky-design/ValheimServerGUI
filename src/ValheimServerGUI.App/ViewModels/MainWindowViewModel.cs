@@ -89,7 +89,8 @@ public partial class MainWindowViewModel : ViewModelBase
         ISoftwareUpdateProvider updateProvider,
         IShellLauncher shell,
         IValheimPathResolver pathResolver,
-        IPlayerListImportService import)
+        IPlayerListImportService import,
+        IWorldBackupService? worldBackups = null)
     {
         _serverManager = serverManager;
         _userPrefs = userPrefs;
@@ -113,6 +114,14 @@ public partial class MainWindowViewModel : ViewModelBase
         // roles at server start (in Core), so the tab needs no access-list service here.
         Players = new PlayersViewModel(playerRepo, Form, userPrefs);
         Logs = new LogsViewModel(appLogger, shell, pathResolver);
+        Backups = new BackupsViewModel(worldBackups ?? new WorldBackupService(), shell, appLogger,
+            ResolveSaveDataDirectory, () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
+            IsSelectedWorldInUse);
+        Form.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(ServerFormViewModel.ExistingWorld) or nameof(ServerFormViewModel.UseNewWorld))
+                Backups.OnSelectionChanged();
+        };
 
         _updateProvider.UpdateCheckStarted += OnUpdateCheckStarted;
         _updateProvider.UpdateCheckFinished += OnUpdateCheckFinished;
@@ -188,6 +197,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     /// <summary>Logs tab.</summary>
     public LogsViewModel Logs { get; }
+
+    /// <summary>Backups tab.</summary>
+    public BackupsViewModel Backups { get; }
 
     // --- profile identity (single CurrentProfile source) ---
     [ObservableProperty]
@@ -440,6 +452,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
         RefreshWorldList();
         SelectWorld(profile.WorldName);
+
+        // The same world name can live in another profile's save folder, so a switch always re-reads the list.
+        Backups.OnSelectionChanged();
     }
 
     /// <summary>
@@ -698,6 +713,42 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private DirectoryInfo? ResolveSaveDataDirectory()
+        => ResolveSaveDataFolder() is { } path ? new DirectoryInfo(path) : null;
+
+    /// <summary>
+    /// Whether any server (any profile, any window) that is not stopped runs the selected world from the same save
+    /// folder. A restore must never swap files under a live server.
+    /// </summary>
+    private bool IsSelectedWorldInUse()
+    {
+        var world = Form.SelectedWorldName;
+        var folder = ResolveSaveDataFolder();
+        if (string.IsNullOrWhiteSpace(world) || folder is null) return false;
+
+        foreach (var server in _serverManager.All)
+        {
+            if (server.Status == ServerStatus.Stopped) continue;
+            if (!string.Equals(server.Options.WorldName, world, StringComparison.OrdinalIgnoreCase)) continue;
+
+            string serverFolder;
+            try
+            {
+                serverFolder = server.Options.GetValidatedSaveDataFolder().FullName;
+            }
+            catch
+            {
+                return true; // can't tell which folder it uses: assume the worst
+            }
+
+            if (string.Equals(Path.TrimEndingDirectorySeparator(serverFolder), Path.TrimEndingDirectorySeparator(folder),
+                    OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                return true;
+        }
+
+        return false;
+    }
+
     private async Task ShowMessageAsync(string title, string body)
     {
         if (MessagePrompt is not null) await MessagePrompt(title, body);
@@ -949,7 +1000,11 @@ public partial class MainWindowViewModel : ViewModelBase
     // ===== Core event handlers (marshalled + guarded) =====
 
     private void HandleServerStatusChanged(object? sender, ServerStatus status)
-        => RunOnUi(() => ServerStatus = status);
+        => RunOnUi(() =>
+        {
+            ServerStatus = status;
+            Backups.RefreshWorldInUse();
+        });
 
     // A just-started new world now exists; switch the picker back to Existing and select it.
     partial void OnServerStatusChanged(ServerStatus value)
@@ -1165,6 +1220,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _userPrefs.PreferencesSaved -= OnUserPreferencesSaved;
         _serverManager.PlayerRolesAdopted -= OnPlayerRolesAdopted;
         Details.Dispose();
+        Backups.Dispose();
         Players.Dispose();
         Logs.Dispose();
     }

@@ -68,6 +68,13 @@ public sealed class EnumDisplayConverter : IValueConverter
         _ => value.ToString(),
     };
 
+    public static string ToText(WorldBackupKind value) => value switch
+    {
+        WorldBackupKind.Manual => Strings.Backups_Kind_Manual,
+        WorldBackupKind.Automatic => Strings.Backups_Kind_Automatic,
+        _ => value.ToString(),
+    };
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch
     {
         ServerStatus v => ToText(v),
@@ -76,6 +83,7 @@ public sealed class EnumDisplayConverter : IValueConverter
         AppTheme v => ToText(v),
         DurationUnit v => ToText(v),
         LogView v => ToText(v),
+        WorldBackupKind v => ToText(v),
         _ => value,
     };
 

@@ -122,6 +122,9 @@
   <data name="MainWindow_Tab_Players" xml:space="preserve">
     <value>Players</value>
   </data>
+  <data name="MainWindow_Tab_Backups" xml:space="preserve">
+    <value>Backups</value>
+  </data>
   <data name="MainWindow_Tab_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
@@ -413,6 +416,117 @@ TIP: You can also connect to "localhost", which is a little easier than typing "
   </data>
   <data name="Players_UnknownName" xml:space="preserve">
     <value>[unknown]</value>
+  </data>
+  <!-- Backups tab -->
+  <data name="Backups_World_Label" xml:space="preserve">
+    <value>World</value>
+  </data>
+  <data name="Backups_World_None" xml:space="preserve">
+    <value>(no world selected)</value>
+  </data>
+  <data name="Backups_BackUpNow" xml:space="preserve">
+    <value>Back Up Now</value>
+  </data>
+  <data name="Backups_BackUpNow_Tip" xml:space="preserve">
+    <value>Zip the world's current save files into a new backup</value>
+  </data>
+  <data name="Backups_Restore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="Backups_Restore_Tip" xml:space="preserve">
+    <value>Replace the world with the selected backup</value>
+  </data>
+  <data name="Backups_Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Backups_Delete_Tip" xml:space="preserve">
+    <value>Delete the selected backup</value>
+  </data>
+  <data name="Backups_OpenFolder_Tip" xml:space="preserve">
+    <value>Open the folder holding this world's backups</value>
+  </data>
+  <data name="Backups_Refresh_Tip" xml:space="preserve">
+    <value>Refresh the backup list</value>
+  </data>
+  <data name="Backups_Column_Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Backups_Column_Kind" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Backups_Column_Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Backups_EmptyText" xml:space="preserve">
+    <value>No backups of this world yet.</value>
+  </data>
+  <data name="Backups_NoWorldText" xml:space="preserve">
+    <value>Select an existing world on the Server Controls tab to see its backups.</value>
+  </data>
+  <data name="Backups_Help" xml:space="preserve">
+    <value>Automatic backups are made by the server itself (see Advanced Controls). Restoring first backs up the world as it is now, so a restore can always be undone.</value>
+  </data>
+  <data name="Backups_Status_Working" xml:space="preserve">
+    <value>Working…</value>
+  </data>
+  <data name="Backups_Status_Created" xml:space="preserve">
+    <value>Backup created: {0}</value>
+  </data>
+  <data name="Backups_Status_Restored" xml:space="preserve">
+    <value>World restored from the backup of {0:g}.</value>
+  </data>
+  <data name="Backups_Status_RestoredWithSafety" xml:space="preserve">
+    <value>World restored from the backup of {0:g}. The previous state was saved as {1}.</value>
+  </data>
+  <data name="Backups_Status_Deleted" xml:space="preserve">
+    <value>Backup deleted.</value>
+  </data>
+  <data name="Backups_Size_KB" xml:space="preserve">
+    <value>{0:N0} KB</value>
+  </data>
+  <data name="Backups_Size_MB" xml:space="preserve">
+    <value>{0:N1} MB</value>
+  </data>
+  <data name="Backups_Kind_Manual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="Backups_Kind_Automatic" xml:space="preserve">
+    <value>Automatic</value>
+  </data>
+  <data name="Backups_WorldInUse" xml:space="preserve">
+    <value>Stop the server running this world before restoring a backup.</value>
+  </data>
+  <data name="Prompt_RestoreBackup_Title" xml:space="preserve">
+    <value>Restore Backup</value>
+  </data>
+  <data name="Prompt_RestoreBackup_Message" xml:space="preserve">
+    <value>Replace world "{0}" with the backup of {1:g}?
+
+The world as it is now is backed up first, so you can undo this.</value>
+  </data>
+  <data name="Prompt_DeleteBackup_Title" xml:space="preserve">
+    <value>Delete Backup</value>
+  </data>
+  <data name="Prompt_DeleteBackup_Message" xml:space="preserve">
+    <value>Delete the backup of {0:g}? This cannot be undone.</value>
+  </data>
+  <data name="Prompt_BackupFailed_Title" xml:space="preserve">
+    <value>Backup Error</value>
+  </data>
+  <data name="Backups_Error_WorldNotFound" xml:space="preserve">
+    <value>World "{0}" has no save files to back up yet.</value>
+  </data>
+  <data name="Backups_Error_BackupNotFound" xml:space="preserve">
+    <value>The backup no longer exists: {0}</value>
+  </data>
+  <data name="Backups_Error_BackupEmpty" xml:space="preserve">
+    <value>The backup holds no world files: {0}</value>
+  </data>
+  <data name="Backups_Error_ForeignEntry" xml:space="preserve">
+    <value>The backup contains "{0}", which is not part of world "{1}". Nothing was restored.</value>
+  </data>
+  <data name="Backups_Error_DeleteAutomatic" xml:space="preserve">
+    <value>Automatic backups are managed by the server and cannot be deleted here.</value>
   </data>
   <!-- Server status -->
   <data name="ServerStatus_Stopped" xml:space="preserve">
