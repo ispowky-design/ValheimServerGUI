@@ -7,10 +7,12 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
+using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using ValheimServerGUI.App.Infrastructure;
 using ValheimServerGUI.App.Startup;
+using ValheimServerGUI.App.Styles;
 using ValheimServerGUI.App.ViewModels;
 using ValheimServerGUI.App.Views;
 using ValheimServerGUI.App.Views.Dialogs;
@@ -212,12 +214,25 @@ public partial class App : Application
     }
 
     /// <summary>Applies the user's theme preference. Called at startup and when Preferences saves.</summary>
-    public void ApplyTheme(AppTheme theme) => RequestedThemeVariant = theme switch
+    public void ApplyTheme(AppTheme theme)
     {
-        AppTheme.Light => ThemeVariant.Light,
-        AppTheme.Dark => ThemeVariant.Dark,
-        _ => ThemeVariant.Default,
-    };
+        // Fluent only takes palettes for Light and Dark, and the Valheim variant inherits Dark's resources, so the
+        // wood-and-gold palette is installed as Dark's while Valheim is the theme and removed for every other one.
+        var fluent = Styles.OfType<FluentTheme>().FirstOrDefault();
+        if (fluent is not null)
+        {
+            if (theme == AppTheme.Valheim) fluent.Palettes[ThemeVariant.Dark] = AppThemeVariants.CreateValheimPalette();
+            else fluent.Palettes.Remove(ThemeVariant.Dark);
+        }
+
+        RequestedThemeVariant = theme switch
+        {
+            AppTheme.Light => ThemeVariant.Light,
+            AppTheme.Dark => ThemeVariant.Dark,
+            AppTheme.Valheim => AppThemeVariants.Valheim,
+            _ => ThemeVariant.Default,
+        };
+    }
 
     private void HandleException(Exception ex, string context)
     {

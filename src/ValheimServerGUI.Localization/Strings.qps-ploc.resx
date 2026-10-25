@@ -569,6 +569,9 @@
   <data name="Theme_Light" xml:space="preserve">
     <value>⟦Theme_Light⟧</value>
   </data>
+  <data name="Theme_Valheim" xml:space="preserve">
+    <value>⟦Theme_Valheim⟧</value>
+  </data>
   <data name="Theme_Dark" xml:space="preserve">
     <value>⟦Theme_Dark⟧</value>
   </data>

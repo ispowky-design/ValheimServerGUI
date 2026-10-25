@@ -30,7 +30,7 @@ public partial class PreferencesViewModel : ModalEditViewModel
     [ObservableProperty] private bool _enablePasswordValidation;
     [ObservableProperty] private AppTheme _theme;
 
-    public IReadOnlyList<AppTheme> Themes { get; } = new[] { AppTheme.System, AppTheme.Light, AppTheme.Dark };
+    public IReadOnlyList<AppTheme> Themes { get; } = new[] { AppTheme.System, AppTheme.Light, AppTheme.Dark, AppTheme.Valheim };
 
     /// <summary>Set on save so the caller can re-apply the theme to the running app.</summary>
     public AppTheme SavedTheme { get; private set; }
