@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="using:ValheimServerGUI.Localization"
+        xmlns:c="using:ValheimServerGUI.App.Controls"
+        xmlns:vm="using:ValheimServerGUI.App.ViewModels.Dialogs"
+        x:Class="ValheimServerGUI.App.Views.Dialogs.ServerInstallWindow"
+        x:DataType="vm:ServerInstallViewModel"
+        Title="{x:Static loc:Strings.SteamCmd_Title}"
+        Width="600" Height="520" MinWidth="480" MinHeight="420"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Top" Spacing="8">
+            <TextBlock Text="{x:Static loc:Strings.SteamCmd_Intro}" TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+
+            <c:FilenameFormField LabelText="{x:Static loc:Strings.SteamCmd_Folder_Label}" SelectMode="Directory"
+                                 Value="{Binding InstallFolder}" IsInputEnabled="{Binding IsIdle}"
+                                 ShowOpenFolder="True" OpenFolderCommand="{Binding OpenFolderCommand}"
+                                 HelpText="{x:Static loc:Strings.SteamCmd_Folder_Help}" />
+
+            <c:LabelField LabelText="{x:Static loc:Strings.SteamCmd_Installed_Label}" Value="{Binding InstalledBuildText}" />
+            <c:LabelField LabelText="{x:Static loc:Strings.SteamCmd_Latest_Label}" Value="{Binding LatestBuildText}" />
+
+            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.SteamCmd_Validate_Label}" Value="{Binding Validate}"
+                                 HelpText="{x:Static loc:Strings.SteamCmd_Validate_Help}" />
+
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="{x:Static loc:Strings.SteamCmd_Install}" Command="{Binding InstallCommand}" />
+                <Button Content="{x:Static loc:Strings.SteamCmd_CheckForUpdate}" Command="{Binding CheckForUpdateCommand}" />
+                <Button Content="{x:Static loc:Strings.SteamCmd_UseServer}" Command="{Binding UseServerCommand}"
+                        ToolTip.Tip="{x:Static loc:Strings.SteamCmd_UseServer_Tip}" />
+                <Button Content="{x:Static loc:Strings.Common_Cancel}" Command="{Binding CancelCommand}"
+                        IsVisible="{Binding IsBusy}" />
+            </StackPanel>
+
+            <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" Height="6" MinHeight="6"
+                         IsIndeterminate="{Binding IsProgressIndeterminate}" />
+            <TextBlock Text="{Binding StatusMessage}" FontStyle="Italic" TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button Content="{x:Static loc:Strings.Common_Close}" MinWidth="80" IsCancel="True" Click="OnClose" />
+        </StackPanel>
+
+        <c:LogViewer ItemsSource="{Binding Log}" Margin="0,8,0,0" />
+    </DockPanel>
+</Window>

@@ -14,6 +14,7 @@ using ValheimServerGUI.App.Views.Dialogs;
 using ValheimServerGUI.Game;
 using ValheimServerGUI.Localization;
 using ValheimServerGUI.Tools;
+using ValheimServerGUI.Tools.Logging;
 
 namespace ValheimServerGUI.App.Views;
 
@@ -132,6 +133,11 @@ public partial class MainWindow : Window
                 break;
             case MenuAction.WorldPreferences:
                 await ShowWorldPreferencesAsync();
+                break;
+            case MenuAction.InstallServer:
+                await new ServerInstallWindow(new ServerInstallViewModel(
+                    Svc<ISteamCmdService>(), Svc<IUserPreferencesProvider>(), Svc<IShellLauncher>(),
+                    Svc<IApplicationLogger>(), ViewModel.IsServerFolderInUse)).ShowDialog(this);
                 break;
         }
     }

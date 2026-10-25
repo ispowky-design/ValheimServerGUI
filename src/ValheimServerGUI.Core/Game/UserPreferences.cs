@@ -33,6 +33,9 @@ namespace ValheimServerGUI.Game
         /// </summary>
         public string? LastActiveProfile { get; set; }
 
+        /// <summary>Where Install / Update Server puts the dedicated server (empty: the suggested app-data folder).</summary>
+        public string ServerInstallFolder { get; set; } = string.Empty;
+
         /// <summary>
         /// How long a stop may run before the app offers Force Stop, in seconds. Only an offer: the server is never
         /// killed without the user choosing it.
@@ -70,6 +73,7 @@ namespace ValheimServerGUI.Game
             prefs.EnablePasswordValidation = file.EnablePasswordValidation ?? prefs.EnablePasswordValidation;
             prefs.LastActiveProfile = file.LastActiveProfile ?? prefs.LastActiveProfile;
             prefs.Theme = file.Theme ?? prefs.Theme;
+            prefs.ServerInstallFolder = file.ServerInstallFolder ?? prefs.ServerInstallFolder;
             prefs.ForceStopOfferSeconds = file.ForceStopOfferSeconds is > 0 ? file.ForceStopOfferSeconds.Value : prefs.ForceStopOfferSeconds;
 
             if (file.Servers != null)
@@ -121,6 +125,7 @@ namespace ValheimServerGUI.Game
                 LastActiveProfile = LastActiveProfile,
                 Theme = Theme,
                 ForceStopOfferSeconds = ForceStopOfferSeconds,
+                ServerInstallFolder = ServerInstallFolder,
                 Servers = new(),
                 Worlds = new(),
             };
