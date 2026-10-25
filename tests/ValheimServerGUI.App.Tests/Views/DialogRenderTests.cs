@@ -196,6 +196,12 @@ public class DialogRenderTests
     }
 
     [AvaloniaFact]
+    public void ServerInstallWindow_realizes()
+        => Realize(new ServerInstallWindow(new ServerInstallViewModel(
+            new FakeSteamCmdService(System.IO.Path.GetTempPath()), new FakeUserPreferencesProvider(),
+            new RecordingShellLauncher(), Core.GetRequiredService<ValheimServerGUI.Tools.Logging.IApplicationLogger>(), _ => false)));
+
+    [AvaloniaFact]
     public void BugReportWindow_realizes()
         => Realize(new BugReportWindow(new BugReportViewModel(new FakeRuneberryApiClient())));
 }

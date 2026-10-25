@@ -89,6 +89,9 @@
   <data name="MainWindow_Menu_SetDirectories" xml:space="preserve">
     <value>Set _Directories…</value>
   </data>
+  <data name="MainWindow_Menu_InstallServer" xml:space="preserve">
+    <value>Install / Update Server…</value>
+  </data>
   <data name="MainWindow_Menu_OpenSettingsDirectory" xml:space="preserve">
     <value>_Open Settings Directory…</value>
   </data>
@@ -533,6 +536,94 @@ The world as it is now is backed up first, so you can undo this.</value>
   </data>
   <data name="Backups_Error_DeleteAutomatic" xml:space="preserve">
     <value>Automatic backups are managed by the server and cannot be deleted here.</value>
+  </data>
+  <!-- Install / Update Server (SteamCMD) -->
+  <data name="SteamCmd_Title" xml:space="preserve">
+    <value>Install / Update Server</value>
+  </data>
+  <data name="SteamCmd_Intro" xml:space="preserve">
+    <value>Downloads the free Valheim Dedicated Server from Steam with SteamCMD (anonymous login, no Steam account needed). SteamCMD itself is downloaded the first time.</value>
+  </data>
+  <data name="SteamCmd_Folder_Label" xml:space="preserve">
+    <value>Install folder</value>
+  </data>
+  <data name="SteamCmd_Folder_Help" xml:space="preserve">
+    <value>The folder the dedicated server is installed into. Updating installs into the same folder. Keep it separate from your world saves.</value>
+  </data>
+  <data name="SteamCmd_Installed_Label" xml:space="preserve">
+    <value>Installed build</value>
+  </data>
+  <data name="SteamCmd_Latest_Label" xml:space="preserve">
+    <value>Latest build</value>
+  </data>
+  <data name="SteamCmd_NotInstalled" xml:space="preserve">
+    <value>Not installed</value>
+  </data>
+  <data name="SteamCmd_Unknown" xml:space="preserve">
+    <value>Not checked</value>
+  </data>
+  <data name="SteamCmd_UpToDate" xml:space="preserve">
+    <value>{0} (up to date)</value>
+  </data>
+  <data name="SteamCmd_UpdateAvailable" xml:space="preserve">
+    <value>{0} (update available)</value>
+  </data>
+  <data name="SteamCmd_Validate_Label" xml:space="preserve">
+    <value>Verify all files</value>
+  </data>
+  <data name="SteamCmd_Validate_Help" xml:space="preserve">
+    <value>Checks every installed file against Steam and repairs any that differ. Slower; use it if the server will not start after an update.</value>
+  </data>
+  <data name="SteamCmd_CheckForUpdate" xml:space="preserve">
+    <value>Check for Update</value>
+  </data>
+  <data name="SteamCmd_Install" xml:space="preserve">
+    <value>Install / Update</value>
+  </data>
+  <data name="SteamCmd_UseServer" xml:space="preserve">
+    <value>Use This Server</value>
+  </data>
+  <data name="SteamCmd_UseServer_Tip" xml:space="preserve">
+    <value>Point every profile at the server in this folder (File > Set Directories)</value>
+  </data>
+  <data name="SteamCmd_Status_Working" xml:space="preserve">
+    <value>Working…</value>
+  </data>
+  <data name="SteamCmd_Status_Installed" xml:space="preserve">
+    <value>The dedicated server is installed and up to date.</value>
+  </data>
+  <data name="SteamCmd_Status_Checked" xml:space="preserve">
+    <value>Check complete.</value>
+  </data>
+  <data name="SteamCmd_Status_UsingServer" xml:space="preserve">
+    <value>Every profile now uses this server.</value>
+  </data>
+  <data name="SteamCmd_Status_Cancelled" xml:space="preserve">
+    <value>Cancelled.</value>
+  </data>
+  <data name="SteamCmd_ServerRunning" xml:space="preserve">
+    <value>Stop every server running from this folder before updating it.</value>
+  </data>
+  <data name="SteamCmd_Log_Downloading" xml:space="preserve">
+    <value>Downloading SteamCMD from {0}…</value>
+  </data>
+  <data name="SteamCmd_Log_Downloaded" xml:space="preserve">
+    <value>SteamCMD downloaded.</value>
+  </data>
+  <data name="SteamCmd_Error_NotInArchive" xml:space="preserve">
+    <value>The SteamCMD download did not contain {0}.</value>
+  </data>
+  <data name="SteamCmd_Error_NoFolder" xml:space="preserve">
+    <value>Choose an install folder first.</value>
+  </data>
+  <data name="SteamCmd_Error_NoSuccess" xml:space="preserve">
+    <value>SteamCMD finished without reporting success.</value>
+  </data>
+  <data name="SteamCmd_Error_Failed" xml:space="preserve">
+    <value>Installing the dedicated server failed: {0}</value>
+  </data>
+  <data name="Prompt_SteamCmdFailed_Title" xml:space="preserve">
+    <value>Install / Update Server</value>
   </data>
   <!-- Server status -->
   <data name="ServerStatus_Stopped" xml:space="preserve">

@@ -89,6 +89,9 @@
   <data name="MainWindow_Menu_SetDirectories" xml:space="preserve">
     <value>⟦MainWindow_Menu_SetDirectories⟧</value>
   </data>
+  <data name="MainWindow_Menu_InstallServer" xml:space="preserve">
+    <value>⟦MainWindow_Menu_InstallServer⟧</value>
+  </data>
   <data name="MainWindow_Menu_OpenSettingsDirectory" xml:space="preserve">
     <value>⟦MainWindow_Menu_OpenSettingsDirectory⟧</value>
   </data>
@@ -525,6 +528,94 @@
   </data>
   <data name="Backups_Error_DeleteAutomatic" xml:space="preserve">
     <value>⟦Backups_Error_DeleteAutomatic⟧</value>
+  </data>
+  <!-- Install / Update Server (SteamCMD) -->
+  <data name="SteamCmd_Title" xml:space="preserve">
+    <value>⟦SteamCmd_Title⟧</value>
+  </data>
+  <data name="SteamCmd_Intro" xml:space="preserve">
+    <value>⟦SteamCmd_Intro⟧</value>
+  </data>
+  <data name="SteamCmd_Folder_Label" xml:space="preserve">
+    <value>⟦SteamCmd_Folder_Label⟧</value>
+  </data>
+  <data name="SteamCmd_Folder_Help" xml:space="preserve">
+    <value>⟦SteamCmd_Folder_Help⟧</value>
+  </data>
+  <data name="SteamCmd_Installed_Label" xml:space="preserve">
+    <value>⟦SteamCmd_Installed_Label⟧</value>
+  </data>
+  <data name="SteamCmd_Latest_Label" xml:space="preserve">
+    <value>⟦SteamCmd_Latest_Label⟧</value>
+  </data>
+  <data name="SteamCmd_NotInstalled" xml:space="preserve">
+    <value>⟦SteamCmd_NotInstalled⟧</value>
+  </data>
+  <data name="SteamCmd_Unknown" xml:space="preserve">
+    <value>⟦SteamCmd_Unknown⟧</value>
+  </data>
+  <data name="SteamCmd_UpToDate" xml:space="preserve">
+    <value>⟦SteamCmd_UpToDate {0}⟧</value>
+  </data>
+  <data name="SteamCmd_UpdateAvailable" xml:space="preserve">
+    <value>⟦SteamCmd_UpdateAvailable {0}⟧</value>
+  </data>
+  <data name="SteamCmd_Validate_Label" xml:space="preserve">
+    <value>⟦SteamCmd_Validate_Label⟧</value>
+  </data>
+  <data name="SteamCmd_Validate_Help" xml:space="preserve">
+    <value>⟦SteamCmd_Validate_Help⟧</value>
+  </data>
+  <data name="SteamCmd_CheckForUpdate" xml:space="preserve">
+    <value>⟦SteamCmd_CheckForUpdate⟧</value>
+  </data>
+  <data name="SteamCmd_Install" xml:space="preserve">
+    <value>⟦SteamCmd_Install⟧</value>
+  </data>
+  <data name="SteamCmd_UseServer" xml:space="preserve">
+    <value>⟦SteamCmd_UseServer⟧</value>
+  </data>
+  <data name="SteamCmd_UseServer_Tip" xml:space="preserve">
+    <value>⟦SteamCmd_UseServer_Tip⟧</value>
+  </data>
+  <data name="SteamCmd_Status_Working" xml:space="preserve">
+    <value>⟦SteamCmd_Status_Working⟧</value>
+  </data>
+  <data name="SteamCmd_Status_Installed" xml:space="preserve">
+    <value>⟦SteamCmd_Status_Installed⟧</value>
+  </data>
+  <data name="SteamCmd_Status_Checked" xml:space="preserve">
+    <value>⟦SteamCmd_Status_Checked⟧</value>
+  </data>
+  <data name="SteamCmd_Status_UsingServer" xml:space="preserve">
+    <value>⟦SteamCmd_Status_UsingServer⟧</value>
+  </data>
+  <data name="SteamCmd_Status_Cancelled" xml:space="preserve">
+    <value>⟦SteamCmd_Status_Cancelled⟧</value>
+  </data>
+  <data name="SteamCmd_ServerRunning" xml:space="preserve">
+    <value>⟦SteamCmd_ServerRunning⟧</value>
+  </data>
+  <data name="SteamCmd_Log_Downloading" xml:space="preserve">
+    <value>⟦SteamCmd_Log_Downloading {0}⟧</value>
+  </data>
+  <data name="SteamCmd_Log_Downloaded" xml:space="preserve">
+    <value>⟦SteamCmd_Log_Downloaded⟧</value>
+  </data>
+  <data name="SteamCmd_Error_NotInArchive" xml:space="preserve">
+    <value>⟦SteamCmd_Error_NotInArchive {0}⟧</value>
+  </data>
+  <data name="SteamCmd_Error_NoFolder" xml:space="preserve">
+    <value>⟦SteamCmd_Error_NoFolder⟧</value>
+  </data>
+  <data name="SteamCmd_Error_NoSuccess" xml:space="preserve">
+    <value>⟦SteamCmd_Error_NoSuccess⟧</value>
+  </data>
+  <data name="SteamCmd_Error_Failed" xml:space="preserve">
+    <value>⟦SteamCmd_Error_Failed {0}⟧</value>
+  </data>
+  <data name="Prompt_SteamCmdFailed_Title" xml:space="preserve">
+    <value>⟦Prompt_SteamCmdFailed_Title⟧</value>
   </data>
   <!-- Server status -->
   <data name="ServerStatus_Stopped" xml:space="preserve">

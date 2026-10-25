@@ -30,6 +30,7 @@ public enum MenuAction
     BugReport,
     About,
     WorldPreferences,
+    InstallServer,
 }
 
 /// <summary>The user's answer to the "host a Steam Cloud world?" import prompt.</summary>
@@ -380,6 +381,20 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [RelayCommand]
     private void SetDirectories() => MenuActionRequested?.Invoke(MenuAction.SetDirectories);
+
+    [RelayCommand]
+    private void InstallServer() => MenuActionRequested?.Invoke(MenuAction.InstallServer);
+
+    /// <summary>Whether a server that is not stopped (any profile, any window) runs an executable inside <paramref name="folder"/>.</summary>
+    public bool IsServerFolderInUse(string folder)
+    {
+        var root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(folder)) + Path.DirectorySeparatorChar;
+        var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        return _serverManager.All.Any(server =>
+            server.Status != ServerStatus.Stopped
+            && !string.IsNullOrWhiteSpace(server.Options.ServerExePath)
+            && Path.GetFullPath(server.Options.ServerExePath).StartsWith(root, comparison));
+    }
 
     [RelayCommand]
     private void SetProfileDirectories() => MenuActionRequested?.Invoke(MenuAction.SetProfileDirectories);
