@@ -61,6 +61,7 @@ namespace ValheimServerGUI
                 .AddSingleton<IServerPreferencesProvider, ServerPreferencesProvider>()
                 .AddSingleton<IWorldPreferencesProvider, WorldPreferencesProvider>()
                 .AddSingleton<ISteamCloudWorldProvider, SteamCloudWorldProvider>()
+                .AddSingleton<IWorldBackupService, WorldBackupService>()
                 .AddSingleton<IPlayerAccessListService, PlayerAccessListService>()
                 .AddSingleton<IPlayerListImportService, PlayerListImportService>()
                 .AddSingleton<IPlayerListBaselineStore, PlayerListBaselineStore>()

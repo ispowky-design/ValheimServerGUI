@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="using:ValheimServerGUI.Localization"
+             xmlns:c="using:ValheimServerGUI.App.Controls"
+             xmlns:vm="using:ValheimServerGUI.App.ViewModels"
+             x:Class="ValheimServerGUI.App.Views.Tabs.BackupsView"
+             x:DataType="vm:MainWindowViewModel">
+
+    <DockPanel Margin="8">
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,6">
+            <c:LabelField Grid.Column="0" LabelText="{x:Static loc:Strings.Backups_World_Label}" Value="{Binding Backups.WorldText}"
+                          HelpText="{x:Static loc:Strings.Backups_Help}" VerticalAlignment="Center" />
+            <Button Grid.Column="2" Content="{x:Static loc:Strings.Backups_BackUpNow}" Command="{Binding Backups.BackUpNowCommand}"
+                    ToolTip.Tip="{x:Static loc:Strings.Backups_BackUpNow_Tip}" Margin="4,0,0,0" />
+            <Button Grid.Column="3" Content="{x:Static loc:Strings.Backups_Restore}" Command="{Binding Backups.RestoreCommand}"
+                    ToolTip.Tip="{x:Static loc:Strings.Backups_Restore_Tip}" Margin="4,0,0,0" />
+        </Grid>
+
+        <!-- Status line: the in-use warning wins over the last operation's outcome. -->
+        <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0" TextWrapping="Wrap" FontStyle="Italic"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                   Text="{Binding Backups.StatusMessage}" IsVisible="{Binding !Backups.IsWorldInUse}" />
+        <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0" TextWrapping="Wrap" FontStyle="Italic"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                   Text="{x:Static loc:Strings.Backups_WorldInUse}" IsVisible="{Binding Backups.IsWorldInUse}" />
+
+        <c:DataListView ItemsSource="{Binding Backups.Backups}"
+                        SelectedItem="{Binding Backups.SelectedBackup}"
+                        EmptyText="{Binding Backups.EmptyText}"
+                        RowInvokeCommand="{Binding Backups.RestoreCommand}">
+            <c:DataListView.RowContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{x:Static loc:Strings.Backups_Restore}" Command="{Binding Backups.RestoreCommand}" />
+                    <MenuItem Header="{x:Static loc:Strings.Backups_Delete}" Command="{Binding Backups.DeleteCommand}" />
+                </ContextMenu>
+            </c:DataListView.RowContextMenu>
+            <c:DataListView.Columns>
+                <DataGridTemplateColumn Header="{x:Static loc:Strings.Backups_Column_Created}" Width="*" SortMemberPath="CreatedAt">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:BackupRowViewModel">
+                            <TextBlock Text="{Binding CreatedText}" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static loc:Strings.Backups_Column_Kind}" Width="100" SortMemberPath="KindText">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:BackupRowViewModel">
+                            <TextBlock Text="{Binding KindText}" VerticalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static loc:Strings.Backups_Column_Size}" Width="90" SortMemberPath="SizeBytes">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:DataType="vm:BackupRowViewModel">
+                            <TextBlock Text="{Binding SizeText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </c:DataListView.Columns>
+            <c:DataListView.FooterLeft>
+                <c:OpenButton ToolTip.Tip="{x:Static loc:Strings.Backups_OpenFolder_Tip}" Command="{Binding Backups.OpenFolderCommand}" />
+            </c:DataListView.FooterLeft>
+            <c:DataListView.FooterRight>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <c:RefreshButton ToolTip.Tip="{x:Static loc:Strings.Backups_Refresh_Tip}" Command="{Binding Backups.RefreshListCommand}" />
+                    <c:IconButton IconName="Cancel_16x" ToolTip.Tip="{x:Static loc:Strings.Backups_Delete_Tip}"
+                                  Command="{Binding Backups.DeleteCommand}" />
+                </StackPanel>
+            </c:DataListView.FooterRight>
+        </c:DataListView>
+    </DockPanel>
+</UserControl>

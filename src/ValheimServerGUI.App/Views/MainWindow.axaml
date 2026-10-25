@@ -160,6 +160,9 @@
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Players}" x:Name="PlayersTab">
                 <tabs:PlayersView />
             </TabItem>
+            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Backups}" x:Name="BackupsTab">
+                <tabs:BackupsView />
+            </TabItem>
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Logs}">
                 <tabs:LogsView />
             </TabItem>
