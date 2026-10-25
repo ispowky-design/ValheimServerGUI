@@ -54,6 +54,17 @@ namespace ValheimServerGUI.Core.Tests.Game
                 metadata.PlayerHistory);
         }
 
+        // The seed name feeds the world map link; the real saves carry the game's random 10-character names.
+        [Theory]
+        [InlineData(WorldSaveFixtures.WithGlobalKey, "kRbC4plpM5")]
+        [InlineData(WorldSaveFixtures.TwoPlatforms, "rPgPk9b0uZ")]
+        public void Read_RealSave_ReturnsTheSeedName(string fixture, string seedName)
+        {
+            var metadata = WorldMetadataReader.Read(new MemoryStream(WorldSaveFixtures.ReadFixture(fixture)));
+
+            Assert.Equal(seedName, metadata.SeedName);
+        }
+
         #endregion
 
         #region Layouts

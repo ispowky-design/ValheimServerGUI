@@ -42,7 +42,7 @@
             <Grid ColumnDefinitions="*,8,*" Margin="0,4,0,0">
                 <c:GroupBox Grid.Column="0" Header="{x:Static loc:Strings.ServerControls_World_Header}">
                     <StackPanel Spacing="4">
-                        <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto">
+                        <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto">
                             <c:RadioFormField Grid.Column="0" GroupName="World" LabelText="{x:Static loc:Strings.ServerControls_ExistingWorld_Label}"
                                               Value="{Binding Form.UseNewWorld, Converter={x:Static conv:InverseBooleanConverter.Instance}}"
                                               IsEnabled="{Binding AllowServerChanges}" />
@@ -54,6 +54,8 @@
                                              Command="{Binding RefreshWorldsCommand}" />
                             <c:OpenButton Grid.Column="5" ToolTip.Tip="{x:Static loc:Strings.ServerControls_OpenSaveFolder_Tip}"
                                           Command="{Binding OpenSaveFolderCommand}" />
+                            <c:IconButton Grid.Column="6" IconName="OpenWeb_16x" ToolTip.Tip="{x:Static loc:Strings.ServerControls_WorldMap_Tip}"
+                                          Command="{Binding ViewWorldMapCommand}" />
                         </Grid>
 
                         <c:DropdownFormField LabelText="{x:Static loc:Strings.ServerControls_SelectWorld_Label}" PlaceholderText="{x:Static loc:Strings.ServerControls_SelectWorld_Placeholder}"

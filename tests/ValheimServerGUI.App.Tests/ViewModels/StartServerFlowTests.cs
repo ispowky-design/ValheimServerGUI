@@ -48,6 +48,7 @@ public sealed class StartServerFlowTests : IDisposable
         public List<string> WorldSettingsPrompts { get; } = new();
         public bool WorldSettingsAnswer { get; set; } = true;
         public List<string> Errors { get; } = new();
+        public required RecordingShellLauncher Shell { get; init; }
         public List<IValheimServerOptions> Started { get; } = new();
     }
 
@@ -57,7 +58,7 @@ public sealed class StartServerFlowTests : IDisposable
         var serverPrefs = new FakeServerPreferencesProvider();
         var ip = new FakeIpAddressProvider();
         var worldPrefs = new FakeWorldPreferencesProvider();
-        var shell = new ShellLauncher(new Services.RecordingSystemShell(), TestLog.Silent);
+        var shell = new RecordingShellLauncher();
 
         var manager = new ServerManager(
             () => Core.GetRequiredService<ValheimServer>(),
@@ -79,7 +80,7 @@ public sealed class StartServerFlowTests : IDisposable
 
         vm.LoadProfile(new ServerPreferences { ProfileName = "Test" });
 
-        var harness = new Harness { Vm = vm, Cloud = cloud, ServerPrefs = serverPrefs, Ip = ip, WorldPrefs = worldPrefs };
+        var harness = new Harness { Vm = vm, Shell = shell, Cloud = cloud, ServerPrefs = serverPrefs, Ip = ip, WorldPrefs = worldPrefs };
         vm.ErrorReported = harness.Errors.Add;
         vm.CloudImportPrompt = _ => Task.FromResult(cloudChoice);
         vm.StartAction = harness.Started.Add; // don't actually launch
@@ -370,5 +371,29 @@ public sealed class StartServerFlowTests : IDisposable
 
         Assert.False(h.Vm.Form.UseNewWorld);
         Assert.Equal("Bornworld", h.Vm.Form.ExistingWorld);
+    }
+
+    [Fact]
+    public void View_map_opens_the_seed_of_the_selected_world()
+    {
+        var h = BuildExistingWorld("Mapworld", CombatHard, CombatHard);
+        h.Vm.ViewWorldMapCommand.Execute(null);
+
+        Assert.Empty(h.Errors);
+        Assert.Equal(new[] { MainWindowViewModel.BuildWorldMapUrl("seed") }, h.Shell.OpenedWebAddresses);
+        Assert.Equal("https://valheim-map.world/?seed=a%20b%26c&offset=0%2C0&zoom=0.6", MainWindowViewModel.BuildWorldMapUrl("a b&c"));
+    }
+
+    [Fact]
+    public void View_map_without_a_saved_world_reports_and_opens_nothing()
+    {
+        var h = Build();
+        h.Vm.Form.UseNewWorld = true;
+        h.Vm.Form.NewWorldName = "Notyet";
+
+        h.Vm.ViewWorldMapCommand.Execute(null);
+
+        Assert.Equal(new[] { Strings.Validation_WorldMapNoSeed }, h.Errors);
+        Assert.Empty(h.Shell.OpenedWebAddresses);
     }
 }

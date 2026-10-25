@@ -180,6 +180,15 @@
   <data name="ServerControls_OpenSaveFolder_Tip" xml:space="preserve">
     <value>Open the save data folder in your file manager</value>
   </data>
+  <data name="ServerControls_WorldMap_Tip" xml:space="preserve">
+    <value>View the selected world's map (opens valheim-map.world in your browser)</value>
+  </data>
+  <data name="Validation_WorldMapNoSeed" xml:space="preserve">
+    <value>The map needs a saved world. Select an existing local world that the server has saved at least once.</value>
+  </data>
+  <data name="Validation_WorldMapFailed" xml:space="preserve">
+    <value>Could not read the world's seed: {0}</value>
+  </data>
   <data name="ServerControls_SelectWorld_Label" xml:space="preserve">
     <value>Select World</value>
   </data>
