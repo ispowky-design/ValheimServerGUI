@@ -6,7 +6,7 @@ using ValheimServerGUI.Tools;
 namespace ValheimServerGUI.App.ViewModels.Dialogs;
 
 /// <summary>
-/// Preferences dialog: the six app-wide booleans plus the theme. Start-with-OS is not a stored preference: it
+/// Preferences dialog: the six app-wide booleans, the theme and the Force Stop offer delay. Start-with-OS is not a stored preference: it
 /// is read from and written to the OS registration through <see cref="IStartupManager"/>. The theme is
 /// re-applied by the caller on save.
 /// </summary>
@@ -29,6 +29,7 @@ public partial class PreferencesViewModel : ModalEditViewModel
     [ObservableProperty] private bool _writeApplicationLogsToFile;
     [ObservableProperty] private bool _enablePasswordValidation;
     [ObservableProperty] private AppTheme _theme;
+    [ObservableProperty] private int _forceStopOfferSeconds;
 
     public IReadOnlyList<AppTheme> Themes { get; } = new[] { AppTheme.System, AppTheme.Light, AppTheme.Dark, AppTheme.Valheim };
 
@@ -48,6 +49,7 @@ public partial class PreferencesViewModel : ModalEditViewModel
         WriteApplicationLogsToFile = p.WriteApplicationLogsToFile;
         EnablePasswordValidation = p.EnablePasswordValidation;
         Theme = p.Theme;
+        ForceStopOfferSeconds = p.ForceStopOfferSeconds;
     });
 
     public override void ApplyDefaults()
@@ -60,6 +62,7 @@ public partial class PreferencesViewModel : ModalEditViewModel
         WriteApplicationLogsToFile = d.WriteApplicationLogsToFile;
         EnablePasswordValidation = d.EnablePasswordValidation;
         Theme = d.Theme;
+        ForceStopOfferSeconds = d.ForceStopOfferSeconds;
     }
 
     /// <summary>Flush to the store (OK). Applies a changed startup registration; theme is re-applied by the caller.</summary>
@@ -72,6 +75,7 @@ public partial class PreferencesViewModel : ModalEditViewModel
         p.WriteApplicationLogsToFile = WriteApplicationLogsToFile;
         p.EnablePasswordValidation = EnablePasswordValidation;
         p.Theme = Theme;
+        p.ForceStopOfferSeconds = ForceStopOfferSeconds;
         _userPrefs.SavePreferences(p);
 
         if (StartWithOs != _loadedStartWithOs)

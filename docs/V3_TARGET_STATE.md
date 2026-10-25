@@ -1027,6 +1027,9 @@ save-flush must be shown to fail under force-kill).
    whose stop was only deferred by world generation, losing the save, while the hung stop it guarded
    against was never observed. A stop that truly hangs is handled as in v2.4: closing again while
    `Stopping` asks "close anyway?" with a save-loss warning.
+   **Fork addition (2026-10-25):** a *manual* Force Stop button, never automatic. It appears only after a stop
+   has run past a Preferences delay (default 120 s, well above the 34 s world-generation deferral) and asks
+   with a save-loss warning before killing.
 8. **Window maximizable / minimize-on-close toggle:** v2.4 is non-maximizable and always
    stops-on-close. Recommend **keep as-is** unless you want to relax.
 9. **Log-buffer size:** hardcoded 1000 — make configurable? Low priority, recommend leave.

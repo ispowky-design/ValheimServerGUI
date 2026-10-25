@@ -40,6 +40,14 @@ namespace ValheimServerGUI.Core.Tests.Fakes
             SafelyKilledKeys.Add(key);
         }
 
+        /// <summary>Keys passed to ForceKillProcess, in order.</summary>
+        public List<string> ForceKilledKeys { get; } = new();
+
+        public void ForceKillProcess(string key)
+        {
+            ForceKilledKeys.Add(key);
+        }
+
         /// <summary>Test hook: raise Process.Exited on the most recently launched process.</summary>
         public void SimulateExit()
         {

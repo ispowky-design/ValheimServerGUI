@@ -40,6 +40,7 @@ namespace ValheimServerGUI.Integration.Tests
         public Process? GetProcess(string key) => _inner.GetProcess(key);
         public void StartIO(Process process) => _inner.StartIO(process);
         public void SafelyKillProcess(string key) => _inner.SafelyKillProcess(key);
+        public void ForceKillProcess(string key) => _inner.ForceKillProcess(key);
     }
 
     /// <summary>

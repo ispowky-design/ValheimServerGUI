@@ -33,6 +33,7 @@ namespace ValheimServerGUI.Game
                 // Uptime is measured from the server's own start, so every window showing it agrees.
                 if (value == ServerStatus.Running) StartedAt = DateTimeOffset.Now;
                 else if (value == ServerStatus.Stopped) StartedAt = null;
+                StoppingSince = value == ServerStatus.Stopping ? DateTimeOffset.Now : null;
                 StatusChanged?.Invoke(this, value);
             }
         }
@@ -40,6 +41,9 @@ namespace ValheimServerGUI.Game
 
         /// <summary>When the server last reached <see cref="ServerStatus.Running"/> (null until then / once Stopped).</summary>
         public DateTimeOffset? StartedAt { get; private set; }
+
+        /// <summary>When the current stop began (null unless <see cref="ServerStatus.Stopping"/>).</summary>
+        public DateTimeOffset? StoppingSince { get; private set; }
 
         private string? ProcessKey;
         private bool IsRestarting;
@@ -65,6 +69,7 @@ namespace ValheimServerGUI.Game
         public bool CanStart => IsAnyStatus(ServerStatus.Stopped) && ProcessKey == null;
         public bool CanStop => IsAnyStatus(ServerStatus.Starting, ServerStatus.Running) && ProcessKey != null;
         public bool CanRestart => IsAnyStatus(ServerStatus.Running) && ProcessKey != null;
+        public bool CanForceStop => IsAnyStatus(ServerStatus.Stopping) && ProcessKey != null;
 
         private readonly IProcessProvider ProcessProvider;
         private readonly IPlayerDataRepository PlayerDataRepository;
@@ -249,6 +254,23 @@ namespace ValheimServerGUI.Game
 
             IsRestarting = false;
             Status = ServerStatus.Stopping;
+        }
+
+        /// <summary>
+        /// Kills a server that is already <see cref="ServerStatus.Stopping"/> but has not exited. Nothing is saved
+        /// since the last world save. Never automatic: a stop can legitimately take a while (world generation defers
+        /// it), so only the user decides, after the UI's offer delay. A pending restart is cancelled. The server
+        /// reports <see cref="ServerStatus.Stopped"/> when the process exits, as with a graceful stop.
+        /// </summary>
+        public void ForceStop()
+        {
+            if (!CanForceStop) return;
+
+            ApplicationLogger.Warning("Force-stopping server {name} after {seconds:F0}s of stopping; unsaved progress is lost",
+                Options.Name, (DateTimeOffset.Now - (StoppingSince ?? DateTimeOffset.Now)).TotalSeconds);
+
+            IsRestarting = false;
+            ProcessProvider.ForceKillProcess(ProcessKey!);
         }
 
         /// <summary>

@@ -150,6 +150,20 @@ namespace ValheimServerGUI.Core.Tests.Game
         }
 
         // Files that never used Manage Players stay byte-identical: no playerDefaults key is written.
+        // The Force Stop offer delay round-trips; a missing or non-positive value falls back to the default.
+        [Theory]
+        [InlineData(300, 300)]
+        [InlineData(null, CoreConstants.DefaultForceStopOfferSeconds)]
+        [InlineData(0, CoreConstants.DefaultForceStopOfferSeconds)]
+        public void UserPreferences_ForceStopOfferSeconds_LoadsOrDefaults(int? stored, int expected)
+        {
+            var file = new UserPreferences().ToFile();
+            file.ForceStopOfferSeconds = stored;
+
+            Assert.Equal(expected, UserPreferences.FromFile(file).ForceStopOfferSeconds);
+            Assert.Equal(expected, UserPreferences.FromFile(UserPreferences.FromFile(file).ToFile()).ForceStopOfferSeconds);
+        }
+
         [Fact]
         public void UserPreferences_EmptyPlayerDefaults_AreOmittedFromFile()
         {

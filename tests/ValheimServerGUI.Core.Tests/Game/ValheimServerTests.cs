@@ -391,6 +391,57 @@ namespace ValheimServerGUI.Core.Tests.Game
             Assert.Equal(ServerStatus.Starting, _server.Status);
         }
 
+        // Force stop is a last resort for a stop that will not finish: only offered while Stopping, never sent by
+        // Stop itself, and it kills (no graceful signal) the tracked process.
+        [Fact]
+        public void ForceStop_OnlyWhileStopping_KillsTheProcess()
+        {
+            _server.Start(Options());
+            FeedLog("Game server connected");
+
+            _server.ForceStop();
+            Assert.Empty(_processProvider.ForceKilledKeys);
+            Assert.False(_server.CanForceStop);
+
+            _server.Stop();
+            Assert.True(_server.CanForceStop);
+            Assert.Empty(_processProvider.ForceKilledKeys);
+
+            _server.ForceStop();
+            Assert.Equal(_processProvider.SafelyKilledKeys, _processProvider.ForceKilledKeys);
+
+            _processProvider.SimulateExit();
+            Assert.Equal(ServerStatus.Stopped, _server.Status);
+        }
+
+        // Killing a restart that is stuck stopping must not start the server again on exit.
+        [Fact]
+        public void ForceStop_DuringRestart_CancelsTheRestart()
+        {
+            _server.Start(Options());
+            FeedLog("Game server connected");
+            _server.Restart();
+
+            _server.ForceStop();
+            _processProvider.SimulateExit();
+
+            Thread.Sleep(800); // past the ~500ms the restart path waits before starting again
+            Assert.Equal(ServerStatus.Stopped, _server.Status);
+        }
+
+        [Fact]
+        public void StoppingSince_IsStampedOnStopping_AndClearedAfter()
+        {
+            _server.Start(Options());
+            Assert.Null(_server.StoppingSince);
+
+            _server.Stop();
+            Assert.NotNull(_server.StoppingSince);
+
+            _processProvider.SimulateExit();
+            Assert.Null(_server.StoppingSince);
+        }
+
         // StartedAt derives uptime from the server's own Running transition (not a per-window capture), and
         // clears once fully Stopped so a re-target onto a stopped profile reads no uptime.
         [Fact]

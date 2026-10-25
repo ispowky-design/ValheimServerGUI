@@ -53,6 +53,9 @@ namespace ValheimServerGUI.Game
         [JsonProperty("theme")]
         public AppTheme? Theme { get; set; }
 
+        [JsonProperty("forceStopOfferSeconds")]
+        public int? ForceStopOfferSeconds { get; set; }
+
         [JsonProperty("servers")]
         public List<ServerPreferencesFile>? Servers { get; set; }
 

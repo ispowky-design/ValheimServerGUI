@@ -46,6 +46,8 @@ public partial class MainWindow : Window
         viewModel.Players.AddPlayerPrompt = options => new AddPlayerWindow(options).ShowDialog<AddPlayerResult?>(this);
         viewModel.UnsavedChangesPrompt = () => DialogGuards.ConfirmSaveDiscardCancelAsync(this);
         viewModel.MessagePrompt = ShowMessageAsync;
+        viewModel.ForceStopPrompt = body =>
+            MessageBox.ConfirmAsync(this, Strings.Prompt_ForceStop_Title, body, Strings.ServerAction_ForceStop, Strings.Common_Cancel);
         viewModel.Backups.ConfirmPrompt = (title, body) => MessageBox.ConfirmAsync(this, title, body);
         viewModel.Backups.ErrorReported = msg => _ = ShowMessageAsync(Strings.Prompt_BackupFailed_Title, msg);
         viewModel.ImportConfirmPrompt = body =>

@@ -33,6 +33,12 @@ namespace ValheimServerGUI.Game
         /// </summary>
         public string? LastActiveProfile { get; set; }
 
+        /// <summary>
+        /// How long a stop may run before the app offers Force Stop, in seconds. Only an offer: the server is never
+        /// killed without the user choosing it.
+        /// </summary>
+        public int ForceStopOfferSeconds { get; set; } = CoreConstants.DefaultForceStopOfferSeconds;
+
         /// <summary>UI theme. Defaults to following the OS.</summary>
         public AppTheme Theme { get; set; } = AppTheme.System;
 
@@ -64,6 +70,7 @@ namespace ValheimServerGUI.Game
             prefs.EnablePasswordValidation = file.EnablePasswordValidation ?? prefs.EnablePasswordValidation;
             prefs.LastActiveProfile = file.LastActiveProfile ?? prefs.LastActiveProfile;
             prefs.Theme = file.Theme ?? prefs.Theme;
+            prefs.ForceStopOfferSeconds = file.ForceStopOfferSeconds is > 0 ? file.ForceStopOfferSeconds.Value : prefs.ForceStopOfferSeconds;
 
             if (file.Servers != null)
             {
@@ -113,6 +120,7 @@ namespace ValheimServerGUI.Game
                 EnablePasswordValidation = EnablePasswordValidation,
                 LastActiveProfile = LastActiveProfile,
                 Theme = Theme,
+                ForceStopOfferSeconds = ForceStopOfferSeconds,
                 Servers = new(),
                 Worlds = new(),
             };
