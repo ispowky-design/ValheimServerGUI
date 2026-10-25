@@ -56,6 +56,12 @@
   <data name="ServerAction_Stop" xml:space="preserve">
     <value>Stop Server</value>
   </data>
+  <data name="ServerAction_ForceStop" xml:space="preserve">
+    <value>Force Stop</value>
+  </data>
+  <data name="ServerAction_ForceStop_Tip" xml:space="preserve">
+    <value>The server is taking unusually long to stop. Kill it now (progress since the last world save is lost).</value>
+  </data>
   <data name="MainWindow_Menu_File" xml:space="preserve">
     <value>_File</value>
   </data>
@@ -645,6 +651,14 @@ The world as it is now is backed up first, so you can undo this.</value>
   <data name="Prompt_ProfileName_CopyOf" xml:space="preserve">
     <value>Copy of {0}</value>
   </data>
+  <data name="Prompt_ForceStop_Title" xml:space="preserve">
+    <value>Force Stop</value>
+  </data>
+  <data name="Prompt_ForceStop_Message" xml:space="preserve">
+    <value>The server for world "{0}" has been stopping for {1:F0} min without exiting.
+
+Force Stop kills it immediately. Anything since the last world save is lost. Kill it now?</value>
+  </data>
   <data name="Prompt_RemoveProfile_Title" xml:space="preserve">
     <value>Remove Profile</value>
   </data>
@@ -792,6 +806,12 @@ Note: this setting does not affect your server's logs. You can toggle server log
     <value>Valheim Dedicated Server will not start if certain password requirements aren't met, and VSG enforces these requirements.
 
 Only disable this setting if you are running a mod that bypasses server password requirements, and you would like VSG to stop validating passwords as well.</value>
+  </data>
+  <data name="Preferences_ForceStopOffer_Label" xml:space="preserve">
+    <value>Offer Force Stop after</value>
+  </data>
+  <data name="Preferences_ForceStopOffer_Help" xml:space="preserve">
+    <value>When a server is still stopping after this long, a Force Stop button appears. The server is never killed unless you click it: a normal stop can take a while because the server saves the world first.</value>
   </data>
   <data name="Preferences_Theme_Label" xml:space="preserve">
     <value>Theme</value>

@@ -66,6 +66,22 @@ namespace ValheimServerGUI.Tools.Processes
             process.BeginErrorReadLine();
         }
 
+        public void ForceKillProcess(string key)
+        {
+            var process = GetProcess(key);
+            if (process == null) return;
+
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch (Exception e) when (e is InvalidOperationException or System.ComponentModel.Win32Exception or NotSupportedException)
+            {
+                // Already gone, or the OS refused: the Exited handler (or the next attempt) settles the state.
+                Logger.Error(e, "Could not force-kill server process {key}", key);
+            }
+        }
+
         public void SafelyKillProcess(string key)
         {
             var process = GetProcess(key);

@@ -24,6 +24,10 @@
         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Preferences_ValidatePassword_Label}" Value="{Binding EnablePasswordValidation}"
                              HelpText="{x:Static loc:Strings.Preferences_ValidatePassword_Help}" />
 
+        <c:DurationFormField LabelText="{x:Static loc:Strings.Preferences_ForceStopOffer_Label}" Value="{Binding ForceStopOfferSeconds}"
+                             Minimum="30" HorizontalAlignment="Left" Margin="0,4,0,0"
+                             HelpText="{x:Static loc:Strings.Preferences_ForceStopOffer_Help}" />
+
         <c:DropdownFormField LabelText="{x:Static loc:Strings.Preferences_Theme_Label}" Width="200" HorizontalAlignment="Left" Margin="0,4,0,0"
                              ItemsSource="{Binding Themes}" Value="{Binding Theme}" />
 

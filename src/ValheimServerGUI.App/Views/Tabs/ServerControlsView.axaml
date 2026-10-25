@@ -99,6 +99,14 @@
                         <TextBlock Text="{x:Static loc:Strings.ServerAction_Stop}" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
+                <!-- Offered only once a stop has run past the Preferences delay; never automatic. -->
+                <Button x:Name="ForceStopButton" Command="{Binding ForceStopCommand}" IsVisible="{Binding ForceStopAvailable}"
+                        ToolTip.Tip="{x:Static loc:Strings.ServerAction_ForceStop_Tip}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <c:IconImage IconName="StatusCriticalError_16x" VerticalAlignment="Center" />
+                        <TextBlock Text="{x:Static loc:Strings.ServerAction_ForceStop}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

@@ -28,6 +28,10 @@ public sealed class FakeProcessProvider : IProcessProvider
 
     public void SafelyKillProcess(string key) { }
 
+    public int ForceKillCount { get; private set; }
+
+    public void ForceKillProcess(string key) => ForceKillCount++;
+
     /// <summary>Raise Process.Exited on the most recently launched process (→ server reports Stopped).</summary>
     public void SimulateExit()
     {

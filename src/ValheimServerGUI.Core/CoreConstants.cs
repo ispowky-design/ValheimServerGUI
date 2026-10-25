@@ -23,6 +23,12 @@ namespace ValheimServerGUI
         /// <summary>Default long backup interval, in seconds.</summary>
         public const int DefaultBackupIntervalLong = 43200;
 
+        /// <summary>
+        /// Default wait, in seconds, before a stop that has not finished offers Force Stop. Well above the ~34 s a
+        /// stop is deferred by world generation on Windows, so a normal slow stop never shows the offer.
+        /// </summary>
+        public const int DefaultForceStopOfferSeconds = 120;
+
         /// <summary>Name of the default server profile.</summary>
         public const string DefaultServerProfileName = "Default";
 

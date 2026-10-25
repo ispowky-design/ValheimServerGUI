@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ValheimServerGUI.App.Converters;
@@ -107,6 +108,9 @@ public partial class MainWindowViewModel : ViewModelBase
         // No server is bound until the first LoadProfile → RetargetTo (the window is always loaded with a
         // profile immediately after construction). ServerStatus defaults to Stopped, which the gates expect.
         StartAction = options => _currentServer!.Start(options);
+
+        _forceStopTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        _forceStopTimer.Tick += (_, _) => RefreshForceStopOffer();
 
         Details = new ServerDetailsViewModel(ipProvider, () => Form.Port);
         // The Players tab edits the active profile's role overrides/mode, which live on the form, and reads the
@@ -237,6 +241,65 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool CanSelectExistingWorld => AllowServerChanges && Form.Worlds.Count > 0;
 
     public string StatusText => EnumDisplayConverter.ToText(ServerStatus);
+
+    // --- force stop (offered, never automatic) ---
+    private readonly DispatcherTimer _forceStopTimer;
+    private TimeSpan _forceStopOfferDelay = TimeSpan.FromSeconds(CoreConstants.DefaultForceStopOfferSeconds);
+
+    /// <summary>Clock seam for the force-stop offer; tests move time forward instead of waiting.</summary>
+    internal Func<DateTimeOffset> Now { get; set; } = () => DateTimeOffset.Now;
+
+    /// <summary>
+    /// The selected server has been stopping for at least the Preferences delay without exiting, so Force Stop is
+    /// offered. A stop that is merely slow (world generation defers it) finishes long before this.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ForceStopCommand))]
+    private bool _forceStopAvailable;
+
+    /// <summary>Asks before killing a stuck server (true = kill it). Wired by the window; treated as "no" if unset.</summary>
+    public Func<string, Task<bool>>? ForceStopPrompt { get; set; }
+
+    /// <summary>Starts or stops watching the selected server's stop, so the offer appears after the delay.</summary>
+    private void TrackForceStopOffer()
+    {
+        if (ServerStatus == ServerStatus.Stopping)
+        {
+            var seconds = _userPrefs.LoadPreferences().ForceStopOfferSeconds;
+            _forceStopOfferDelay = TimeSpan.FromSeconds(seconds > 0 ? seconds : CoreConstants.DefaultForceStopOfferSeconds);
+            _forceStopTimer.Start();
+        }
+        else
+        {
+            _forceStopTimer.Stop();
+        }
+
+        RefreshForceStopOffer();
+    }
+
+    internal void RefreshForceStopOffer()
+    {
+        var since = _currentServer?.StoppingSince;
+        ForceStopAvailable = ServerStatus == ServerStatus.Stopping
+            && _currentServer?.CanForceStop == true
+            && since is not null
+            && Now() - since.Value >= _forceStopOfferDelay;
+    }
+
+    [RelayCommand(CanExecute = nameof(ForceStopAvailable))]
+    private async Task ForceStop()
+    {
+        var server = _currentServer;
+        if (server is null) return;
+
+        var world = server.Options.WorldName ?? string.Empty;
+        var elapsed = Now() - (server.StoppingSince ?? Now());
+        var message = string.Format(Strings.Prompt_ForceStop_Message, world, elapsed.TotalMinutes);
+        if (ForceStopPrompt is null || !await ForceStopPrompt(message)) return;
+
+        _logger.Warning("Force-stopping server for profile '{profile}' at the user's request", CurrentProfile?.ProfileName);
+        server.ForceStop();
+    }
 
     // --- update-check status ---
     [ObservableProperty]
@@ -484,6 +547,9 @@ public partial class MainWindowViewModel : ViewModelBase
         // Mandatory: re-seed the single status gate from the newly selected server so Can*/AllowServerChanges
         // and the Start/Stop/Restart command CanExecute reflect that server immediately, with no event.
         ServerStatus = _currentServer.Status;
+
+        // A switch between two stopping servers raises no status change, so re-read the offer for this one.
+        TrackForceStopOffer();
 
         Details.SetServer(_currentServer);
         Logs.SetServerLog(_serverManager.GetServerLog(profileName));
@@ -1009,6 +1075,8 @@ public partial class MainWindowViewModel : ViewModelBase
     // A just-started new world now exists; switch the picker back to Existing and select it.
     partial void OnServerStatusChanged(ServerStatus value)
     {
+        TrackForceStopOffer();
+
         if (value == ServerStatus.Running && _startedNewWorld is not null)
         {
             RefreshWorldList();
@@ -1219,6 +1287,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _serverPrefs.PreferencesSaved -= OnServerPreferencesSaved;
         _userPrefs.PreferencesSaved -= OnUserPreferencesSaved;
         _serverManager.PlayerRolesAdopted -= OnPlayerRolesAdopted;
+        _forceStopTimer.Stop();
         Details.Dispose();
         Backups.Dispose();
         Players.Dispose();
