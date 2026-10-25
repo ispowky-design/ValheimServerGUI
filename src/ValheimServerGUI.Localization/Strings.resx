@@ -577,6 +577,9 @@ The world as it is now is backed up first, so you can undo this.</value>
   <data name="Theme_Light" xml:space="preserve">
     <value>Light</value>
   </data>
+  <data name="Theme_Valheim" xml:space="preserve">
+    <value>Valheim (wood and gold)</value>
+  </data>
   <data name="Theme_Dark" xml:space="preserve">
     <value>Dark</value>
   </data>

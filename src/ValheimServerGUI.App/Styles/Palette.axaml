@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:styles="using:ValheimServerGUI.App.Styles">
     <!-- Layered surface palette (VS Code-inspired), theme-variant aware. No pure black anywhere.
          Three depths, darkest to lightest:
            LayerDarkest  — menu bar + footer
@@ -7,8 +8,8 @@
            LayerContent  — active tab + tab content (the "raised" surface)
          AppBorderBrush is the hairline used for tab/frame borders. -->
     <!-- The "?" help glyph shares the controls' accent (checkbox/radio/focus) instead of a hardcoded
-         blue. Reusable token; tracks SystemAccentColor so it always matches the control highlight. -->
-    <SolidColorBrush x:Key="HelpGlyphBrush" Color="{DynamicResource SystemAccentColor}" />
+         blue. Reusable token, defined per theme below: Light/Dark track SystemAccentColor so it always matches
+         the control highlight. (A top-level key would win over every theme dictionary.) -->
 
     <!-- SINGLE SOURCE OF TRUTH for input styling. Every input surface — text/number boxes, dropdowns, the
          field shell, checkbox/radio boxes — reads the Input* brushes below, so their fill/border stay in
@@ -40,6 +41,8 @@
             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#D2D2D3" />
             <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#D2D2D3" />
             <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#A7A7A8" />
+
+            <SolidColorBrush x:Key="HelpGlyphBrush" Color="{DynamicResource SystemAccentColor}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="LayerDarkest" Color="#D4D4D4" />
@@ -61,6 +64,31 @@
             <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#4D4D4E" />
             <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#4D4D4E" />
             <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#808081" />
+
+            <SolidColorBrush x:Key="HelpGlyphBrush" Color="{DynamicResource SystemAccentColor}" />
+        </ResourceDictionary>
+        <!-- Valheim (wood and gold): inherits Dark; these override its layers and inputs with oak browns and a
+             gold focus/hover edge. Fluent's own colors come from AppThemeVariants.CreateValheimPalette. -->
+        <ResourceDictionary x:Key="{x:Static styles:AppThemeVariants.Valheim}">
+            <SolidColorBrush x:Key="LayerDarkest" Color="#1F160F" />
+            <SolidColorBrush x:Key="LayerBase" Color="#2B1F15" />
+            <SolidColorBrush x:Key="LayerContent" Color="#36281B" />
+            <SolidColorBrush x:Key="LayerBaseHover" Color="#3F2E1F" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#5C4630" />
+
+            <SolidColorBrush x:Key="InputBackground" Color="#1C140D" />
+            <SolidColorBrush x:Key="InputBackgroundHover" Color="#150F09" />
+            <SolidColorBrush x:Key="InputBackgroundFocused" Color="#150F09" />
+            <SolidColorBrush x:Key="InputBorderBrush" Color="#8C7656" />
+            <SolidColorBrush x:Key="InputBorderBrushHover" Color="#C9AE7E" />
+            <SolidColorBrush x:Key="InputBorderBrushFocused" Color="#D4A63A" />
+
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#8C7656" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#D4A63A" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#D4A63A" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#5C4630" />
+
+            <SolidColorBrush x:Key="HelpGlyphBrush" Color="#D4A63A" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

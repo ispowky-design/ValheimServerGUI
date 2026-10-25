@@ -49,6 +49,7 @@ public sealed class EnumDisplayConverter : IValueConverter
         AppTheme.System => Strings.Theme_System,
         AppTheme.Light => Strings.Theme_Light,
         AppTheme.Dark => Strings.Theme_Dark,
+        AppTheme.Valheim => Strings.Theme_Valheim,
         _ => value.ToString(),
     };
 

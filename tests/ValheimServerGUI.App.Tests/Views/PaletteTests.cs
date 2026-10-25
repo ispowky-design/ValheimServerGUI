@@ -3,6 +3,8 @@ using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using System.Linq;
+using ValheimServerGUI.App.Styles;
 using Microsoft.Extensions.DependencyInjection;
 using ValheimServerGUI.App.Services;
 using ValheimServerGUI.App.Tests.Services;
@@ -16,7 +18,7 @@ using Xunit;
 namespace ValheimServerGUI.App.Tests.Views;
 
 // The layered surface palette resolves in both theme variants, the three layers are distinct, and none is
-// pure black (the app uses no solid black anywhere). The window paints the base layer.
+// pure black (the app uses no solid black anywhere). The window paints the base layer. Covers the Valheim theme too.
 public class PaletteTests
 {
     private static readonly System.IServiceProvider Core =
@@ -46,13 +48,21 @@ public class PaletteTests
         return window;
     }
 
+    private static ThemeVariant Variant(string name) => name switch
+    {
+        "Dark" => ThemeVariant.Dark,
+        "Valheim" => AppThemeVariants.Valheim,
+        _ => ThemeVariant.Light,
+    };
+
     [AvaloniaTheory]
     [InlineData("Light")]
     [InlineData("Dark")]
+    [InlineData("Valheim")]
     public void Layers_are_distinct_and_never_pure_black(string variantName)
     {
         var window = ShowWindow();
-        window.RequestedThemeVariant = variantName == "Dark" ? ThemeVariant.Dark : ThemeVariant.Light;
+        window.RequestedThemeVariant = Variant(variantName);
         Dispatcher.UIThread.RunJobs();
 
         var darkest = Resolve(window, "LayerDarkest");
@@ -67,5 +77,47 @@ public class PaletteTests
 
         // App background blends with the menu/footer (darkest layer).
         Assert.Equal(darkest, (window.Background as ISolidColorBrush)!.Color);
+    }
+
+    // The Valheim theme has its own oak layers (not Dark's greys), and every theme defines the help glyph.
+    [AvaloniaTheory]
+    [InlineData("Light")]
+    [InlineData("Dark")]
+    [InlineData("Valheim")]
+    public void Each_theme_resolves_its_own_layers_and_help_glyph(string variantName)
+    {
+        var window = ShowWindow();
+        window.RequestedThemeVariant = ThemeVariant.Dark;
+        Dispatcher.UIThread.RunJobs();
+        var darkBase = Resolve(window, "LayerBase");
+
+        window.RequestedThemeVariant = Variant(variantName);
+        Dispatcher.UIThread.RunJobs();
+
+        Resolve(window, "HelpGlyphBrush");
+        if (variantName == "Valheim") Assert.NotEqual(darkBase, Resolve(window, "LayerBase"));
+    }
+
+    // Choosing Valheim installs the wood-and-gold Fluent palette (gold accent); any other theme takes it out again,
+    // so plain Dark keeps Fluent's own accent.
+    [AvaloniaFact]
+    public void Apply_theme_installs_the_gold_palette_only_for_Valheim()
+    {
+        var app = ValheimServerGUI.App.App.Instance;
+        var fluent = app.Styles.OfType<Avalonia.Themes.Fluent.FluentTheme>().Single();
+        try
+        {
+            app.ApplyTheme(AppTheme.Valheim);
+            Assert.Equal(AppThemeVariants.Valheim, app.RequestedThemeVariant);
+            Assert.Equal(AppThemeVariants.Gold, fluent.Palettes[ThemeVariant.Dark].Accent);
+
+            app.ApplyTheme(AppTheme.Dark);
+            Assert.Equal(ThemeVariant.Dark, app.RequestedThemeVariant);
+            Assert.False(fluent.Palettes.ContainsKey(ThemeVariant.Dark));
+        }
+        finally
+        {
+            app.ApplyTheme(AppTheme.System);
+        }
     }
 }
