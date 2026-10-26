@@ -603,6 +603,36 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
   <data name="Map_Refresh_Tip" xml:space="preserve">
     <value>Recharger la carte du monde sélectionné depuis sa dernière sauvegarde complète</value>
   </data>
+  <data name="Map_Exploration_Header" xml:space="preserve">
+    <value>Carte découverte</value>
+  </data>
+  <data name="Map_Exploration_Label" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Map_Exploration_Help" xml:space="preserve">
+    <value>La carte à afficher : celle d'un personnage pour ce monde (ce qu'il a exploré et ce qui a été partagé sur une table de cartographie), ou les zones générées par le serveur, qui couvrent à peu près tous les endroits où un joueur est passé.</value>
+  </data>
+  <data name="Map_Exploration_None" xml:space="preserve">
+    <value>(aucune zone découverte)</value>
+  </data>
+  <data name="Map_Exploration_Character" xml:space="preserve">
+    <value>Personnage : {0}</value>
+  </data>
+  <data name="Map_Exploration_ServerZones" xml:space="preserve">
+    <value>Zones générées par le serveur</value>
+  </data>
+  <data name="Map_CharacterFile_Label" xml:space="preserve">
+    <value>Fichier personnage</value>
+  </data>
+  <data name="Map_CharacterFile_Help" xml:space="preserve">
+    <value>Une sauvegarde de personnage (.fch) dont lire la carte découverte, pour un personnage absent du dossier Valheim de cet ordinateur. Les sauvegardes des joueurs sont dans AppData\LocalLow\IronGate\Valheim\characters_local sur leur propre ordinateur.</value>
+  </data>
+  <data name="Map_Status_CharacterFailed" xml:space="preserve">
+    <value>Impossible de lire la sauvegarde du personnage : {0}</value>
+  </data>
+  <data name="Map_Status_CharacterNoWorld" xml:space="preserve">
+    <value>Ce personnage n'a pas de carte de ce monde.</value>
+  </data>
   <data name="Map_Layers_Header" xml:space="preserve">
     <value>Calques</value>
   </data>
@@ -622,10 +652,10 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
     <value>Camps</value>
   </data>
   <data name="Map_Layer_Fog" xml:space="preserve">
-    <value>Brouillard sur les zones inexplorées</value>
+    <value>Afficher seulement la carte découverte</value>
   </data>
   <data name="Map_Layer_Fog_Help" xml:space="preserve">
-    <value>Couvre les zones que le serveur n'a pas encore générées. C'est une approximation tirée de la sauvegarde du monde, qui ne lit pas les cartes des joueurs.</value>
+    <value>Recouvre tout ce que personne n'a encore découvert, comme sur la carte du jeu, et cache les lieux qui s'y trouvent.</value>
   </data>
   <data name="Map_Search_Header" xml:space="preserve">
     <value>Recherche</value>

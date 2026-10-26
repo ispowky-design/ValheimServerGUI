@@ -16,7 +16,7 @@
                     Background="{DynamicResource LayerDarkest}">
                 <c:WorldMapCanvas Renderer="{Binding WorldMap.Renderer}"
                                   Markers="{Binding WorldMap.Markers}"
-                                  ExploredZones="{Binding WorldMap.ExploredZones}"
+                                  Exploration="{Binding WorldMap.Exploration}"
                                   ShowFog="{Binding WorldMap.ShowFog}"
                                   Focus="{Binding WorldMap.Focus}"
                                   IsExpanded="{Binding WorldMap.IsExpanded}"
@@ -41,6 +41,19 @@
                     </StackPanel>
                 </c:GroupBox>
 
+                <c:GroupBox Header="{x:Static loc:Strings.Map_Exploration_Header}">
+                    <StackPanel>
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Fog}" HelpText="{x:Static loc:Strings.Map_Layer_Fog_Help}"
+                                             Value="{Binding WorldMap.ShowFog}" IsEnabled="{Binding WorldMap.HasExploration}" />
+                        <c:DropdownFormField LabelText="{x:Static loc:Strings.Map_Exploration_Label}" HelpText="{x:Static loc:Strings.Map_Exploration_Help}"
+                                             PlaceholderText="{x:Static loc:Strings.Map_Exploration_None}"
+                                             ItemsSource="{Binding WorldMap.ExplorationSources}" Value="{Binding WorldMap.SelectedExplorationSource}"
+                                             IsEnabled="{Binding WorldMap.ShowFog}" />
+                        <c:FilenameFormField LabelText="{x:Static loc:Strings.Map_CharacterFile_Label}" HelpText="{x:Static loc:Strings.Map_CharacterFile_Help}"
+                                             SelectMode="File" Value="{Binding WorldMap.CharacterFile}" />
+                    </StackPanel>
+                </c:GroupBox>
+
                 <c:GroupBox Header="{x:Static loc:Strings.Map_Layers_Header}">
                     <StackPanel>
                         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Spawn}" Value="{Binding WorldMap.ShowSpawn}" />
@@ -48,8 +61,6 @@
                         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Traders}" Value="{Binding WorldMap.ShowTraders}" />
                         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Dungeons}" Value="{Binding WorldMap.ShowDungeons}" />
                         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Camps}" Value="{Binding WorldMap.ShowCamps}" />
-                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Fog}" HelpText="{x:Static loc:Strings.Map_Layer_Fog_Help}"
-                                             Value="{Binding WorldMap.ShowFog}" IsEnabled="{Binding WorldMap.HasExploredZones}" />
                     </StackPanel>
                 </c:GroupBox>
 

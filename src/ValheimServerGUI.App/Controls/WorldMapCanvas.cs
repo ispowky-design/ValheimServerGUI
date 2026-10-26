@@ -32,8 +32,8 @@ public class WorldMapCanvas : Control
     public static readonly StyledProperty<IReadOnlyList<WorldMapMarker>?> MarkersProperty =
         AvaloniaProperty.Register<WorldMapCanvas, IReadOnlyList<WorldMapMarker>?>(nameof(Markers));
 
-    public static readonly StyledProperty<IReadOnlyList<(short X, short Y)>?> ExploredZonesProperty =
-        AvaloniaProperty.Register<WorldMapCanvas, IReadOnlyList<(short X, short Y)>?>(nameof(ExploredZones));
+    public static readonly StyledProperty<WorldMapExploration?> ExplorationProperty =
+        AvaloniaProperty.Register<WorldMapCanvas, WorldMapExploration?>(nameof(Exploration));
 
     public static readonly StyledProperty<bool> ShowFogProperty =
         AvaloniaProperty.Register<WorldMapCanvas, bool>(nameof(ShowFog));
@@ -49,7 +49,8 @@ public class WorldMapCanvas : Control
 
     public WorldMapRenderer? Renderer { get => GetValue(RendererProperty); set => SetValue(RendererProperty, value); }
     public IReadOnlyList<WorldMapMarker>? Markers { get => GetValue(MarkersProperty); set => SetValue(MarkersProperty, value); }
-    public IReadOnlyList<(short X, short Y)>? ExploredZones { get => GetValue(ExploredZonesProperty); set => SetValue(ExploredZonesProperty, value); }
+    /// <summary>The discovered area; with <see cref="ShowFog"/> on, everything else is covered.</summary>
+    public WorldMapExploration? Exploration { get => GetValue(ExplorationProperty); set => SetValue(ExplorationProperty, value); }
     public bool ShowFog { get => GetValue(ShowFogProperty); set => SetValue(ShowFogProperty, value); }
     public WorldMapFocus? Focus { get => GetValue(FocusProperty); set => SetValue(FocusProperty, value); }
     public bool IsExpanded { get => GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
@@ -97,7 +98,7 @@ public class WorldMapCanvas : Control
     private int _detailWidth;
     private int _detailHeight;
     private WriteableBitmap? _fogBitmap;
-    private int _fogRadiusZones;
+    private WorldMapExploration? _fogExploration;
 
     private CancellationTokenSource? _baseCts;
     private CancellationTokenSource? _detailCts;
@@ -136,10 +137,15 @@ public class WorldMapCanvas : Control
         {
             OnRendererChanged();
         }
-        else if (change.Property == ExploredZonesProperty)
+        else if (change.Property == ExplorationProperty)
         {
             BuildFog();
-            InvalidateVisual();
+            if (Bounds.Width > 0) ResetView();
+            else InvalidateVisual();
+        }
+        else if (change.Property == ShowFogProperty && Bounds.Width > 0)
+        {
+            ResetView();
         }
         else if (change.Property == FocusProperty && Focus is { } focus)
         {
@@ -180,11 +186,23 @@ public class WorldMapCanvas : Control
 
     private double FitScale => Math.Max(1e-6, Math.Min(Bounds.Width, Bounds.Height) / (2 * WorldMapRenderer.MapRadius));
 
+    /// <summary>
+    /// Frames the discovered area when only that is shown, else the whole world.
+    /// </summary>
     private void ResetView()
     {
         _centerX = 0;
         _centerZ = 0;
         _scale = FitScale;
+        if (ShowFog && _fogExploration?.ExploredBounds() is { } b)
+        {
+            const double margin = 1.25;
+            var width = Math.Max(b.East - b.West, 400) * margin;
+            var height = Math.Max(b.North - b.South, 400) * margin;
+            _centerX = (b.West + b.East) / 2;
+            _centerZ = (b.South + b.North) / 2;
+            _scale = Math.Clamp(Math.Min(Bounds.Width / width, Bounds.Height / height), FitScale, MaxScale);
+        }
         _viewInitialised = Bounds.Width > 0;
         OnViewChanged();
     }
@@ -337,25 +355,21 @@ public class WorldMapCanvas : Control
     }
 
     /// <summary>
-    /// One pixel per 64 m zone: clear where the server has generated the zone, parchment elsewhere. Drawn scaled up
-    /// with smoothing, so the fog's edge is soft rather than blocky.
+    /// One pixel per exploration cell: clear where explored, opaque parchment elsewhere, like the in-game map. Drawn
+    /// scaled up with smoothing, so the edge of the discovered area is soft rather than blocky.
     /// </summary>
     private void BuildFog()
     {
         _fogBitmap = null;
-        var zones = ExploredZones;
-        if (zones is null) return;
+        _fogExploration = Exploration;
+        if (_fogExploration is not { } exploration) return;
 
-        _fogRadiusZones = (int)Math.Ceiling(WorldMapRenderer.MapRadius / WorldMapSaveData.ZoneSize);
-        var size = 2 * _fogRadiusZones + 1;
+        const uint fog = 0xFFD8C49A; // parchment
+        var size = exploration.Size;
         var pixels = new uint[size * size];
-        const uint fog = 0xEBC7B48E; // premultiplied parchment at ~92% opacity
-        Array.Fill(pixels, fog);
-        foreach (var (x, y) in zones)
+        for (var i = 0; i < pixels.Length; i++)
         {
-            var col = x + _fogRadiusZones;
-            var row = _fogRadiusZones - y;
-            if (col >= 0 && col < size && row >= 0 && row < size) pixels[row * size + col] = 0;
+            if (exploration.Explored[i] == 0) pixels[i] = fog;
         }
         _fogBitmap = ToBitmap(pixels, size, size);
     }
@@ -380,13 +394,11 @@ public class WorldMapCanvas : Control
                 context.DrawImage(detail, new Rect(0, 0, _detailWidth, _detailHeight), ToScreen(_detailRegion, _detailWidth, _detailHeight));
             }
 
-            if (ShowFog && _fogBitmap is { } fog && _baseBitmap is not null)
+            if (ShowFog && _fogBitmap is { } fog && _fogExploration is { } exploration && _baseBitmap is not null)
             {
-                var zone = WorldMapSaveData.ZoneSize;
-                var extent = (_fogRadiusZones + 0.5) * zone;
-                var topLeft = ToScreen(-extent, extent);
-                var side = 2 * extent * _scale;
-                var radius = WorldMapRenderer.WorldRadius * _scale;
+                var topLeft = ToScreen(exploration.Left, exploration.Top);
+                var side = exploration.Size * exploration.MetersPerCell * _scale;
+                var radius = WorldMapRenderer.MapRadius * _scale;
                 var centre = ToScreen(0, 0);
                 using (context.PushGeometryClip(new EllipseGeometry(new Rect(centre.X - radius, centre.Y - radius, 2 * radius, 2 * radius))))
                 {
