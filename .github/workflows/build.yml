@@ -103,7 +103,8 @@ jobs:
       - name: Build the installer
         shell: pwsh
         run: |
-          & $env:ISCC "/DAppVersion=$env:VERSION" "/DSourceExe=$PWD\publish\win\ValheimServerGUI.App.exe" "/DOutputDir=$PWD\dist" packaging\windows\ValheimServerGUI.iss
+          $fileVersion = ($env:VERSION -split '[-+]')[0]
+          & $env:ISCC "/DAppVersion=$env:VERSION" "/DFileVersion=$fileVersion" "/DSourceExe=$PWD\publish\win\ValheimServerGUI.App.exe" "/DOutputDir=$PWD\dist" packaging\windows\ValheimServerGUI.iss
           if ($LASTEXITCODE -ne 0) { throw "ISCC failed ($LASTEXITCODE)" }
           Get-ChildItem dist
 

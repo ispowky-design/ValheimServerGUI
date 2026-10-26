@@ -6,10 +6,14 @@
 ; uninstall touches them.
 ;
 ; Build (on Windows, with Inno Setup 6):
-;   ISCC.exe /DAppVersion=3.1.0 /DSourceExe=path\to\ValheimServerGUI.exe /DOutputDir=dist packaging\windows\ValheimServerGUI.iss
+; ISCC.exe /DAppVersion=3.1.0 /DFileVersion=3.1.0 /DSourceExe=path\to\ValheimServerGUI.exe /DOutputDir=dist packaging\windows\ValheimServerGUI.iss
 
 #ifndef AppVersion
   #define AppVersion "0.0.0"
+#endif
+; Windows file versions are numbers only, so a pre-release like 3.1.0-rc.1 passes /DFileVersion=3.1.0.
+#ifndef FileVersion
+  #define FileVersion "0.0.0"
 #endif
 #ifndef SourceExe
   #error Pass /DSourceExe=<path to the published ValheimServerGUI.exe>
@@ -54,7 +58,7 @@ WizardStyle=modern
 ; An update closes a running copy of the app first (only a copy started from this install folder).
 CloseApplications=yes
 RestartApplications=no
-VersionInfoVersion={#AppVersion}
+VersionInfoVersion={#FileVersion}
 VersionInfoProductName={#AppName}
 
 [Languages]
