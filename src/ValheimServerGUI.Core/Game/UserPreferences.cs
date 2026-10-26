@@ -48,6 +48,12 @@ namespace ValheimServerGUI.Game
         /// <summary>UI language, applied at the next start. Defaults to following the OS.</summary>
         public AppLanguage Language { get; set; } = AppLanguage.System;
 
+        /// <summary>Whether the World Map is published on a web page for players who are not in game.</summary>
+        public bool PublishMapOnWeb { get; set; }
+
+        /// <summary>The TCP port the World Map's web page is served on.</summary>
+        public int MapWebPort { get; set; } = CoreConstants.DefaultMapWebPort;
+
         public List<ServerPreferences> Servers { get; set; } = new();
 
         public List<WorldPreferences> Worlds { get; set; } = new();
@@ -79,6 +85,8 @@ namespace ValheimServerGUI.Game
             prefs.Language = file.Language ?? prefs.Language;
             prefs.ServerInstallFolder = file.ServerInstallFolder ?? prefs.ServerInstallFolder;
             prefs.ForceStopOfferSeconds = file.ForceStopOfferSeconds is > 0 ? file.ForceStopOfferSeconds.Value : prefs.ForceStopOfferSeconds;
+            prefs.PublishMapOnWeb = file.PublishMapOnWeb ?? prefs.PublishMapOnWeb;
+            prefs.MapWebPort = file.MapWebPort is > 0 and <= 65535 ? file.MapWebPort.Value : prefs.MapWebPort;
 
             if (file.Servers != null)
             {
@@ -131,6 +139,8 @@ namespace ValheimServerGUI.Game
                 Language = Language,
                 ForceStopOfferSeconds = ForceStopOfferSeconds,
                 ServerInstallFolder = ServerInstallFolder,
+                PublishMapOnWeb = PublishMapOnWeb,
+                MapWebPort = MapWebPort,
                 Servers = new(),
                 Worlds = new(),
             };

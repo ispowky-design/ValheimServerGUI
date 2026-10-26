@@ -10,9 +10,6 @@ by DoomMachine: an offline port of Valheim's world generator, used by the World 
 Copyright (c) 2026 DoomMachine, released under the MIT License; the full text is in
 [src/ThirdParty/SeedLab.WorldGen/LICENSE](src/ThirdParty/SeedLab.WorldGen/LICENSE).
 
-`src/ValheimServerGUI.Core/Game/WorldMap/CharacterMapReader.cs` follows the layout of SeedLab's `CharacterReader`
-(same project, same licence).
-
 Its `Noise/` folder reproduces part of [FastNoise](https://github.com/Auburn/FastNoise_CSharp) by Jordan Peck,
 Copyright (c) 2016 Jordan Peck, also released under the MIT License.
 

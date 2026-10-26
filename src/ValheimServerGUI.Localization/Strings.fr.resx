@@ -610,16 +610,10 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
     <value>Source</value>
   </data>
   <data name="Map_Exploration_Help" xml:space="preserve">
-    <value>La carte découverte à afficher. « Tout » réunit les tables de cartographie du monde (la carte que les joueurs y partagent, gardée par le serveur dans la sauvegarde du monde) et toutes les cartes de personnages trouvées sur cet ordinateur. La carte personnelle d'un joueur n'est gardée que dans sa sauvegarde de personnage, sur son ordinateur : pour l'ajouter, choisis son fichier .fch ci-dessous. Sans aucune des deux, les zones générées par le serveur couvrent à peu près tous les endroits où un joueur est passé.</value>
+    <value>D'où vient la zone découverte : les tables de cartographie du monde (la carte que les joueurs y partagent, gardée par le serveur dans la sauvegarde du monde) ou, tant qu'aucune table n'a servi, les zones générées par le serveur, qui couvrent à peu près tous les endroits où un joueur est passé.</value>
   </data>
   <data name="Map_Exploration_None" xml:space="preserve">
     <value>(aucune zone découverte)</value>
-  </data>
-  <data name="Map_Exploration_Character" xml:space="preserve">
-    <value>Personnage : {0}</value>
-  </data>
-  <data name="Map_Exploration_All" xml:space="preserve">
-    <value>Tout (tables et personnages)</value>
   </data>
   <data name="Map_Exploration_Tables_One" xml:space="preserve">
     <value>Table de cartographie</value>
@@ -630,17 +624,32 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
   <data name="Map_Exploration_ServerZones" xml:space="preserve">
     <value>Zones générées par le serveur</value>
   </data>
-  <data name="Map_CharacterFile_Label" xml:space="preserve">
-    <value>Fichier personnage</value>
+  <data name="Map_Publish_Header" xml:space="preserve">
+    <value>Partager sur le web</value>
   </data>
-  <data name="Map_CharacterFile_Help" xml:space="preserve">
-    <value>Une sauvegarde de personnage (.fch) dont lire la carte découverte, pour un personnage absent du dossier Valheim de cet ordinateur. Les sauvegardes des joueurs sont dans AppData\LocalLow\IronGate\Valheim\characters_local sur leur propre ordinateur.</value>
+  <data name="Map_Publish_Enabled" xml:space="preserve">
+    <value>Publier la carte sur le web</value>
   </data>
-  <data name="Map_Status_CharacterFailed" xml:space="preserve">
-    <value>Impossible de lire la sauvegarde du personnage : {0}</value>
+  <data name="Map_Publish_Enabled_Help" xml:space="preserve">
+    <value>Affiche cette carte, telle que réglée ici (zone découverte et lieux), sur une page web, pour que les joueurs qui ne sont pas en jeu puissent la voir. L'appli sert la page elle-même tant qu'elle est ouverte, et la page suit les sauvegardes du monde. Pour les joueurs hors de ton réseau, redirige ce port TCP vers cet ordinateur sur ta box, et autorise l'appli dans le pare-feu quand Windows le demande.</value>
   </data>
-  <data name="Map_Status_CharacterNoWorld" xml:space="preserve">
-    <value>Ce personnage n'a pas de carte de ce monde.</value>
+  <data name="Map_Publish_Port_Label" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Map_Publish_Port_Help" xml:space="preserve">
+    <value>Le port TCP de la page. Choisis-en un libre, qui n'est pas un des ports du serveur Valheim.</value>
+  </data>
+  <data name="Map_Publish_Link_Label" xml:space="preserve">
+    <value>Lien pour les joueurs</value>
+  </data>
+  <data name="Map_Publish_Link_Help" xml:space="preserve">
+    <value>L'adresse à donner aux joueurs, avec l'IP publique de cet ordinateur. Elle marche depuis l'extérieur une fois le port redirigé sur ta box.</value>
+  </data>
+  <data name="Map_Publish_LocalLink_Label" xml:space="preserve">
+    <value>Lien sur cet ordinateur</value>
+  </data>
+  <data name="Map_Status_PublishFailed" xml:space="preserve">
+    <value>Impossible de publier la carte sur le port {0} : {1}</value>
   </data>
   <data name="Map_Layers_Header" xml:space="preserve">
     <value>Calques</value>
@@ -1906,5 +1915,21 @@ Voir les journaux de l'appli pour le détail.</value>
     <value>Une erreur fatale s'est produite : {0}
 
 Veux-tu envoyer un rapport de plantage automatique au développeur ?</value>
+  </data>
+  <!-- World map web page -->
+  <data name="MapWeb_Title" xml:space="preserve">
+    <value>Carte de {0}</value>
+  </data>
+  <data name="MapWeb_Updated" xml:space="preserve">
+    <value>Mise à jour : {0:g}</value>
+  </data>
+  <data name="MapWeb_Reset" xml:space="preserve">
+    <value>Recentrer</value>
+  </data>
+  <data name="MapWeb_Hint" xml:space="preserve">
+    <value>Fais glisser pour déplacer la carte ; zoome avec la molette ou en pinçant.</value>
+  </data>
+  <data name="MapWeb_NotReady" xml:space="preserve">
+    <value>La carte n'est pas encore prête. Cette page réessaiera dans un instant.</value>
   </data>
 </root>

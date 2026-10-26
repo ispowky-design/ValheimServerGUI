@@ -14,7 +14,7 @@ namespace ValheimServerGUI.Game.WorldMap
     /// Reads the map shared on a world's cartography tables from the world save, read-only and with every file opened
     /// shared, so a running server is never disturbed. This is the one map the server keeps on behalf of every
     /// player: each player who writes to a table adds what they have discovered (and what others shared with them).
-    /// A player's own map is never sent to the server; it stays in their character save (<see cref="CharacterMapReader"/>).
+    /// A player's own map is never sent to the server; it stays in their character save, on their computer.
     ///
     /// <para>From <c>MapTable.OnWrite</c> and <c>Minimap.GetSharedMapData</c>: a table keeps its map in its ZDO under
     /// <c>ZDOVars.s_data</c> as a byte array (int32 length + bytes), gzip of:</para>

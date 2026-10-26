@@ -29,6 +29,9 @@ namespace ValheimServerGUI
         /// </summary>
         public const int DefaultForceStopOfferSeconds = 120;
 
+        /// <summary>The TCP port the World Map's web page is served on unless the user picks another.</summary>
+        public const int DefaultMapWebPort = 8080;
+
         /// <summary>How many scheduled-restart backups each world keeps; older ones are deleted.</summary>
         public const int ScheduledBackupsKept = 10;
 
