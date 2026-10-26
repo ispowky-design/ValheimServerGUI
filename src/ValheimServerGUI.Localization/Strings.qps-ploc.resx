@@ -593,6 +593,36 @@
   <data name="Map_Refresh_Tip" xml:space="preserve">
     <value>⟦Map_Refresh_Tip⟧</value>
   </data>
+  <data name="Map_Exploration_Header" xml:space="preserve">
+    <value>⟦Map_Exploration_Header⟧</value>
+  </data>
+  <data name="Map_Exploration_Label" xml:space="preserve">
+    <value>⟦Map_Exploration_Label⟧</value>
+  </data>
+  <data name="Map_Exploration_Help" xml:space="preserve">
+    <value>⟦Map_Exploration_Help⟧</value>
+  </data>
+  <data name="Map_Exploration_None" xml:space="preserve">
+    <value>⟦Map_Exploration_None⟧</value>
+  </data>
+  <data name="Map_Exploration_Character" xml:space="preserve">
+    <value>⟦Map_Exploration_Character {0}⟧</value>
+  </data>
+  <data name="Map_Exploration_ServerZones" xml:space="preserve">
+    <value>⟦Map_Exploration_ServerZones⟧</value>
+  </data>
+  <data name="Map_CharacterFile_Label" xml:space="preserve">
+    <value>⟦Map_CharacterFile_Label⟧</value>
+  </data>
+  <data name="Map_CharacterFile_Help" xml:space="preserve">
+    <value>⟦Map_CharacterFile_Help⟧</value>
+  </data>
+  <data name="Map_Status_CharacterFailed" xml:space="preserve">
+    <value>⟦Map_Status_CharacterFailed {0}⟧</value>
+  </data>
+  <data name="Map_Status_CharacterNoWorld" xml:space="preserve">
+    <value>⟦Map_Status_CharacterNoWorld⟧</value>
+  </data>
   <data name="Map_Layers_Header" xml:space="preserve">
     <value>⟦Map_Layers_Header⟧</value>
   </data>

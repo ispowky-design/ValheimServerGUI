@@ -37,13 +37,23 @@ public sealed class WorldMapSearchRow
     public string DistanceText { get; }
 }
 
+/// <summary>Where the map's discovered area comes from: a character's own map, or the zones the server generated.</summary>
+public sealed class WorldMapExplorationSource(string displayName, WorldMapExploration exploration)
+{
+    public string DisplayName { get; } = displayName;
+    public WorldMapExploration Exploration { get; } = exploration;
+    public override string ToString() => DisplayName;
+}
+
 /// <summary>A biome swatch in the legend.</summary>
 public sealed record WorldMapLegendRow(string Name, IBrush Brush);
 
 /// <summary>
 /// World Map tab: draws the selected world from its seed, with the bosses, traders, dungeons and camps its latest save
-/// holds and a fog over the zones nobody has visited. Any seed can also be previewed (terrain only). Everything is read
-/// from the save files, read-only, so a running server is never disturbed; world generation runs off the UI thread.
+/// holds. By default only the discovered area shows, as a character's own in-game map has it (or, with no character
+/// save at hand, the zones the server has generated); the rest is covered and its markers hidden. Any seed can also be
+/// previewed (terrain only). Everything is read from the save files, read-only, so a running server is never
+/// disturbed; world generation runs off the UI thread.
 /// </summary>
 public partial class WorldMapViewModel : ViewModelBase
 {
@@ -52,17 +62,21 @@ public partial class WorldMapViewModel : ViewModelBase
     private readonly IApplicationLogger _logger;
     private readonly Func<DirectoryInfo?> _saveFolder;
     private readonly Func<string?> _worldName;
+    private readonly Func<IEnumerable<DirectoryInfo>> _characterFolders;
+    private long? _worldUid;
 
     private IReadOnlyList<WorldMapMarker> _allMarkers = Array.Empty<WorldMapMarker>();
     private bool _isActive;
     private bool _isStale = true;
     private int _loadVersion;
 
-    public WorldMapViewModel(IApplicationLogger logger, Func<DirectoryInfo?> saveFolder, Func<string?> worldName)
+    public WorldMapViewModel(IApplicationLogger logger, Func<DirectoryInfo?> saveFolder, Func<string?> worldName,
+        Func<IEnumerable<DirectoryInfo>>? characterFolders = null)
     {
         _logger = logger;
         _saveFolder = saveFolder;
         _worldName = worldName;
+        _characterFolders = characterFolders ?? (() => Array.Empty<DirectoryInfo>());
 
         Legend = WorldMapMarkers.Legend()
             .Select(e => new WorldMapLegendRow(e.Name, new SolidColorBrush(Color.FromRgb(e.R, e.G, e.B))))
@@ -78,12 +92,20 @@ public partial class WorldMapViewModel : ViewModelBase
     /// <summary>The markers of the categories that are switched on.</summary>
     [ObservableProperty] private IReadOnlyList<WorldMapMarker> _markers = Array.Empty<WorldMapMarker>();
 
-    /// <summary>The zones the server has generated, for the fog; null when the map has no save behind it.</summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(HasExploredZones))]
-    private IReadOnlyList<(short X, short Y)>? _exploredZones;
+    /// <summary>The discovered area the map shows when <see cref="ShowFog"/> is on; null when nothing is known.</summary>
+    [ObservableProperty] private WorldMapExploration? _exploration;
 
-    public bool HasExploredZones => ExploredZones is not null;
+    /// <summary>The places the discovered area can come from: each character that has a map of this world, then the server's zones.</summary>
+    public ObservableCollection<WorldMapExplorationSource> ExplorationSources { get; } = new();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasExploration))]
+    private WorldMapExplorationSource? _selectedExplorationSource;
+
+    public bool HasExploration => SelectedExplorationSource is not null;
+
+    /// <summary>A character save picked by hand (e.g. one kept on another drive or in Steam Cloud).</summary>
+    [ObservableProperty] private string? _characterFile;
 
     [ObservableProperty] private WorldMapFocus? _focus;
 
@@ -107,7 +129,8 @@ public partial class WorldMapViewModel : ViewModelBase
     [ObservableProperty] private bool _showTraders = true;
     [ObservableProperty] private bool _showDungeons;
     [ObservableProperty] private bool _showCamps;
-    [ObservableProperty] private bool _showFog;
+    /// <summary>Show only the discovered area (on by default): the rest of the world is covered and its markers hidden.</summary>
+    [ObservableProperty] private bool _showFog = true;
 
     [ObservableProperty] private string? _searchText;
 
@@ -122,6 +145,25 @@ public partial class WorldMapViewModel : ViewModelBase
     partial void OnShowTradersChanged(bool value) => ApplyFilters();
     partial void OnShowDungeonsChanged(bool value) => ApplyFilters();
     partial void OnShowCampsChanged(bool value) => ApplyFilters();
+
+    partial void OnShowFogChanged(bool value)
+    {
+        ApplyFilters();
+        RefreshSearch();
+    }
+
+    partial void OnSelectedExplorationSourceChanged(WorldMapExplorationSource? value)
+    {
+        Exploration = value?.Exploration;
+        ApplyFilters();
+        RefreshSearch();
+    }
+
+    partial void OnCharacterFileChanged(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value) || _worldUid is not { } uid) return;
+        _ = AddCharacterFileAsync(new FileInfo(value), uid);
+    }
     partial void OnSearchTextChanged(string? value) => RefreshSearch();
 
     partial void OnSelectedResultChanged(WorldMapSearchRow? value)
@@ -163,6 +205,8 @@ public partial class WorldMapViewModel : ViewModelBase
         var version = ++_loadVersion;
         WorldText = Strings.Map_World_None;
         SeedText = seedName;
+        _worldUid = null;
+        SetExplorationSources(Array.Empty<WorldMapExplorationSource>());
         SetSaveData(null);
         await LoadTerrainAsync(version, ValheimHash.SeedFromName(seedName), worldGenVersion: 2);
         if (version == _loadVersion) StatusMessage = Strings.Map_Status_Preview;
@@ -173,6 +217,8 @@ public partial class WorldMapViewModel : ViewModelBase
     {
         _isStale = false;
         var version = ++_loadVersion;
+        _worldUid = null;
+        SetExplorationSources(Array.Empty<WorldMapExplorationSource>());
 
         var world = _worldName();
         var folder = string.IsNullOrWhiteSpace(world) ? null : _saveFolder();
@@ -193,21 +239,24 @@ public partial class WorldMapViewModel : ViewModelBase
         WorldMapSaveData? save = null;
         string? saveError = null;
         DateTime? savedAt = null;
+        IReadOnlyList<CharacterWorldMap> characterMaps = Array.Empty<CharacterWorldMap>();
+        var characterFolders = _characterFolders().ToList();
         IsBusy = true;
         try
         {
-            (metadata, save, saveError, savedAt) = await Task.Run(() =>
+            (metadata, save, saveError, savedAt, characterMaps) = await Task.Run(() =>
             {
                 var meta = WorldMetadataReader.ReadFromWorldFolder(worldFolder);
+                var maps = meta.Uid is { } uid ? ReadCharacterMaps(characterFolders, uid) : Array.Empty<CharacterWorldMap>();
                 try
                 {
                     var data = WorldMapSaveReader.ReadFromWorldFolder(worldFolder);
                     var time = WorldMetadataReader.FindLatestCompleteSave(worldFolder)?.LastWriteTime;
-                    return (meta, data, (string?)null, time);
+                    return (meta, data, (string?)null, time, maps);
                 }
                 catch (Exception e) when (e is IOException or InvalidDataException or UnauthorizedAccessException)
                 {
-                    return (meta, (WorldMapSaveData?)null, e.Message, (DateTime?)null);
+                    return (meta, (WorldMapSaveData?)null, e.Message, (DateTime?)null, maps);
                 }
             });
         }
@@ -236,7 +285,17 @@ public partial class WorldMapViewModel : ViewModelBase
         }
 
         SeedText = metadata.SeedName;
+        _worldUid = metadata.Uid;
+        var sources = characterMaps
+            .Select(m => new WorldMapExplorationSource(string.Format(Strings.Map_Exploration_Character, m.CharacterName), m.Exploration))
+            .ToList();
+        if (save is not null)
+        {
+            sources.Add(new WorldMapExplorationSource(Strings.Map_Exploration_ServerZones,
+                WorldMapExploration.FromGeneratedZones(save.GeneratedZones)));
+        }
         SetSaveData(save);
+        SetExplorationSources(sources);
         if (saveError is not null)
         {
             _logger.Warning("Could not read the locations of world {world} for the map: {message}", world, saveError);
@@ -271,15 +330,83 @@ public partial class WorldMapViewModel : ViewModelBase
     private void SetSaveData(WorldMapSaveData? save)
     {
         _allMarkers = save is null ? Array.Empty<WorldMapMarker>() : WorldMapMarkers.FromSave(save);
-        ExploredZones = save?.GeneratedZones;
         ApplyFilters();
         RefreshSearch();
     }
 
+    private void SetExplorationSources(IReadOnlyList<WorldMapExplorationSource> sources)
+    {
+        ExplorationSources.Clear();
+        foreach (var source in sources) ExplorationSources.Add(source);
+        SelectedExplorationSource = sources.FirstOrDefault();
+    }
+
+    /// <summary>Reads, off the UI thread, the map each character save in the given folders has of the world.</summary>
+    private IReadOnlyList<CharacterWorldMap> ReadCharacterMaps(IEnumerable<DirectoryInfo> folders, long worldUid)
+    {
+        var maps = new List<CharacterWorldMap>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var folder in folders)
+        {
+            IEnumerable<FileInfo> files;
+            try
+            {
+                files = CharacterMapReader.FindCharacterFiles(folder).ToList();
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                continue;
+            }
+
+            foreach (var file in files)
+            {
+                if (!seen.Add(file.FullName)) continue;
+                try
+                {
+                    if (CharacterMapReader.ReadWorldMap(file, worldUid) is { } map) maps.Add(map);
+                }
+                catch (Exception e) when (e is IOException or InvalidDataException or UnauthorizedAccessException)
+                {
+                    _logger.Warning("Could not read the map in character save {path}: {message}", file.FullName, e.Message);
+                }
+            }
+        }
+        return maps;
+    }
+
+    private async Task AddCharacterFileAsync(FileInfo file, long worldUid)
+    {
+        CharacterWorldMap? map;
+        try
+        {
+            map = await Task.Run(() => CharacterMapReader.ReadWorldMap(file, worldUid));
+        }
+        catch (Exception e) when (e is IOException or InvalidDataException or UnauthorizedAccessException)
+        {
+            StatusMessage = string.Format(Strings.Map_Status_CharacterFailed, e.Message);
+            return;
+        }
+
+        if (_worldUid != worldUid) return;
+        if (map is null)
+        {
+            StatusMessage = Strings.Map_Status_CharacterNoWorld;
+            return;
+        }
+
+        var source = new WorldMapExplorationSource(string.Format(Strings.Map_Exploration_Character, map.CharacterName), map.Exploration);
+        ExplorationSources.Insert(0, source);
+        SelectedExplorationSource = source;
+    }
+
     private void ApplyFilters()
     {
-        Markers = _allMarkers.Where(m => IsShown(m.Kind)).ToList();
+        Markers = _allMarkers.Where(m => IsShown(m.Kind) && IsDiscovered(m)).ToList();
     }
+
+    /// <summary>With the fog on, a place nobody has discovered stays hidden, on the map and in the list.</summary>
+    private bool IsDiscovered(WorldMapMarker marker)
+        => !ShowFog || Exploration is not { } exploration || exploration.IsExplored(marker.X, marker.Z);
 
     private bool IsShown(WorldLocationKind kind) => kind switch
     {
@@ -304,6 +431,7 @@ public partial class WorldMapViewModel : ViewModelBase
         IEnumerable<WorldMapMarker> matches = string.IsNullOrEmpty(text)
             ? _allMarkers.Where(m => m.Kind is WorldLocationKind.Spawn or WorldLocationKind.Boss or WorldLocationKind.Trader)
             : _allMarkers.Where(m => m.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase));
+        matches = matches.Where(IsDiscovered);
 
         SearchResults.Clear();
         foreach (var row in matches

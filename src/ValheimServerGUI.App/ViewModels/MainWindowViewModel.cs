@@ -124,7 +124,8 @@ public partial class MainWindowViewModel : ViewModelBase
             ResolveSaveDataDirectory, () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
             IsSelectedWorldInUse);
         WorldMap = new WorldMapViewModel(appLogger, ResolveSaveDataDirectory,
-            () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName);
+            () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
+            CharacterDataFolders);
         Form.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName is nameof(ServerFormViewModel.ExistingWorld) or nameof(ServerFormViewModel.UseNewWorld))
@@ -847,6 +848,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private DirectoryInfo? ResolveSaveDataDirectory()
         => ResolveSaveDataFolder() is { } path ? new DirectoryInfo(path) : null;
+
+    /// <summary>
+    /// Where the World Map looks for character saves: the profile's save folder, and the game's own data folder, where
+    /// a player who plays on this computer keeps their characters.
+    /// </summary>
+    private IEnumerable<DirectoryInfo> CharacterDataFolders()
+    {
+        if (ResolveSaveDataDirectory() is { } saveFolder) yield return saveFolder;
+        yield return new DirectoryInfo(_pathResolver.DefaultSaveDataFolder);
+    }
 
     /// <summary>
     /// Whether any server (any profile, any window) that is not stopped runs the selected world from the same save
