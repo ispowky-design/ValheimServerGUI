@@ -763,6 +763,9 @@ The world as it is now is backed up first, so you can undo this.</value>
   <data name="Map_Players_Status_NoServer" xml:space="preserve">
     <value>Set where the server is installed first (File &gt; Set Directories).</value>
   </data>
+  <data name="Map_Players_Status_NotFound" xml:space="preserve">
+    <value>The server was not found at {0}. Fix its location in File &gt; Set Directories.</value>
+  </data>
   <data name="Map_Players_Status_NoBepInEx" xml:space="preserve">
     <value>The server has no BepInEx. Install BepInEx (BepInExPack for Valheim) in the server folder, then install the plugin here.</value>
   </data>

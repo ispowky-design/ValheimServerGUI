@@ -763,6 +763,9 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
   <data name="Map_Players_Status_NoServer" xml:space="preserve">
     <value>Indique d'abord où le serveur est installé (Fichier &gt; Dossiers).</value>
   </data>
+  <data name="Map_Players_Status_NotFound" xml:space="preserve">
+    <value>Serveur introuvable à l'emplacement {0}. Corrige-le dans Fichier &gt; Dossiers.</value>
+  </data>
   <data name="Map_Players_Status_NoBepInEx" xml:space="preserve">
     <value>Le serveur n'a pas BepInEx. Installe BepInEx (BepInExPack pour Valheim) dans le dossier du serveur, puis installe le plugin ici.</value>
   </data>

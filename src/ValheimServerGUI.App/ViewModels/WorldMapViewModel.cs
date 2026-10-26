@@ -711,6 +711,8 @@ public partial class WorldMapViewModel : ViewModelBase
             Players = ShowPlayers ? live : Array.Empty<LivePlayer>();
             PlayersStatus = error is not null ? string.Format(Strings.Map_Players_Status_ReadFailed, error) : state switch
             {
+                ServerPluginState.NoServer when !string.IsNullOrWhiteSpace(exe)
+                    => string.Format(Strings.Map_Players_Status_NotFound, exe),
                 ServerPluginState.NoServer => Strings.Map_Players_Status_NoServer,
                 ServerPluginState.NoBepInEx => Strings.Map_Players_Status_NoBepInEx,
                 ServerPluginState.NotInstalled => Strings.Map_Players_Status_NotInstalled,

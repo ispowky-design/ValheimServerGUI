@@ -753,6 +753,9 @@
   <data name="Map_Players_Status_NoServer" xml:space="preserve">
     <value>⟦Map_Players_Status_NoServer⟧</value>
   </data>
+  <data name="Map_Players_Status_NotFound" xml:space="preserve">
+    <value>⟦Map_Players_Status_NotFound {0}⟧</value>
+  </data>
   <data name="Map_Players_Status_NoBepInEx" xml:space="preserve">
     <value>⟦Map_Players_Status_NoBepInEx⟧</value>
   </data>
