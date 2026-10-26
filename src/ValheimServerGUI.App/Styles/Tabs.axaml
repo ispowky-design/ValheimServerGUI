@@ -11,7 +11,7 @@
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
         <Setter Property="Background" Value="{DynamicResource LayerBase}" />
-        <Setter Property="Padding" Value="12,4" />
+        <Setter Property="Padding" Value="14,5" />
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="Template">
             <ControlTemplate>
@@ -21,11 +21,16 @@
                         BorderThickness="1"
                         CornerRadius="4,4,0,0"
                         Margin="0,2,-1,0">
-                    <ContentPresenter Name="PART_ContentPresenter"
-                                      Content="{TemplateBinding Header}"
-                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                      Padding="{TemplateBinding Padding}"
-                                      HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Panel>
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <!-- Accent strip along the selected tab's top edge. -->
+                        <Border Name="PART_Accent" Height="2" VerticalAlignment="Top" CornerRadius="3,3,0,0"
+                                Background="{DynamicResource SystemAccentColor}" IsVisible="False" />
+                    </Panel>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -37,6 +42,10 @@
             <Setter Property="Background" Value="{DynamicResource LayerContent}" />
             <Setter Property="BorderThickness" Value="1,1,1,0" />
             <Setter Property="Margin" Value="0,0,-1,-1" />
+        </Style>
+
+        <Style Selector="^:selected /template/ Border#PART_Accent">
+            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:pointerover:not(:selected) /template/ Border#PART_LayoutRoot">

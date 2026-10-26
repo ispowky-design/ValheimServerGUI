@@ -140,6 +140,97 @@
   <data name="MainWindow_Tab_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
+  <!-- Dashboard tab -->
+  <data name="MainWindow_Tab_Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Dashboard_Subtitle" xml:space="preserve">
+    <value>World {0} · Port {1}</value>
+  </data>
+  <data name="Dashboard_Status_Title" xml:space="preserve">
+    <value>SERVER STATUS</value>
+  </data>
+  <data name="Dashboard_Uptime_Caption" xml:space="preserve">
+    <value>Uptime {0}</value>
+  </data>
+  <data name="Dashboard_Players_Title" xml:space="preserve">
+    <value>PLAYERS ONLINE</value>
+  </data>
+  <data name="Dashboard_Players_Caption" xml:space="preserve">
+    <value>Peak {0} this session · {1} known</value>
+  </data>
+  <data name="Dashboard_Cpu_Title" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="Dashboard_Cpu_Value" xml:space="preserve">
+    <value>{0:F0}%</value>
+  </data>
+  <data name="Dashboard_Cpu_Caption" xml:space="preserve">
+    <value>Share of {0} logical processors</value>
+  </data>
+  <data name="Dashboard_Memory_Title" xml:space="preserve">
+    <value>MEMORY</value>
+  </data>
+  <data name="Dashboard_Memory_Gigabytes" xml:space="preserve">
+    <value>{0:F2} GB</value>
+  </data>
+  <data name="Dashboard_Memory_Megabytes" xml:space="preserve">
+    <value>{0:F0} MB</value>
+  </data>
+  <data name="Dashboard_Memory_Caption" xml:space="preserve">
+    <value>Of {0:F0} GB on this computer</value>
+  </data>
+  <data name="Dashboard_Backup_Title" xml:space="preserve">
+    <value>LATEST BACKUP</value>
+  </data>
+  <data name="Dashboard_Backup_None" xml:space="preserve">
+    <value>None yet</value>
+  </data>
+  <data name="Dashboard_Backup_Caption" xml:space="preserve">
+    <value>{0} backups of {1}</value>
+  </data>
+  <data name="Dashboard_OnlinePlayers_Title" xml:space="preserve">
+    <value>CONNECTED PLAYERS</value>
+  </data>
+  <data name="Dashboard_OnlinePlayers_Empty" xml:space="preserve">
+    <value>No one is connected right now.</value>
+  </data>
+  <data name="Dashboard_Connection_Title" xml:space="preserve">
+    <value>CONNECTION</value>
+  </data>
+  <data name="Dashboard_Actions_Title" xml:space="preserve">
+    <value>QUICK ACTIONS</value>
+  </data>
+  <data name="Dashboard_Action_OpenWorldFolder" xml:space="preserve">
+    <value>World Folder</value>
+  </data>
+  <data name="Dashboard_Action_WorldMap" xml:space="preserve">
+    <value>World Map</value>
+  </data>
+  <data name="Dashboard_Action_Settings" xml:space="preserve">
+    <value>Server Settings</value>
+  </data>
+  <data name="Dashboard_Action_Players" xml:space="preserve">
+    <value>Players</value>
+  </data>
+  <data name="Dashboard_Console_Title" xml:space="preserve">
+    <value>SERVER CONSOLE</value>
+  </data>
+  <data name="Dashboard_Console_ViewAll" xml:space="preserve">
+    <value>Open full logs</value>
+  </data>
+  <data name="Dashboard_Console_Help" xml:space="preserve">
+    <value>The live output of the server. Valheim's dedicated server has no remote console: admin commands (kick, ban, save…) are typed in game with F5, or managed from the Players tab.</value>
+  </data>
+  <data name="Dashboard_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Dashboard_Restart" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Dashboard_Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
   <!-- Server Controls tab -->
   <data name="ServerControls_Name_Label" xml:space="preserve">
     <value>Server Name</value>

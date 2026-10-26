@@ -54,6 +54,9 @@ public partial class LogsViewModel : ViewModelBase
     private ObservableCollection<string> _serverLines = new();
     public ObservableCollection<string> AppLines { get; } = new();
 
+    /// <summary>The selected profile's server log, whichever view is selected (the dashboard's live console).</summary>
+    public ObservableCollection<string> ServerLines => _serverLines;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CurrentLines))]
     private LogView _selectedView = LogView.Server;
@@ -71,6 +74,7 @@ public partial class LogsViewModel : ViewModelBase
     public void SetServerLog(ObservableCollection<string> buffer)
     {
         _serverLines = buffer;
+        OnPropertyChanged(nameof(ServerLines));
         OnPropertyChanged(nameof(CurrentLines));
     }
 

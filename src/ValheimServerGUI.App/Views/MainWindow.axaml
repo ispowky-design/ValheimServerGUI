@@ -11,8 +11,8 @@
         x:Class="ValheimServerGUI.App.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         x:Name="Root"
-        Width="550" Height="408"
-        MinWidth="550" MinHeight="408"
+        Width="980" Height="700"
+        MinWidth="720" MinHeight="520"
         Title="{Binding Title}">
 
     <Window.Resources>
@@ -151,7 +151,10 @@
 
         <!-- ===== Tabs ===== -->
         <TabControl Margin="8" x:Name="Tabs" SelectionChanged="OnTabChanged">
-            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_ServerControls}">
+            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Dashboard}" x:Name="DashboardTab">
+                <tabs:DashboardView />
+            </TabItem>
+            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_ServerControls}" x:Name="ServerControlsTab">
                 <tabs:ServerControlsView />
             </TabItem>
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_AdvancedControls}">
@@ -169,7 +172,7 @@
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_WorldMap}" x:Name="WorldMapTab">
                 <tabs:WorldMapView />
             </TabItem>
-            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Logs}">
+            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Logs}" x:Name="LogsTab">
                 <tabs:LogsView />
             </TabItem>
         </TabControl>

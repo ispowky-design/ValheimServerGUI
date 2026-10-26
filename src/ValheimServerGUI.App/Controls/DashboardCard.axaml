@@ -1,0 +1,56 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="using:ValheimServerGUI.App.Controls">
+
+    <!-- Dashboard panel: raised card surface with a muted title row (header content on the right), an optional
+         large value and caption, then the content. Colours come from the Card* tokens in Palette.axaml. -->
+    <ControlTheme x:Key="{x:Type c:DashboardCard}" TargetType="c:DashboardCard">
+        <Setter Property="Background" Value="{DynamicResource CardBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <Grid RowDefinitions="Auto,Auto,Auto,*">
+                        <Grid Grid.Row="0" Name="PART_Header" ColumnDefinitions="Auto,*,Auto" MinHeight="18">
+                            <c:IconImage Grid.Column="0" IconName="{TemplateBinding IconName}" VerticalAlignment="Center" Margin="0,0,6,0"
+                                         IsVisible="{TemplateBinding IconName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" FontSize="11" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <ContentPresenter Grid.Column="2" Content="{TemplateBinding HeaderContent}" VerticalAlignment="Center"
+                                              IsVisible="{TemplateBinding HeaderContent, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        </Grid>
+                        <TextBlock Grid.Row="1" Text="{TemplateBinding Value}" Margin="0,4,0,0"
+                                   FontSize="22" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"
+                                   IsVisible="{TemplateBinding Value, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        <TextBlock Grid.Row="2" Text="{TemplateBinding Caption}" FontSize="11" TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                   IsVisible="{TemplateBinding Caption, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                        <ContentPresenter Grid.Row="3" Name="PART_Content" Margin="0,8,0,0"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                          IsVisible="{TemplateBinding Content, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- "untitled": a bare panel, with no title row and the content flush with the top. -->
+        <Style Selector="^.untitled /template/ Grid#PART_Header">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^.untitled /template/ ContentPresenter#PART_Content">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

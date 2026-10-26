@@ -44,6 +44,10 @@ public partial class MainWindow : Window
         viewModel.InstallUpdateAndExit = App.Instance.InstallUpdateAndExit;
         viewModel.MenuActionRequested += a => _ = HandleMenuActionAsync(a);
         viewModel.RemoveProfileRequested += name => _ = HandleRemoveProfileAsync(name);
+        viewModel.Dashboard.NavigateRequested += OnDashboardNavigate;
+        // The dashboard is the first tab, so it is already selected before the view-model arrives.
+        Opened += (_, _) => RefreshActiveTabs();
+        Closed += (_, _) => viewModel.Dashboard.SetActive(false);
         viewModel.Players.ViewDetailsRequested += player => _ = ShowManagePlayersAsync(player.Key);
         viewModel.Players.ManagePlayersRequested += () => _ = ShowManagePlayersAsync();
         viewModel.Players.AddPlayerPrompt = options => new AddPlayerWindow(options).ShowDialog<AddPlayerResult?>(this);
@@ -235,14 +239,32 @@ public partial class MainWindow : Window
             await HandleMenuActionAsync(MenuAction.SetDirectories);
     }
 
-    // Tab-visible lazy refresh: the Details/Players 1s timers run only while their tab is shown.
-    private void OnTabChanged(object? sender, SelectionChangedEventArgs e)
+    // Tab-visible lazy refresh: the Details/Players 1s timers run only while their tab is shown. The dashboard
+    // summarises Details and Players, so their timers also run while it is shown.
+    private void OnTabChanged(object? sender, SelectionChangedEventArgs e) => RefreshActiveTabs();
+
+    private void RefreshActiveTabs()
     {
         if (ViewModel is null) return;
-        ViewModel.Details.SetActive(DetailsTab.IsSelected);
-        ViewModel.Players.SetActive(PlayersTab.IsSelected);
+        var dashboard = DashboardTab.IsSelected;
+        ViewModel.Details.SetActive(DetailsTab.IsSelected || dashboard);
+        ViewModel.Players.SetActive(PlayersTab.IsSelected || dashboard);
         ViewModel.Backups.SetActive(BackupsTab.IsSelected);
         ViewModel.WorldMap.SetActive(WorldMapTab.IsSelected);
+        ViewModel.Dashboard.SetActive(dashboard);
+    }
+
+    // Dashboard shortcuts open the matching tab.
+    private void OnDashboardNavigate(DashboardTarget target)
+    {
+        Tabs.SelectedItem = target switch
+        {
+            DashboardTarget.ServerControls => ServerControlsTab,
+            DashboardTarget.Players => PlayersTab,
+            DashboardTarget.Backups => BackupsTab,
+            DashboardTarget.WorldMap => WorldMapTab,
+            _ => LogsTab,
+        };
     }
 
     private Task<CloudImportChoice> ShowCloudImportAsync(string worldName)

@@ -349,6 +349,25 @@ namespace ValheimServerGUI.Game
             return statuses.Any(s => s == Status);
         }
 
+        /// <summary>
+        /// Reads the server process's CPU time and memory, or null when it isn't running (or exited mid-read). Only
+        /// the process this server started is read; a server started outside the app is never looked at.
+        /// </summary>
+        public ProcessUsageSample? SampleProcessUsage()
+        {
+            if (ProcessKey is not { } key || ProcessProvider.GetProcess(key) is not { } process) return null;
+
+            try
+            {
+                process.Refresh();
+                return new ProcessUsageSample(process.TotalProcessorTime, process.WorkingSet64, DateTimeOffset.Now);
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception or NotSupportedException)
+            {
+                return null;
+            }
+        }
+
         #endregion
 
         #region Event handlers

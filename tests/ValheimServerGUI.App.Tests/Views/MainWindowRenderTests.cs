@@ -46,7 +46,7 @@ public class MainWindowRenderTests
     private static Button FindNamedButton(Visual root, string name)
         => root.GetVisualDescendants().OfType<Button>().First(b => b.Name == name);
 
-    // Realizes + binds every tab's view (menus + all 7 tabs) by selecting each tab and forcing a
+    // Realizes + binds every tab's view (menus + all 8 tabs) by selecting each tab and forcing a
     // layout pass, which attaches and data-binds the selected tab's content. We deliberately do NOT
     // call CaptureRenderedFrame(): that forces a real Skia compositor commit which, under CPU load,
     // reads a thread-affine Brush off the wrong thread (Dispatcher.VerifyAccess throws) and dead-locks
@@ -60,7 +60,7 @@ public class MainWindowRenderTests
         Assert.True(window.IsVisible);
 
         var tabs = window.GetVisualDescendants().OfType<TabControl>().Single();
-        Assert.Equal(7, tabs.ItemCount);
+        Assert.Equal(8, tabs.ItemCount);
 
         for (var i = 0; i < tabs.ItemCount; i++)
         {
@@ -139,7 +139,8 @@ public class MainWindowRenderTests
         var window = new MainWindow(vm);
         window.Show();
 
-        // The Start/Stop buttons live on the (default-selected) Server Controls tab; realize it.
+        // The Start/Stop buttons live on the Server Controls tab (after the default-selected Dashboard); realize it.
+        window.GetVisualDescendants().OfType<TabControl>().Single().SelectedIndex = 1;
         ForceLayout(window);
 
         var start = FindNamedButton(window, "StartButton");
