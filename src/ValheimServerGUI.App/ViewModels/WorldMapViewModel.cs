@@ -37,7 +37,10 @@ public sealed class WorldMapSearchRow
     public string DistanceText { get; }
 }
 
-/// <summary>Where the map's discovered area comes from: a character's own map, or the zones the server generated.</summary>
+/// <summary>
+/// Where the map's discovered area comes from: everything combined, the world's cartography tables, a character's own
+/// map, or the zones the server generated.
+/// </summary>
 public sealed class WorldMapExplorationSource(string displayName, WorldMapExploration exploration)
 {
     public string DisplayName { get; } = displayName;
@@ -50,8 +53,9 @@ public sealed record WorldMapLegendRow(string Name, IBrush Brush);
 
 /// <summary>
 /// World Map tab: draws the selected world from its seed, with the bosses, traders, dungeons and camps its latest save
-/// holds. By default only the discovered area shows, as a character's own in-game map has it (or, with no character
-/// save at hand, the zones the server has generated); the rest is covered and its markers hidden. Any seed can also be
+/// holds. By default only the discovered area shows: everything shared on the world's cartography tables and every
+/// character map found on this computer, combined (or, with neither at hand, the zones the server has generated); the
+/// rest is covered and its markers hidden. Any seed can also be
 /// previewed (terrain only). Everything is read from the save files, read-only, so a running server is never
 /// disturbed; world generation runs off the UI thread.
 /// </summary>
@@ -64,6 +68,11 @@ public partial class WorldMapViewModel : ViewModelBase
     private readonly Func<string?> _worldName;
     private readonly Func<IEnumerable<DirectoryInfo>> _characterFolders;
     private long? _worldUid;
+
+    // What the discovered area is built from, for the world on show.
+    private SharedWorldMap? _sharedMap;
+    private readonly List<CharacterWorldMap> _characterMaps = new();
+    private WorldMapExploration? _generatedZones;
 
     private IReadOnlyList<WorldMapMarker> _allMarkers = Array.Empty<WorldMapMarker>();
     private bool _isActive;
@@ -95,7 +104,10 @@ public partial class WorldMapViewModel : ViewModelBase
     /// <summary>The discovered area the map shows when <see cref="ShowFog"/> is on; null when nothing is known.</summary>
     [ObservableProperty] private WorldMapExploration? _exploration;
 
-    /// <summary>The places the discovered area can come from: each character that has a map of this world, then the server's zones.</summary>
+    /// <summary>
+    /// The places the discovered area can come from: all of them combined (when there are several), the cartography
+    /// tables, each character that has a map of this world, then the server's zones.
+    /// </summary>
     public ObservableCollection<WorldMapExplorationSource> ExplorationSources { get; } = new();
 
     [ObservableProperty]
@@ -206,7 +218,7 @@ public partial class WorldMapViewModel : ViewModelBase
         WorldText = Strings.Map_World_None;
         SeedText = seedName;
         _worldUid = null;
-        SetExplorationSources(Array.Empty<WorldMapExplorationSource>());
+        SetExploration(null, Array.Empty<CharacterWorldMap>(), null);
         SetSaveData(null);
         await LoadTerrainAsync(version, ValheimHash.SeedFromName(seedName), worldGenVersion: 2);
         if (version == _loadVersion) StatusMessage = Strings.Map_Status_Preview;
@@ -218,7 +230,7 @@ public partial class WorldMapViewModel : ViewModelBase
         _isStale = false;
         var version = ++_loadVersion;
         _worldUid = null;
-        SetExplorationSources(Array.Empty<WorldMapExplorationSource>());
+        SetExploration(null, Array.Empty<CharacterWorldMap>(), null);
 
         var world = _worldName();
         var folder = string.IsNullOrWhiteSpace(world) ? null : _saveFolder();
@@ -240,23 +252,25 @@ public partial class WorldMapViewModel : ViewModelBase
         string? saveError = null;
         DateTime? savedAt = null;
         IReadOnlyList<CharacterWorldMap> characterMaps = Array.Empty<CharacterWorldMap>();
+        SharedWorldMap? sharedMap = null;
         var characterFolders = _characterFolders().ToList();
         IsBusy = true;
         try
         {
-            (metadata, save, saveError, savedAt, characterMaps) = await Task.Run(() =>
+            (metadata, save, saveError, savedAt, characterMaps, sharedMap) = await Task.Run(() =>
             {
                 var meta = WorldMetadataReader.ReadFromWorldFolder(worldFolder);
                 var maps = meta.Uid is { } uid ? ReadCharacterMaps(characterFolders, uid) : Array.Empty<CharacterWorldMap>();
+                var tables = ReadSharedMap(worldFolder, world);
                 try
                 {
                     var data = WorldMapSaveReader.ReadFromWorldFolder(worldFolder);
                     var time = WorldMetadataReader.FindLatestCompleteSave(worldFolder)?.LastWriteTime;
-                    return (meta, data, (string?)null, time, maps);
+                    return (meta, data, (string?)null, time, maps, tables);
                 }
                 catch (Exception e) when (e is IOException or InvalidDataException or UnauthorizedAccessException)
                 {
-                    return (meta, (WorldMapSaveData?)null, e.Message, (DateTime?)null, maps);
+                    return (meta, (WorldMapSaveData?)null, e.Message, (DateTime?)null, maps, tables);
                 }
             });
         }
@@ -286,16 +300,9 @@ public partial class WorldMapViewModel : ViewModelBase
 
         SeedText = metadata.SeedName;
         _worldUid = metadata.Uid;
-        var sources = characterMaps
-            .Select(m => new WorldMapExplorationSource(string.Format(Strings.Map_Exploration_Character, m.CharacterName), m.Exploration))
-            .ToList();
-        if (save is not null)
-        {
-            sources.Add(new WorldMapExplorationSource(Strings.Map_Exploration_ServerZones,
-                WorldMapExploration.FromGeneratedZones(save.GeneratedZones)));
-        }
         SetSaveData(save);
-        SetExplorationSources(sources);
+        SetExploration(sharedMap, characterMaps,
+            save is null ? null : WorldMapExploration.FromGeneratedZones(save.GeneratedZones));
         if (saveError is not null)
         {
             _logger.Warning("Could not read the locations of world {world} for the map: {message}", world, saveError);
@@ -334,11 +341,57 @@ public partial class WorldMapViewModel : ViewModelBase
         RefreshSearch();
     }
 
-    private void SetExplorationSources(IReadOnlyList<WorldMapExplorationSource> sources)
+    private void SetExploration(SharedWorldMap? sharedMap, IEnumerable<CharacterWorldMap> characterMaps, WorldMapExploration? generatedZones)
     {
+        _sharedMap = sharedMap;
+        _characterMaps.Clear();
+        _characterMaps.AddRange(characterMaps);
+        _generatedZones = generatedZones;
+        RebuildExplorationSources();
+    }
+
+    /// <summary>
+    /// Lists the sources, most complete first, and selects the first: what the tables and every character map have
+    /// discovered, combined (when there is more than one), then each of them, then the server's zones as a fallback.
+    /// </summary>
+    private void RebuildExplorationSources()
+    {
+        var parts = new List<WorldMapExplorationSource>();
+        if (_sharedMap is { } shared)
+        {
+            var name = shared.TableCount == 1
+                ? Strings.Map_Exploration_Tables_One
+                : string.Format(Strings.Map_Exploration_Tables_Other, shared.TableCount);
+            parts.Add(new WorldMapExplorationSource(name, shared.Exploration));
+        }
+        parts.AddRange(_characterMaps.Select(m =>
+            new WorldMapExplorationSource(string.Format(Strings.Map_Exploration_Character, m.CharacterName), m.Exploration)));
+
+        var sources = new List<WorldMapExplorationSource>();
+        if (parts.Count > 1 && WorldMapExploration.Combine(parts.Select(p => p.Exploration)) is { } all)
+        {
+            sources.Add(new WorldMapExplorationSource(Strings.Map_Exploration_All, all));
+        }
+        sources.AddRange(parts);
+        if (_generatedZones is { } zones) sources.Add(new WorldMapExplorationSource(Strings.Map_Exploration_ServerZones, zones));
+
         ExplorationSources.Clear();
         foreach (var source in sources) ExplorationSources.Add(source);
         SelectedExplorationSource = sources.FirstOrDefault();
+    }
+
+    /// <summary>Reads, off the UI thread, what the world's cartography tables hold; null when there are none.</summary>
+    private SharedWorldMap? ReadSharedMap(DirectoryInfo worldFolder, string world)
+    {
+        try
+        {
+            return SharedMapReader.ReadFromWorldFolder(worldFolder);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            _logger.Warning("Could not read the cartography tables of world {world}: {message}", world, e.Message);
+            return null;
+        }
     }
 
     /// <summary>Reads, off the UI thread, the map each character save in the given folders has of the world.</summary>
@@ -394,9 +447,9 @@ public partial class WorldMapViewModel : ViewModelBase
             return;
         }
 
-        var source = new WorldMapExplorationSource(string.Format(Strings.Map_Exploration_Character, map.CharacterName), map.Exploration);
-        ExplorationSources.Insert(0, source);
-        SelectedExplorationSource = source;
+        _characterMaps.RemoveAll(m => string.Equals(m.FilePath, map.FilePath, StringComparison.OrdinalIgnoreCase));
+        _characterMaps.Insert(0, map);
+        RebuildExplorationSources();
     }
 
     private void ApplyFilters()

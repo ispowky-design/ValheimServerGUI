@@ -610,13 +610,22 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
     <value>Source</value>
   </data>
   <data name="Map_Exploration_Help" xml:space="preserve">
-    <value>La carte à afficher : celle d'un personnage pour ce monde (ce qu'il a exploré et ce qui a été partagé sur une table de cartographie), ou les zones générées par le serveur, qui couvrent à peu près tous les endroits où un joueur est passé.</value>
+    <value>La carte découverte à afficher. « Tout » réunit les tables de cartographie du monde (la carte que les joueurs y partagent, gardée par le serveur dans la sauvegarde du monde) et toutes les cartes de personnages trouvées sur cet ordinateur. La carte personnelle d'un joueur n'est gardée que dans sa sauvegarde de personnage, sur son ordinateur : pour l'ajouter, choisis son fichier .fch ci-dessous. Sans aucune des deux, les zones générées par le serveur couvrent à peu près tous les endroits où un joueur est passé.</value>
   </data>
   <data name="Map_Exploration_None" xml:space="preserve">
     <value>(aucune zone découverte)</value>
   </data>
   <data name="Map_Exploration_Character" xml:space="preserve">
     <value>Personnage : {0}</value>
+  </data>
+  <data name="Map_Exploration_All" xml:space="preserve">
+    <value>Tout (tables et personnages)</value>
+  </data>
+  <data name="Map_Exploration_Tables_One" xml:space="preserve">
+    <value>Table de cartographie</value>
+  </data>
+  <data name="Map_Exploration_Tables_Other" xml:space="preserve">
+    <value>Tables de cartographie ({0})</value>
   </data>
   <data name="Map_Exploration_ServerZones" xml:space="preserve">
     <value>Zones générées par le serveur</value>

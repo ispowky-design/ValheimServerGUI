@@ -608,6 +608,15 @@
   <data name="Map_Exploration_Character" xml:space="preserve">
     <value>⟦Map_Exploration_Character {0}⟧</value>
   </data>
+  <data name="Map_Exploration_All" xml:space="preserve">
+    <value>⟦Map_Exploration_All⟧</value>
+  </data>
+  <data name="Map_Exploration_Tables_One" xml:space="preserve">
+    <value>⟦Map_Exploration_Tables_One⟧</value>
+  </data>
+  <data name="Map_Exploration_Tables_Other" xml:space="preserve">
+    <value>⟦Map_Exploration_Tables_Other {0}⟧</value>
+  </data>
   <data name="Map_Exploration_ServerZones" xml:space="preserve">
     <value>⟦Map_Exploration_ServerZones⟧</value>
   </data>
