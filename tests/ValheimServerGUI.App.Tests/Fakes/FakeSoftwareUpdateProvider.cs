@@ -16,7 +16,7 @@ internal sealed class FakeSoftwareUpdateProvider : ISoftwareUpdateProvider
     public event EventHandler? UpdateCheckStarted;
     public event EventHandler<SoftwareUpdateEventArgs>? UpdateCheckFinished;
 
-    public Task CheckForUpdatesAsync(bool isManualCheck)
+    public Task CheckForUpdatesAsync(bool isManualCheck, bool releasePublished = false)
     {
         CheckCount++;
         LastIsManual = isManualCheck;

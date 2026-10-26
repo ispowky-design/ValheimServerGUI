@@ -27,5 +27,17 @@ namespace ValheimServerGUI.Core.Tests.Fakes
 
         public Task<LatestReleaseResponse?> GetLatestReleaseAsync()
             => LatestReleaseError is { } e ? Task.FromException<LatestReleaseResponse?>(e) : Task.FromResult(LatestRelease);
+
+        /// <summary>What <see cref="GetLatestTagAsync"/> returns (null = no quick look available).</summary>
+        public string? LatestTag { get; set; }
+
+        /// <summary>How many quick looks were made.</summary>
+        public int TagLooks { get; private set; }
+
+        public Task<string?> GetLatestTagAsync()
+        {
+            TagLooks++;
+            return Task.FromResult(LatestTag);
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -191,10 +192,125 @@ namespace ValheimServerGUI.Core.Tests.Tools
             Assert.Null(result.ReleaseUrl);
         }
 
+        // ---- automatic checks: a cheap look at the latest tag, a full check only when it changed ----
+
+        private sealed class Clock
+        {
+            public DateTime Now = new(2026, 10, 26, 12, 0, 0, DateTimeKind.Utc);
+        }
+
+        private static (SoftwareUpdateProvider Provider, List<SoftwareUpdateEventArgs> Results, Clock Clock) NewAutomatic(
+            FakeRuneberryApiClient api, bool checkForUpdates = true)
+        {
+            var clock = new Clock();
+            var provider = new SoftwareUpdateProvider(api, new StubUserPreferencesProvider { CheckForUpdates = checkForUpdates })
+            {
+                UtcNow = () => clock.Now,
+            };
+            var results = new List<SoftwareUpdateEventArgs>();
+            provider.UpdateCheckFinished += (_, e) => results.Add(e);
+            return (provider, results, clock);
+        }
+
+        [Fact]
+        public async Task An_unchanged_tag_skips_the_full_check()
+        {
+            var api = new FakeRuneberryApiClient { LatestRelease = new() { Version = "v3.6.0", Url = "https://x" }, LatestTag = "v3.6.0" };
+            var (provider, results, clock) = NewAutomatic(api);
+
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+            clock.Now += CoreConstants.UpdateCheckInterval;
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+
+            Assert.Single(results);
+            Assert.Equal(1, api.TagLooks);
+        }
+
+        [Fact]
+        public async Task A_new_tag_runs_the_full_check()
+        {
+            var api = new FakeRuneberryApiClient { LatestRelease = new() { Version = "v3.6.0", Url = "https://x" }, LatestTag = "v3.6.0" };
+            var (provider, results, clock) = NewAutomatic(api);
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+
+            api.LatestTag = "v3.6.1";
+            api.LatestRelease = new() { Version = "v3.6.1", Url = "https://x" };
+            clock.Now += CoreConstants.UpdateCheckInterval;
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+
+            Assert.Equal("v3.6.1", results[^1].LatestVersion);
+        }
+
+        [Fact]
+        public async Task Automatic_checks_are_spaced_out()
+        {
+            var api = new FakeRuneberryApiClient { LatestRelease = new() { Version = "v3.6.0", Url = "https://x" }, LatestTag = "v3.6.1" };
+            var (provider, results, _) = NewAutomatic(api);
+
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+
+            Assert.Single(results);
+            Assert.Equal(0, api.TagLooks);
+        }
+
+        [Fact]
+        public async Task Without_a_quick_look_the_full_check_waits_for_its_hour()
+        {
+            var api = new FakeRuneberryApiClient { LatestRelease = new() { Version = "v3.6.0", Url = "https://x" } };
+            var (provider, results, clock) = NewAutomatic(api);
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+
+            clock.Now += CoreConstants.UpdateCheckInterval;
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+            Assert.Single(results);
+
+            clock.Now += CoreConstants.FullUpdateCheckInterval;
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+            Assert.Equal(2, results.Count);
+        }
+
+        [Fact]
+        public async Task An_announced_release_is_checked_at_once()
+        {
+            var api = new FakeRuneberryApiClient { LatestRelease = new() { Version = "v3.6.0", Url = "https://x" }, LatestTag = "v3.6.0" };
+            var (provider, results, _) = NewAutomatic(api);
+            await provider.CheckForUpdatesAsync(isManualCheck: false);
+
+            api.LatestRelease = new() { Version = "v3.6.1", Url = "https://x" };
+            await provider.CheckForUpdatesAsync(isManualCheck: false, releasePublished: true);
+
+            Assert.Equal(2, results.Count);
+            Assert.Equal("v3.6.1", results[^1].LatestVersion);
+            Assert.False(results[^1].IsManualCheck);
+        }
+
+        [Fact]
+        public async Task An_announced_release_respects_turned_off_update_checks()
+        {
+            var api = new FakeRuneberryApiClient { LatestRelease = new() { Version = "v3.6.1", Url = "https://x" } };
+            var (provider, results, _) = NewAutomatic(api, checkForUpdates: false);
+
+            await provider.CheckForUpdatesAsync(isManualCheck: false, releasePublished: true);
+
+            Assert.Empty(results);
+        }
+
+        [Theory]
+        [InlineData("https://github.com/o/r/releases/tag/v3.6.1", "v3.6.1")]
+        [InlineData("https://github.com/o/r/releases/tag/v3.6.1-beta", "v3.6.1-beta")]
+        [InlineData("https://github.com/o/r/releases", null)]
+        [InlineData("https://github.com/o/r/releases/latest", null)]
+        public void Reads_the_tag_from_the_latest_release_page_address(string url, string? expected)
+        {
+            Assert.Equal(expected, RuneberryApiClient.ParseTagFromReleaseUrl(new Uri(url)));
+        }
+
         private sealed class StubUserPreferencesProvider : IUserPreferencesProvider
         {
+            public bool CheckForUpdates { get; init; } = true;
             public event EventHandler<UserPreferences>? PreferencesSaved { add { } remove { } }
-            public UserPreferences LoadPreferences() => new();
+            public UserPreferences LoadPreferences() => new() { CheckForUpdates = CheckForUpdates };
             public void SavePreferences(UserPreferences preferences) { }
         }
     }

@@ -13,6 +13,8 @@ internal sealed class FakeRuneberryApiClient : IRuneberryApiClient
 
     public Task<LatestReleaseResponse?> GetLatestReleaseAsync() => Task.FromResult<LatestReleaseResponse?>(null);
 
+    public Task<string?> GetLatestTagAsync() => Task.FromResult<string?>(null);
+
     public Task SendCrashReportAsync(CrashReport report)
     {
         Reports.Add(report);

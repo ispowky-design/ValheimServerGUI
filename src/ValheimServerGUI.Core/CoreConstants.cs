@@ -44,8 +44,12 @@ namespace ValheimServerGUI
         /// </summary>
         public const string ValheimSteamAppId = "892970";
 
-        /// <summary>How often to check for application updates.</summary>
-        public static readonly TimeSpan UpdateCheckInterval = TimeSpan.FromHours(1);
+        /// <summary>How often the open app looks for a new release: a quick look at the latest tag, followed by a full
+        /// check only when the tag changed (see <see cref="Tools.IRuneberryApiClient.GetLatestTagAsync"/>).</summary>
+        public static readonly TimeSpan UpdateCheckInterval = TimeSpan.FromSeconds(30);
+
+        /// <summary>How often to run a full update check when no quick tag look is available (builds with an API key).</summary>
+        public static readonly TimeSpan FullUpdateCheckInterval = TimeSpan.FromHours(1);
 
         /// <summary>
         /// The app's backend base (crash reports, update check, external-IP check), served by the
@@ -61,6 +65,19 @@ namespace ValheimServerGUI
         /// check for updates here instead of <see cref="UrlRuneberryApi"/>, which refuses them.
         /// </summary>
         public const string UrlGitHubLatestRelease = "https://api.github.com/repos/ispowky-design/ValheimServerGUI/releases/latest";
+
+        /// <summary>
+        /// The fork's latest-release web page. It redirects to <c>…/releases/tag/&lt;tag&gt;</c>, so a request to it tells the
+        /// newest tag without using the GitHub API and its 60-requests-an-hour limit.
+        /// </summary>
+        /// <summary>
+        /// The ntfy.sh topic the release workflow posts to as soon as it publishes a release (.github/workflows/build.yml).
+        /// The open app listens to it and checks GitHub at once. Anyone can post to a public topic, so a message is only
+        /// a hint to check: what gets installed always comes from the GitHub release and its checksums.
+        /// </summary>
+        public const string UrlReleasePushTopic = "https://ntfy.sh/valheimservergui-ispowky-releases";
+
+        public const string UrlGitHubLatestReleasePage = "https://github.com/ispowky-design/ValheimServerGUI/releases/latest";
 
         /// <summary>
         /// Public IPv4-only lookup (<c>{"ip":…}</c>) used for the external IP by builds without a Runeberry API key.

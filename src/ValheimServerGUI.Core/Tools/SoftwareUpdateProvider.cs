@@ -16,7 +16,10 @@ namespace ValheimServerGUI.Tools
         /// window created after the startup check (which runs before the main window exists) show its result.</summary>
         SoftwareUpdateEventArgs? LastResult { get; }
 
-        Task CheckForUpdatesAsync(bool isManualCheck);
+        /// <param name="isManualCheck">The user asked (Help &gt; Check for Updates): always checks, and reports the result.</param>
+        /// <param name="releasePublished">A release was just announced (see <see cref="UpdateWatcher"/>): an automatic check
+        /// that skips the spacing and the quick tag look, so the new release is found at once.</param>
+        Task CheckForUpdatesAsync(bool isManualCheck, bool releasePublished = false);
     }
 
     public class SoftwareUpdateEventArgs
@@ -66,6 +69,10 @@ namespace ValheimServerGUI.Tools
 
         private readonly TimeSpan UpdateCheckInterval = CoreConstants.UpdateCheckInterval;
         private DateTime NextAutomaticUpdateCheck = DateTime.MinValue;
+        private DateTime NextFullUpdateCheck = DateTime.MinValue;
+
+        /// <summary>Test seam for the clock.</summary>
+        internal Func<DateTime> UtcNow { get; set; } = () => DateTime.UtcNow;
 
         public SoftwareUpdateProvider(IRuneberryApiClient apiClient, IUserPreferencesProvider userPrefsProvider)
         {
@@ -79,18 +86,26 @@ namespace ValheimServerGUI.Tools
 
         public SoftwareUpdateEventArgs? LastResult { get; private set; }
 
-        public async Task CheckForUpdatesAsync(bool isManualCheck)
+        public async Task CheckForUpdatesAsync(bool isManualCheck, bool releasePublished = false)
         {
-            if (!isManualCheck)
+            if (!isManualCheck && releasePublished)
+            {
+                if (!UserPrefsProvider.LoadPreferences().CheckForUpdates) return;
+            }
+            else if (!isManualCheck)
             {
                 // Only fulfill automated checks if enough time has passed since the last check
-                var now = DateTime.UtcNow;
+                var now = UtcNow();
                 if (now < NextAutomaticUpdateCheck) return;
                 NextAutomaticUpdateCheck = now + UpdateCheckInterval;
 
                 // Only fulfill automated checks if the user has update checks enabled
                 var prefs = UserPrefsProvider.LoadPreferences();
                 if (!prefs.CheckForUpdates) return;
+
+                // Once a full check has answered, later automatic checks first look at the latest tag, which is cheap,
+                // and only run the full check (and tell anyone) when a new release appeared.
+                if (LastResult is { IsSuccessful: true } && await IsLatestTagUnchangedAsync(now)) return;
             }
 
             UpdateCheckStarted?.Invoke(this, EventArgs.Empty);
@@ -112,7 +127,26 @@ namespace ValheimServerGUI.Tools
             }
 
             LastResult = eventArgs;
+            NextFullUpdateCheck = UtcNow() + CoreConstants.FullUpdateCheckInterval;
             UpdateCheckFinished?.Invoke(this, eventArgs);
+        }
+
+        // True when nothing new needs checking: the latest tag is still the one the last full check found, or (without
+        // a quick look) the last full check is recent. A failed quick look also waits for the next tick.
+        private async Task<bool> IsLatestTagUnchangedAsync(DateTime now)
+        {
+            string? tag;
+            try
+            {
+                tag = await ApiClient.GetLatestTagAsync();
+            }
+            catch
+            {
+                return true;
+            }
+
+            if (tag == null) return now < NextFullUpdateCheck;
+            return string.Equals(tag, LastResult!.LatestVersion, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

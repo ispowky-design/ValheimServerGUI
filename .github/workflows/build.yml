@@ -172,3 +172,8 @@ jobs:
           gh release create "v$VERSION" dist/* \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
             --title "ValheimServerGUI $VERSION" --notes-file packaging/release-notes.md "${prerelease[@]}"
+          # Tell open copies of the app at once (CoreConstants.UrlReleasePushTopic). Only a hint: the app then checks
+          # the GitHub release itself. A failure here never fails the release.
+          if [[ ${#prerelease[@]} -eq 0 ]]; then
+            curl -fsS --max-time 20 -d "v$VERSION" https://ntfy.sh/valheimservergui-ispowky-releases || true
+          fi
