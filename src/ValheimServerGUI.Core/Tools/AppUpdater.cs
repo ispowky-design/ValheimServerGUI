@@ -56,6 +56,10 @@ namespace ValheimServerGUI.Tools
 
         /// <summary>Deletes what the previous update left behind (the replaced portable exe, the downloads).</summary>
         void CleanUpPreviousUpdate();
+
+        /// <summary>True the first time it is asked for <paramref name="version"/>: the one window that tells the user
+        /// an update is ready. Every later ask, from any window, is false.</summary>
+        bool ClaimReadyNotice(string version);
     }
 
     public class AppUpdater : IAppUpdater
@@ -76,6 +80,7 @@ namespace ValheimServerGUI.Tools
         private readonly Action<ProcessStartInfo> _startProcess;
         private readonly object _lock = new();
         private (string Version, Task<string> Task)? _download;
+        private readonly HashSet<string> _noticed = new();
 
         public AppUpdater(IHttpClientProvider http, IApplicationLogger logger)
             : this(http, logger,
@@ -279,6 +284,11 @@ namespace ValheimServerGUI.Tools
                 default:
                     throw new InvalidOperationException("This copy of the app cannot install updates itself.");
             }
+        }
+
+        public bool ClaimReadyNotice(string version)
+        {
+            lock (_lock) return _noticed.Add(version);
         }
 
         public void CleanUpPreviousUpdate()

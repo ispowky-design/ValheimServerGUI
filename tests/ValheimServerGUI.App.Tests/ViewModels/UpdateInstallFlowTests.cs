@@ -84,6 +84,16 @@ public sealed class UpdateInstallFlowTests : IDisposable
     private static SoftwareUpdateEventArgs Release(bool manual = false)
         => new("9.9.9", ReleasePage, manual, new[] { new ReleaseAsset { Name = FileName, DownloadUrl = "https://x/" + FileName } });
 
+    // An automatic check finds the release; the "ready to install" notice it raises is declined, so a test starts
+    // from the status-bar offer.
+    private void Found()
+    {
+        _answer = false;
+        _updates.RaiseFinished(Release());
+        _asked.Clear();
+        _answer = true;
+    }
+
     private void StartServer(MainWindowViewModel vm)
         => vm.Server!.Start(new ValheimServerOptions
         {
@@ -96,7 +106,7 @@ public sealed class UpdateInstallFlowTests : IDisposable
     {
         var vm = Build();
 
-        _updates.RaiseFinished(Release());
+        Found();
 
         Assert.Equal(new[] { "9.9.9" }, _updater.Downloads);
         Assert.Equal(string.Format(Strings.Update_StatusReady, "9.9.9"), vm.UpdateStatusText);
@@ -108,7 +118,7 @@ public sealed class UpdateInstallFlowTests : IDisposable
     public async Task Clicking_the_ready_update_asks_then_installs_and_exits()
     {
         var vm = Build();
-        _updates.RaiseFinished(Release());
+        Found();
 
         await vm.UpdateLinkCommand.ExecuteAsync(null);
 
@@ -122,7 +132,7 @@ public sealed class UpdateInstallFlowTests : IDisposable
     public async Task Declining_installs_nothing()
     {
         var vm = Build();
-        _updates.RaiseFinished(Release());
+        Found();
         _answer = false;
 
         await vm.UpdateLinkCommand.ExecuteAsync(null);
@@ -134,7 +144,7 @@ public sealed class UpdateInstallFlowTests : IDisposable
     public async Task Never_installs_while_a_server_runs()
     {
         var vm = Build();
-        _updates.RaiseFinished(Release());
+        Found();
         StartServer(vm);
         Assert.NotEqual(ServerStatus.Stopped, vm.ServerStatus);
 
@@ -149,7 +159,7 @@ public sealed class UpdateInstallFlowTests : IDisposable
     public async Task A_server_started_during_the_download_stops_the_install()
     {
         var vm = Build();
-        _updates.RaiseFinished(Release());
+        Found();
         vm.UpdateDownloadPrompt = async dialog =>
         {
             StartServer(vm);
@@ -167,7 +177,7 @@ public sealed class UpdateInstallFlowTests : IDisposable
     {
         _updater.DownloadError = new Exception("no network");
         var vm = Build();
-        _updates.RaiseFinished(Release());
+        Found();
         Assert.Equal(string.Format(Strings.Update_StatusAvailable, "9.9.9"), vm.UpdateStatusText); // never "ready"
 
         string? message = null;
@@ -187,7 +197,7 @@ public sealed class UpdateInstallFlowTests : IDisposable
     public async Task An_install_that_cannot_start_is_reported_and_the_app_stays()
     {
         var vm = Build();
-        _updates.RaiseFinished(Release());
+        Found();
         vm.InstallUpdateAndExit = _ => throw new IOException("file in use");
 
         await vm.UpdateLinkCommand.ExecuteAsync(null);
@@ -213,12 +223,72 @@ public sealed class UpdateInstallFlowTests : IDisposable
     {
         _updater.InstallKind = AppInstallKind.Unsupported;
         var vm = Build();
-        _updates.RaiseFinished(Release());
+        Found();
 
         vm.UpdateLinkCommand.Execute(null);
 
         Assert.Empty(_updater.Downloads);
         Assert.Equal(string.Format(Strings.Update_StatusAvailable, "9.9.9"), vm.UpdateStatusText);
         Assert.Equal(new[] { ReleasePage }, _shell.Started.SelectMany(s => s.Args));
+    }
+
+    // ---- telling the user ----
+
+    [AvaloniaFact]
+    public void A_ready_update_is_announced_once_and_yes_installs_it()
+    {
+        Build();
+
+        _updates.RaiseFinished(Release());
+
+        Assert.Equal(new[] { string.Format(Strings.Update_InstallReadyPrompt, "9.9.9") }, _asked);
+        Assert.Equal(new[] { "/downloads/" + FileName }, _installed);
+    }
+
+    [AvaloniaFact]
+    public void A_later_check_or_another_window_does_not_announce_it_again()
+    {
+        Build();
+        Found();
+        Build();
+
+        _updates.RaiseFinished(Release());
+
+        Assert.Empty(_asked);
+        Assert.Empty(_installed);
+    }
+
+    [AvaloniaFact]
+    public async Task A_manual_check_asks_once_not_twice()
+    {
+        Build();
+
+        _updates.RaiseFinished(Release(manual: true));
+        await Task.Yield();
+
+        Assert.Single(_asked);
+    }
+
+    [AvaloniaFact]
+    public void A_failed_periodic_check_keeps_the_ready_update()
+    {
+        var vm = Build();
+        Found();
+
+        _updates.RaiseFinished(new SoftwareUpdateEventArgs(new Exception("offline"), isManualCheck: false));
+
+        Assert.Equal(string.Format(Strings.Update_StatusReady, "9.9.9"), vm.UpdateStatusText);
+        Assert.True(vm.UpdateIsLink);
+    }
+
+    [AvaloniaFact]
+    public async Task A_periodic_check_starting_keeps_showing_the_ready_update()
+    {
+        var vm = Build();
+        Found();
+
+        await _updates.CheckForUpdatesAsync(isManualCheck: false);
+
+        Assert.Equal(string.Format(Strings.Update_StatusReady, "9.9.9"), vm.UpdateStatusText);
     }
 }

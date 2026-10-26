@@ -45,7 +45,7 @@ namespace ValheimServerGUI
         public const string ValheimSteamAppId = "892970";
 
         /// <summary>How often to check for application updates.</summary>
-        public static readonly TimeSpan UpdateCheckInterval = TimeSpan.FromDays(1);
+        public static readonly TimeSpan UpdateCheckInterval = TimeSpan.FromHours(1);
 
         /// <summary>
         /// The app's backend base (crash reports, update check, external-IP check), served by the

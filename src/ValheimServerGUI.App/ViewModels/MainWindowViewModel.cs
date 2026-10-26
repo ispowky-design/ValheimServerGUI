@@ -1185,6 +1185,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private void OnUpdateCheckStarted(object? sender, EventArgs e)
         => RunOnUi(() =>
         {
+            // A periodic re-check keeps showing the last answer (and an update ready to install) until it has a new one.
+            if (UpdateStatus is UpdateCheckStatus.Available or UpdateCheckStatus.UpToDate) return;
             UpdateStatusText = Strings.Update_Checking;
             UpdateStatus = UpdateCheckStatus.Checking;
             UpdateLinkTarget = null;
@@ -1193,6 +1195,13 @@ public partial class MainWindowViewModel : ViewModelBase
     private void OnUpdateCheckFinished(object? sender, SoftwareUpdateEventArgs e)
         => RunOnUi(() =>
         {
+            // A periodic check that fails (offline for a while) does not hide what an earlier check found.
+            if (!e.IsSuccessful && !e.IsManualCheck && UpdateStatus is UpdateCheckStatus.Available or UpdateCheckStatus.UpToDate)
+            {
+                _logger.Warning("Update check failed: {message}", e.Exception?.GetPrimaryException().Message);
+                return;
+            }
+
             ApplyUpdateResult(e);
             if (e.IsManualCheck) _ = PromptManualUpdateResultAsync(e);
         });
@@ -1265,6 +1274,13 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private async Task OfferReadyUpdateAsync(SoftwareUpdateEventArgs update)
+    {
+        if (UpdateResultPrompt is null || !await UpdateResultPrompt(string.Format(Strings.Update_InstallReadyPrompt, update.LatestVersion)))
+            return;
+        await InstallUpdateAsync(update, confirmed: true);
+    }
+
     // A newer release this copy can install is fetched in the background as soon as a check finds it, so installing
     // it later is one click. Every window asks; the updater runs one download per version.
     private async Task DownloadUpdateInBackgroundAsync(SoftwareUpdateEventArgs update)
@@ -1274,8 +1290,12 @@ public partial class MainWindowViewModel : ViewModelBase
             await _appUpdater!.DownloadAsync(update);
             RunOnUi(() =>
             {
-                if (_installableUpdate?.LatestVersion == update.LatestVersion && UpdateStatus == UpdateCheckStatus.Available)
-                    UpdateStatusText = string.Format(Strings.Update_StatusReady, update.LatestVersion);
+                if (_installableUpdate?.LatestVersion != update.LatestVersion || UpdateStatus != UpdateCheckStatus.Available) return;
+                UpdateStatusText = string.Format(Strings.Update_StatusReady, update.LatestVersion);
+
+                // Say so once per version, in one window (a manual check has already asked).
+                if (!update.IsManualCheck && _appUpdater.ClaimReadyNotice(update.LatestVersion!))
+                    _ = OfferReadyUpdateAsync(update);
             });
         }
         catch (Exception ex)

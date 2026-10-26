@@ -264,6 +264,16 @@ namespace ValheimServerGUI.Core.Tests.Tools
             Assert.Throws<InvalidOperationException>(() => NewUpdater(onWindows: false).LaunchInstall("x"));
         }
 
+        [Fact]
+        public void Only_the_first_ask_announces_a_version()
+        {
+            var updater = NewUpdater();
+
+            Assert.True(updater.ClaimReadyNotice("v3.4.0"));
+            Assert.False(updater.ClaimReadyNotice("v3.4.0"));
+            Assert.True(updater.ClaimReadyNotice("v3.5.0"));
+        }
+
         // ---- restart arguments ----
 
         [Fact]
