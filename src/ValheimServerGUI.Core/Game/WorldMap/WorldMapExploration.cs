@@ -83,8 +83,11 @@ namespace ValheimServerGUI.Game.WorldMap
             return new WorldMapExploration(size, WorldMapSaveData.ZoneSize, -extent, extent, explored);
         }
 
+        /// <summary>Metres per minimap pixel (<c>Minimap.m_pixelSize</c>).</summary>
+        public const float MinimapPixelSize = 12f;
+
         /// <summary>
-        /// The game's minimap grid (a character's map, or a cartography table's): 12 m per pixel, centred on the world
+        /// The game's minimap grid (a cartography table's map): 12 m per pixel, centred on the world
         /// origin, with row 0 at the south. A pixel is explored when any of the layers has it.
         /// </summary>
         public static WorldMapExploration FromMinimap(int textureSize, params byte[][] layers)
@@ -108,7 +111,7 @@ namespace ValheimServerGUI.Game.WorldMap
 
             // Minimap.WorldToPixel rounds x / 12 + size / 2, so pixel col covers (col - size/2) * 12 ± 6 m.
             var half = size / 2;
-            var pixel = CharacterMapReader.PixelSize;
+            var pixel = MinimapPixelSize;
             return new WorldMapExploration(size, pixel, (-half - 0.5) * pixel, (size - 1 - half + 0.5) * pixel, grid);
         }
 

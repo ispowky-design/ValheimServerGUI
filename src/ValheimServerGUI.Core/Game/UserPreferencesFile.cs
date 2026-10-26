@@ -62,6 +62,12 @@ namespace ValheimServerGUI.Game
         [JsonProperty("forceStopOfferSeconds")]
         public int? ForceStopOfferSeconds { get; set; }
 
+        [JsonProperty("publishMapOnWeb")]
+        public bool? PublishMapOnWeb { get; set; }
+
+        [JsonProperty("mapWebPort")]
+        public int? MapWebPort { get; set; }
+
         [JsonProperty("servers")]
         public List<ServerPreferencesFile>? Servers { get; set; }
 

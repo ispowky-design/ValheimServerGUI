@@ -605,12 +605,6 @@
   <data name="Map_Exploration_None" xml:space="preserve">
     <value>⟦Map_Exploration_None⟧</value>
   </data>
-  <data name="Map_Exploration_Character" xml:space="preserve">
-    <value>⟦Map_Exploration_Character {0}⟧</value>
-  </data>
-  <data name="Map_Exploration_All" xml:space="preserve">
-    <value>⟦Map_Exploration_All⟧</value>
-  </data>
   <data name="Map_Exploration_Tables_One" xml:space="preserve">
     <value>⟦Map_Exploration_Tables_One⟧</value>
   </data>
@@ -620,17 +614,32 @@
   <data name="Map_Exploration_ServerZones" xml:space="preserve">
     <value>⟦Map_Exploration_ServerZones⟧</value>
   </data>
-  <data name="Map_CharacterFile_Label" xml:space="preserve">
-    <value>⟦Map_CharacterFile_Label⟧</value>
+  <data name="Map_Publish_Header" xml:space="preserve">
+    <value>⟦Map_Publish_Header⟧</value>
   </data>
-  <data name="Map_CharacterFile_Help" xml:space="preserve">
-    <value>⟦Map_CharacterFile_Help⟧</value>
+  <data name="Map_Publish_Enabled" xml:space="preserve">
+    <value>⟦Map_Publish_Enabled⟧</value>
   </data>
-  <data name="Map_Status_CharacterFailed" xml:space="preserve">
-    <value>⟦Map_Status_CharacterFailed {0}⟧</value>
+  <data name="Map_Publish_Enabled_Help" xml:space="preserve">
+    <value>⟦Map_Publish_Enabled_Help⟧</value>
   </data>
-  <data name="Map_Status_CharacterNoWorld" xml:space="preserve">
-    <value>⟦Map_Status_CharacterNoWorld⟧</value>
+  <data name="Map_Publish_Port_Label" xml:space="preserve">
+    <value>⟦Map_Publish_Port_Label⟧</value>
+  </data>
+  <data name="Map_Publish_Port_Help" xml:space="preserve">
+    <value>⟦Map_Publish_Port_Help⟧</value>
+  </data>
+  <data name="Map_Publish_Link_Label" xml:space="preserve">
+    <value>⟦Map_Publish_Link_Label⟧</value>
+  </data>
+  <data name="Map_Publish_Link_Help" xml:space="preserve">
+    <value>⟦Map_Publish_Link_Help⟧</value>
+  </data>
+  <data name="Map_Publish_LocalLink_Label" xml:space="preserve">
+    <value>⟦Map_Publish_LocalLink_Label⟧</value>
+  </data>
+  <data name="Map_Status_PublishFailed" xml:space="preserve">
+    <value>⟦Map_Status_PublishFailed {0} {1}⟧</value>
   </data>
   <data name="Map_Layers_Header" xml:space="preserve">
     <value>⟦Map_Layers_Header⟧</value>
@@ -1845,5 +1854,21 @@
   <!-- Crash report -->
   <data name="CrashReport_Prompt" xml:space="preserve">
     <value>⟦CrashReport_Prompt {0}⟧</value>
+  </data>
+  <!-- World map web page -->
+  <data name="MapWeb_Title" xml:space="preserve">
+    <value>⟦MapWeb_Title {0}⟧</value>
+  </data>
+  <data name="MapWeb_Updated" xml:space="preserve">
+    <value>⟦MapWeb_Updated {0:g}⟧</value>
+  </data>
+  <data name="MapWeb_Reset" xml:space="preserve">
+    <value>⟦MapWeb_Reset⟧</value>
+  </data>
+  <data name="MapWeb_Hint" xml:space="preserve">
+    <value>⟦MapWeb_Hint⟧</value>
+  </data>
+  <data name="MapWeb_NotReady" xml:space="preserve">
+    <value>⟦MapWeb_NotReady⟧</value>
   </data>
 </root>

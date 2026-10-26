@@ -49,8 +49,29 @@
                                              PlaceholderText="{x:Static loc:Strings.Map_Exploration_None}"
                                              ItemsSource="{Binding WorldMap.ExplorationSources}" Value="{Binding WorldMap.SelectedExplorationSource}"
                                              IsEnabled="{Binding WorldMap.ShowFog}" />
-                        <c:FilenameFormField LabelText="{x:Static loc:Strings.Map_CharacterFile_Label}" HelpText="{x:Static loc:Strings.Map_CharacterFile_Help}"
-                                             SelectMode="File" Value="{Binding WorldMap.CharacterFile}" />
+                    </StackPanel>
+                </c:GroupBox>
+
+                <c:GroupBox Header="{x:Static loc:Strings.Map_Publish_Header}" IsVisible="{Binding WorldMap.CanPublish}">
+                    <StackPanel Spacing="2">
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Publish_Enabled}" HelpText="{x:Static loc:Strings.Map_Publish_Enabled_Help}"
+                                             Value="{Binding WorldMap.IsPublishing}" />
+                        <c:NumericFormField LabelText="{x:Static loc:Strings.Map_Publish_Port_Label}" HelpText="{x:Static loc:Strings.Map_Publish_Port_Help}"
+                                            Minimum="1" Maximum="65535" Value="{Binding WorldMap.PublishPort}" />
+                        <StackPanel IsVisible="{Binding WorldMap.PublicLink, Converter={x:Static ObjectConverters.IsNotNull}}" Spacing="2">
+                            <c:LabelField LabelWidth="Auto" LabelText="{x:Static loc:Strings.Map_Publish_Link_Label}" HelpText="{x:Static loc:Strings.Map_Publish_Link_Help}" />
+                            <Grid ColumnDefinitions="*,Auto">
+                                <c:HyperlinkLabel Text="{Binding WorldMap.PublicLink}" Command="{Binding WorldMap.OpenPublicLinkCommand}" />
+                                <c:CopyButton Grid.Column="1" Text="{Binding WorldMap.PublicLink}" />
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel IsVisible="{Binding WorldMap.LocalLink, Converter={x:Static ObjectConverters.IsNotNull}}" Spacing="2">
+                            <c:LabelField LabelWidth="Auto" LabelText="{x:Static loc:Strings.Map_Publish_LocalLink_Label}" />
+                            <Grid ColumnDefinitions="*,Auto">
+                                <c:HyperlinkLabel Text="{Binding WorldMap.LocalLink}" Command="{Binding WorldMap.OpenLocalLinkCommand}" />
+                                <c:CopyButton Grid.Column="1" Text="{Binding WorldMap.LocalLink}" />
+                            </Grid>
+                        </StackPanel>
                     </StackPanel>
                 </c:GroupBox>
 

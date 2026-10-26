@@ -27,13 +27,11 @@ public sealed class WorldMapViewModelTests : IDisposable
 
     private readonly DirectoryInfo _saveFolder;
     private string? _world = "Viking";
-    private readonly DirectoryInfo _gameFolder;
 
     public WorldMapViewModelTests()
     {
         _saveFolder = new DirectoryInfo(Path.Join(Path.GetTempPath(), "vsg_map_vm_" + Guid.NewGuid().ToString("N")));
         Directory.CreateDirectory(Path.Join(_saveFolder.FullName, "worlds_local"));
-        _gameFolder = new DirectoryInfo(Path.Join(_saveFolder.FullName, "game"));
     }
 
     public void Dispose()
@@ -42,15 +40,11 @@ public sealed class WorldMapViewModelTests : IDisposable
     }
 
     private WorldMapViewModel Build()
-        => new(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world, () => new[] { _gameFolder });
+        => new(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world);
 
-    // The world written by WorldMapSaves has uid 1.
-    private void WriteCharacter(string name, params (float X, float Z)[] explored)
-    {
-        var folder = Directory.CreateDirectory(Path.Join(_gameFolder.FullName, "characters_local"));
-        var pixels = explored.Select(p => ((int)Math.Round(p.X / 12 + 1024), (int)Math.Round(p.Z / 12 + 1024)));
-        File.WriteAllBytes(Path.Join(folder.FullName, name + ".fch"), CharacterSaveFixtures.Build(name, new[] { (1L, pixels) }));
-    }
+    private void WriteTable(params (float X, float Z)[] shared)
+        => File.WriteAllBytes(Path.Join(_saveFolder.GetLocalWorldFolder("Viking").FullName, "20_20__0_1.chunk"),
+            SharedMapFixtures.BuildChunk(new[] { shared.Select(p => SharedMapFixtures.Pixel(p.X, p.Z)) }));
 
     private void WriteWorld()
         => WorldMapSaves.Write(_saveFolder.GetLocalWorldFolder("Viking"), Seed,
@@ -173,68 +167,89 @@ public sealed class WorldMapViewModelTests : IDisposable
     }
 
     [AvaloniaFact]
-    public async Task Load_PrefersTheCharactersOwnMap()
+    public async Task Load_ShowsTheCartographyTablesMap()
     {
         WriteWorld();
-        WriteCharacter("Ragnar", (300f, 400f), (5f, -3f));
+        WriteTable((300f, 400f), (5f, -3f));
         var vm = Build();
 
         await vm.LoadSelectedWorldAsync();
 
-        Assert.Equal(
-            new[] { string.Format(Strings.Map_Exploration_Character, "Ragnar"), Strings.Map_Exploration_ServerZones },
+        Assert.Equal(new[] { Strings.Map_Exploration_Tables_One, Strings.Map_Exploration_ServerZones },
             vm.ExplorationSources.Select(s => s.DisplayName));
         Assert.Same(vm.ExplorationSources[0].Exploration, vm.Exploration);
-        // Eikthyr's altar is discovered on Ragnar's map; the Elder, Haldor and the rest are not.
+        // Eikthyr's altar is on the table's map; the Elder, Haldor and the rest are not.
         Assert.Equal(new[] { WorldLocationKind.Spawn, WorldLocationKind.Boss }, vm.Markers.Select(m => m.Kind));
         Assert.Equal(new[] { Strings.MapLocation_StartTemple, Strings.MapLocation_Eikthyr }, vm.SearchResults.Select(r => r.Name));
 
         vm.SelectedExplorationSource = vm.ExplorationSources[1];
         Assert.Equal(new[] { WorldLocationKind.Spawn }, vm.Markers.Select(m => m.Kind));
+
+        // A reload keeps the server zones selected.
+        await vm.LoadSelectedWorldAsync();
+        Assert.True(vm.SelectedExplorationSource!.IsGeneratedZones);
     }
 
     [AvaloniaFact]
-    public async Task Load_CombinesTheCartographyTablesAndEveryCharacter()
+    public async Task Publishing_ServesTheMapAsShown()
     {
         WriteWorld();
-        WriteCharacter("Ragnar", (300f, 400f), (5f, -3f));
-        File.WriteAllBytes(Path.Join(_saveFolder.GetLocalWorldFolder("Viking").FullName, "20_20__0_1.chunk"),
-            SharedMapFixtures.BuildChunk(new[] { new[] { SharedMapFixtures.Pixel(2000f, 0f) } }));
-        var vm = Build();
+        WriteTable((300f, 400f), (5f, -3f));
+        using var server = new WorldMapWebServer();
+        var prefs = new FakeUserPreferencesProvider();
+        var port = FreePort();
+        var vm = new WorldMapViewModel(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world,
+            server, prefs, () => "203.0.113.7");
+        vm.PublishPort = port;
 
-        await vm.LoadSelectedWorldAsync();
+        vm.IsPublishing = true;
+        for (var i = 0; i < 400 && (vm.Renderer is null || vm.IsBusy || !server.Respond("GET /map.png HTTP/1.1").AsSpan(0, 12).SequenceEqual("HTTP/1.1 200"u8)); i++)
+        {
+            await Task.Delay(25);
+        }
 
-        Assert.Equal(
-            new[]
-            {
-                Strings.Map_Exploration_All, Strings.Map_Exploration_Tables_One,
-                string.Format(Strings.Map_Exploration_Character, "Ragnar"), Strings.Map_Exploration_ServerZones,
-            },
-            vm.ExplorationSources.Select(s => s.DisplayName));
-        // Eikthyr's altar is on Ragnar's map and Haldor on the table; the Elder is on neither.
-        Assert.Equal(
-            new[] { WorldLocationKind.Spawn, WorldLocationKind.Boss, WorldLocationKind.Trader },
-            vm.Markers.Select(m => m.Kind).OrderBy(k => k));
+        Assert.True(server.IsRunning, vm.StatusMessage);
+        Assert.Equal($"http://203.0.113.7:{port}/", vm.PublicLink);
+        Assert.Equal($"http://localhost:{port}/", vm.LocalLink);
+        var page = System.Text.Encoding.UTF8.GetString(server.Respond("GET / HTTP/1.1"));
+        Assert.Contains(System.Net.WebUtility.HtmlEncode(string.Format(Strings.MapWeb_Title, "Viking")), page);
+        // Place names are in the page's script data, JSON-encoded.
+        static string Json(string text) => System.Text.Json.JsonSerializer.Serialize(text);
+        Assert.Contains(Json(Strings.MapLocation_Eikthyr), page);
+        Assert.DoesNotContain(Json(Strings.MapLocation_TheElder), page);
+        Assert.True(prefs.LoadPreferences().PublishMapOnWeb);
+        Assert.Equal(port, prefs.LoadPreferences().MapWebPort);
 
-        vm.SelectedExplorationSource = vm.ExplorationSources[1];
-        Assert.Equal(new[] { WorldLocationKind.Trader }, vm.Markers.Select(m => m.Kind));
+        vm.IsPublishing = false;
+        Assert.False(server.IsRunning);
+        Assert.Null(vm.PublicLink);
+        Assert.False(prefs.LoadPreferences().PublishMapOnWeb);
     }
 
     [AvaloniaFact]
-    public async Task CharacterFile_AddsThatCharactersMap()
+    public void Publishing_ReportsAPortInUse()
     {
-        WriteWorld();
-        WriteCharacter("Lagertha", (2000f, 0f));
-        var file = Path.Join(_gameFolder.FullName, "characters_local", "Lagertha.fch");
-        var moved = Path.Join(_saveFolder.FullName, "Lagertha.fch");
-        File.Move(file, moved);
-        var vm = Build();
-        await vm.LoadSelectedWorldAsync();
+        using var blocker = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Any, 0);
+        blocker.Start();
+        var port = ((System.Net.IPEndPoint)blocker.LocalEndpoint).Port;
+        using var server = new WorldMapWebServer();
+        var vm = new WorldMapViewModel(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world, server);
+        vm.PublishPort = port;
 
-        vm.CharacterFile = moved;
-        for (var i = 0; i < 100 && vm.ExplorationSources.Count < 2; i++) await Task.Delay(20);
+        vm.IsPublishing = true;
 
-        Assert.Equal(string.Format(Strings.Map_Exploration_Character, "Lagertha"), vm.SelectedExplorationSource!.DisplayName);
-        Assert.Contains(vm.Markers, m => m.Kind == WorldLocationKind.Trader);
+        Assert.False(vm.IsPublishing);
+        Assert.False(server.IsRunning);
+        var expected = string.Format(Strings.Map_Status_PublishFailed, port, "\0");
+        Assert.StartsWith(expected[..expected.IndexOf('\0')], vm.StatusMessage);
+    }
+
+    private static int FreePort()
+    {
+        var probe = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+        probe.Start();
+        var port = ((System.Net.IPEndPoint)probe.LocalEndpoint).Port;
+        probe.Stop();
+        return port;
     }
 }
