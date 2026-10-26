@@ -132,7 +132,8 @@ public partial class MainWindowViewModel : ViewModelBase
             IsSelectedWorldInUse);
         WorldMap = new WorldMapViewModel(appLogger, ResolveSaveDataDirectory,
             () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
-            WorldMapWebServer.Shared, userPrefs, () => _ipProvider.ExternalIpAddress, shell.OpenWebAddress);
+            WorldMapWebServer.Shared, userPrefs, () => _ipProvider.ExternalIpAddress, shell.OpenWebAddress,
+            () => OverrideOr(BuildPreferences().ServerExePath, _userPrefs.LoadPreferences().ServerExePath));
         Dashboard = new DashboardViewModel(Players, Backups);
         Form.PropertyChanged += (_, e) =>
         {

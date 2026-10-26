@@ -732,6 +732,57 @@
   <data name="Map_Status_PublishFailed" xml:space="preserve">
     <value>⟦Map_Status_PublishFailed {0} {1}⟧</value>
   </data>
+  <data name="Map_Players_Header" xml:space="preserve">
+    <value>⟦Map_Players_Header⟧</value>
+  </data>
+  <data name="Map_Players_Show" xml:space="preserve">
+    <value>⟦Map_Players_Show⟧</value>
+  </data>
+  <data name="Map_Players_Show_Help" xml:space="preserve">
+    <value>⟦Map_Players_Show_Help⟧</value>
+  </data>
+  <data name="Map_Players_Install" xml:space="preserve">
+    <value>⟦Map_Players_Install⟧</value>
+  </data>
+  <data name="Map_Players_Install_Tip" xml:space="preserve">
+    <value>⟦Map_Players_Install_Tip⟧</value>
+  </data>
+  <data name="Map_Players_Column_Name" xml:space="preserve">
+    <value>⟦Map_Players_Column_Name⟧</value>
+  </data>
+  <data name="Map_Players_Status_NoServer" xml:space="preserve">
+    <value>⟦Map_Players_Status_NoServer⟧</value>
+  </data>
+  <data name="Map_Players_Status_NoBepInEx" xml:space="preserve">
+    <value>⟦Map_Players_Status_NoBepInEx⟧</value>
+  </data>
+  <data name="Map_Players_Status_NotInstalled" xml:space="preserve">
+    <value>⟦Map_Players_Status_NotInstalled⟧</value>
+  </data>
+  <data name="Map_Players_Status_Outdated" xml:space="preserve">
+    <value>⟦Map_Players_Status_Outdated⟧</value>
+  </data>
+  <data name="Map_Players_Status_Installed" xml:space="preserve">
+    <value>⟦Map_Players_Status_Installed⟧</value>
+  </data>
+  <data name="Map_Players_Status_Waiting" xml:space="preserve">
+    <value>⟦Map_Players_Status_Waiting⟧</value>
+  </data>
+  <data name="Map_Players_Status_None" xml:space="preserve">
+    <value>⟦Map_Players_Status_None⟧</value>
+  </data>
+  <data name="Map_Players_Status_One" xml:space="preserve">
+    <value>⟦Map_Players_Status_One⟧</value>
+  </data>
+  <data name="Map_Players_Status_Other" xml:space="preserve">
+    <value>⟦Map_Players_Status_Other {0}⟧</value>
+  </data>
+  <data name="Map_Players_Status_ReadFailed" xml:space="preserve">
+    <value>⟦Map_Players_Status_ReadFailed {0}⟧</value>
+  </data>
+  <data name="Map_Players_InstallFailed" xml:space="preserve">
+    <value>⟦Map_Players_InstallFailed {0}⟧</value>
+  </data>
   <data name="Map_Layers_Header" xml:space="preserve">
     <value>⟦Map_Layers_Header⟧</value>
   </data>
@@ -1997,5 +2048,8 @@
   </data>
   <data name="MapWeb_NotReady" xml:space="preserve">
     <value>⟦MapWeb_NotReady⟧</value>
+  </data>
+  <data name="MapWeb_Players" xml:space="preserve">
+    <value>⟦MapWeb_Players⟧</value>
   </data>
 </root>

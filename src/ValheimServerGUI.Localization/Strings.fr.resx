@@ -742,6 +742,57 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
   <data name="Map_Status_PublishFailed" xml:space="preserve">
     <value>Impossible de publier la carte sur le port {0} : {1}</value>
   </data>
+  <data name="Map_Players_Header" xml:space="preserve">
+    <value>Joueurs connectés</value>
+  </data>
+  <data name="Map_Players_Show" xml:space="preserve">
+    <value>Afficher les joueurs connectés</value>
+  </data>
+  <data name="Map_Players_Show_Help" xml:space="preserve">
+    <value>Montre où sont les joueurs connectés au serveur, mis à jour toutes les quelques secondes. Un serveur Valheim de base ne partage pas la position des joueurs : il faut le petit plugin de l'appli sur le serveur, qui a besoin de BepInEx. Ici tous les joueurs connectés s'affichent ; la page web ne montre que ceux qui ont choisi d'être visibles sur la carte en jeu.</value>
+  </data>
+  <data name="Map_Players_Install" xml:space="preserve">
+    <value>Installer le plugin sur le serveur</value>
+  </data>
+  <data name="Map_Players_Install_Tip" xml:space="preserve">
+    <value>Copie le plugin dans le dossier BepInEx\plugins du serveur. Il démarre au prochain lancement du serveur.</value>
+  </data>
+  <data name="Map_Players_Column_Name" xml:space="preserve">
+    <value>Joueur</value>
+  </data>
+  <data name="Map_Players_Status_NoServer" xml:space="preserve">
+    <value>Indique d'abord où le serveur est installé (Fichier &gt; Dossiers).</value>
+  </data>
+  <data name="Map_Players_Status_NoBepInEx" xml:space="preserve">
+    <value>Le serveur n'a pas BepInEx. Installe BepInEx (BepInExPack pour Valheim) dans le dossier du serveur, puis installe le plugin ici.</value>
+  </data>
+  <data name="Map_Players_Status_NotInstalled" xml:space="preserve">
+    <value>Le plugin n'est pas installé sur le serveur.</value>
+  </data>
+  <data name="Map_Players_Status_Outdated" xml:space="preserve">
+    <value>Un plugin plus récent est disponible : réinstalle-le.</value>
+  </data>
+  <data name="Map_Players_Status_Installed" xml:space="preserve">
+    <value>Plugin installé. Redémarre le serveur pour le lancer.</value>
+  </data>
+  <data name="Map_Players_Status_Waiting" xml:space="preserve">
+    <value>En attente du serveur : les joueurs s'affichent quand il tourne avec le plugin.</value>
+  </data>
+  <data name="Map_Players_Status_None" xml:space="preserve">
+    <value>Aucun joueur connecté.</value>
+  </data>
+  <data name="Map_Players_Status_One" xml:space="preserve">
+    <value>1 joueur connecté.</value>
+  </data>
+  <data name="Map_Players_Status_Other" xml:space="preserve">
+    <value>{0} joueurs connectés.</value>
+  </data>
+  <data name="Map_Players_Status_ReadFailed" xml:space="preserve">
+    <value>Impossible de lire les joueurs : {0}</value>
+  </data>
+  <data name="Map_Players_InstallFailed" xml:space="preserve">
+    <value>Impossible d'installer le plugin : {0} Si le serveur tourne, arrête-le et réessaie.</value>
+  </data>
   <data name="Map_Layers_Header" xml:space="preserve">
     <value>Calques</value>
   </data>
@@ -2059,5 +2110,8 @@ Veux-tu envoyer un rapport de plantage automatique au développeur ?</value>
   </data>
   <data name="MapWeb_NotReady" xml:space="preserve">
     <value>La carte n'est pas encore prête. Cette page réessaiera dans un instant.</value>
+  </data>
+  <data name="MapWeb_Players" xml:space="preserve">
+    <value>Joueurs connectés</value>
   </data>
 </root>

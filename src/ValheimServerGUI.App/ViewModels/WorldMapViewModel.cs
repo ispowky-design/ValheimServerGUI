@@ -69,6 +69,9 @@ public partial class WorldMapViewModel : ViewModelBase
     // While the map is published, how often the world is re-read so the page follows the server's saves.
     private static readonly TimeSpan PublishRefreshInterval = TimeSpan.FromMinutes(5);
 
+    // How often the connected players are re-read while the tab shows or the map is published.
+    private static readonly TimeSpan PlayersRefreshInterval = TimeSpan.FromSeconds(3);
+
     private readonly IApplicationLogger _logger;
     private readonly Func<DirectoryInfo?> _saveFolder;
     private readonly Func<string?> _worldName;
@@ -77,6 +80,11 @@ public partial class WorldMapViewModel : ViewModelBase
     private readonly Func<string?> _externalIp;
     private readonly Action<string>? _openWebAddress;
     private readonly DispatcherTimer _publishTimer;
+    private readonly Func<string?> _serverExePath;
+    private readonly DispatcherTimer _playersTimer;
+    private IReadOnlyList<LivePlayer> _livePlayers = Array.Empty<LivePlayer>();
+    private bool _readingPlayers;
+    private bool _pluginJustInstalled;
 
     private IReadOnlyList<WorldMapMarker> _allMarkers = Array.Empty<WorldMapMarker>();
     private bool _isActive;
@@ -93,8 +101,11 @@ public partial class WorldMapViewModel : ViewModelBase
 
     public WorldMapViewModel(IApplicationLogger logger, Func<DirectoryInfo?> saveFolder, Func<string?> worldName,
         WorldMapWebServer? webServer = null, IUserPreferencesProvider? userPrefs = null, Func<string?>? externalIp = null,
-        Action<string>? openWebAddress = null)
+        Action<string>? openWebAddress = null, Func<string?>? serverExePath = null)
     {
+        _serverExePath = serverExePath ?? (() => null);
+        _playersTimer = new DispatcherTimer { Interval = PlayersRefreshInterval };
+        _playersTimer.Tick += (_, _) => _ = RefreshPlayersAsync();
         _logger = logger;
         _saveFolder = saveFolder;
         _worldName = worldName;
@@ -190,6 +201,34 @@ public partial class WorldMapViewModel : ViewModelBase
 
     public bool CanPublish => _webServer is not null;
 
+    /// <summary>The connected players the map draws (empty while <see cref="ShowPlayers"/> is off).</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasPlayers))]
+    private IReadOnlyList<LivePlayer> _players = Array.Empty<LivePlayer>();
+
+    public bool HasPlayers => Players.Count > 0;
+
+    [ObservableProperty] private bool _showPlayers = true;
+
+    [ObservableProperty] private LivePlayer? _selectedPlayer;
+
+    /// <summary>What the players panel says: how many are connected, or what is missing to see them.</summary>
+    [ObservableProperty] private string? _playersStatus;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanInstallPlugin))]
+    [NotifyCanExecuteChangedFor(nameof(InstallPluginCommand))]
+    private ServerPluginState _pluginState = ServerPluginState.NoServer;
+
+    public bool CanInstallPlugin => PluginState is ServerPluginState.NotInstalled or ServerPluginState.Outdated;
+
+    partial void OnShowPlayersChanged(bool value) => Players = value ? _livePlayers : Array.Empty<LivePlayer>();
+
+    partial void OnSelectedPlayerChanged(LivePlayer? value)
+    {
+        if (value is not null) Focus = new WorldMapFocus(value.X, value.Z);
+    }
+
     partial void OnShowSpawnChanged(bool value) => ApplyFilters();
     partial void OnShowBossesChanged(bool value) => ApplyFilters();
     partial void OnShowTradersChanged(bool value) => ApplyFilters();
@@ -238,6 +277,7 @@ public partial class WorldMapViewModel : ViewModelBase
     {
         _isActive = active;
         if (active && _isStale) _ = LoadSelectedWorldAsync();
+        UpdatePlayersTimer();
     }
 
     /// <summary>The window's world or save folder changed; re-read now if the tab is showing or the map published, else when it next shows.</summary>
@@ -508,6 +548,7 @@ public partial class WorldMapViewModel : ViewModelBase
         }
 
         _ownsWebServer = true;
+        UpdatePlayersTimer();
         LocalLink = string.Format(CultureInfo.InvariantCulture, "http://localhost:{0}/", PublishPort);
         UpdatePublicLink();
         _publishTimer.Start();
@@ -518,6 +559,7 @@ public partial class WorldMapViewModel : ViewModelBase
     private void StopPublishing()
     {
         _publishTimer.Stop();
+        UpdatePlayersTimer();
         if (_ownsWebServer) _webServer?.Stop();
         _ownsWebServer = false;
         PublicLink = null;
@@ -592,8 +634,106 @@ public partial class WorldMapViewModel : ViewModelBase
         UpdatePublicLink();
     }
 
+    [RelayCommand(CanExecute = nameof(CanInstallPlugin))]
+    private async Task InstallPlugin()
+    {
+        var exe = _serverExePath();
+        if (string.IsNullOrWhiteSpace(exe)) return;
+        try
+        {
+            await Task.Run(() => ServerPluginInstaller.Install(exe));
+            _logger.Information("Installed the player positions plugin at {path}", ServerPluginInstaller.PluginPath(exe));
+            _pluginJustInstalled = true;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or InvalidOperationException)
+        {
+            _logger.Warning("Could not install the player positions plugin: {message}", e.Message);
+            PlayersStatus = string.Format(Strings.Map_Players_InstallFailed, e.Message);
+            return;
+        }
+        await RefreshPlayersAsync();
+    }
+
+    private void UpdatePlayersTimer()
+    {
+        if (IsDisposed) return;
+        if (_isActive || IsPublishing)
+        {
+            if (!_playersTimer.IsEnabled)
+            {
+                _playersTimer.Start();
+                _ = RefreshPlayersAsync();
+            }
+        }
+        else
+        {
+            _playersTimer.Stop();
+        }
+    }
+
+    /// <summary>
+    /// Re-reads, off the UI thread, whether the server can report its players and where they are. Players count only
+    /// while the server is writing (a stopped server leaves its last file behind) and only for the world on show.
+    /// </summary>
+    public async Task RefreshPlayersAsync()
+    {
+        if (_readingPlayers || IsDisposed) return;
+        _readingPlayers = true;
+        try
+        {
+            var exe = _serverExePath();
+            var (state, snapshot, error) = await Task.Run(() =>
+            {
+                var current = ServerPluginInstaller.Check(exe);
+                if (exe is null || current is not (ServerPluginState.Installed or ServerPluginState.Outdated))
+                {
+                    return (current, (LivePlayerSnapshot?)null, (string?)null);
+                }
+                try
+                {
+                    return (current, LivePlayerReader.Read(LivePlayerReader.FilePath(exe)), (string?)null);
+                }
+                catch (Exception e) when (e is IOException or InvalidDataException or UnauthorizedAccessException)
+                {
+                    return (current, null, e.Message);
+                }
+            });
+            if (IsDisposed) return;
+
+            PluginState = state;
+            var live = snapshot is not null && snapshot.IsCurrent(DateTime.UtcNow)
+                       && (snapshot.World is null || _publishableWorld is null || string.Equals(snapshot.World, _publishableWorld, StringComparison.Ordinal))
+                ? snapshot.Players
+                : Array.Empty<LivePlayer>();
+            if (snapshot is not null && snapshot.IsCurrent(DateTime.UtcNow)) _pluginJustInstalled = false;
+
+            _livePlayers = live;
+            Players = ShowPlayers ? live : Array.Empty<LivePlayer>();
+            PlayersStatus = error is not null ? string.Format(Strings.Map_Players_Status_ReadFailed, error) : state switch
+            {
+                ServerPluginState.NoServer => Strings.Map_Players_Status_NoServer,
+                ServerPluginState.NoBepInEx => Strings.Map_Players_Status_NoBepInEx,
+                ServerPluginState.NotInstalled => Strings.Map_Players_Status_NotInstalled,
+                _ when _pluginJustInstalled => Strings.Map_Players_Status_Installed,
+                _ when snapshot is null || !snapshot.IsCurrent(DateTime.UtcNow) => Strings.Map_Players_Status_Waiting,
+                _ when live.Count == 0 => Strings.Map_Players_Status_None,
+                _ when live.Count == 1 => Strings.Map_Players_Status_One,
+                _ => string.Format(Strings.Map_Players_Status_Other, live.Count),
+            };
+            if (state == ServerPluginState.Outdated) PlayersStatus += " " + Strings.Map_Players_Status_Outdated;
+
+            // The web page only shows the players who chose to be visible on the in-game map.
+            if (IsPublishing) _webServer?.PublishPlayers(live.Where(p => p.IsPublic));
+        }
+        finally
+        {
+            _readingPlayers = false;
+        }
+    }
+
     protected override void DisposeCore()
     {
+        _playersTimer.Stop();
         _publishTimer.Stop();
         if (_ownsWebServer) _webServer?.Stop();
     }
