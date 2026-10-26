@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    A BepInEx 5 plugin for the Valheim dedicated server: it writes where the connected players are, for the app's
+    World Map. It runs inside the game, so it targets what the game's Mono runs (netstandard2.1) and references the
+    game only by reflection: the app's build never needs Valheim installed. BepInEx (vendored under
+    src/ThirdParty/BepInEx, MIT) and Unity are compile-time references only and are never copied next to it.
+    The app embeds the built DLL (see ValheimServerGUI.Core.csproj) and installs it when the user asks.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>ValheimServerGUI.ServerPlugin</AssemblyName>
+    <RootNamespace>ValheimServerGUI.ServerPlugin</RootNamespace>
+    <Version>1.0.0</Version>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- Unity's and BepInEx's assemblies bind other System.* versions than netstandard2.1; harmless for a plugin. -->
+    <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>..\ThirdParty\BepInEx\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.33" ExcludeAssets="runtime" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

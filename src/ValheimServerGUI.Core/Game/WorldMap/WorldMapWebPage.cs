@@ -17,8 +17,9 @@ namespace ValheimServerGUI.Game.WorldMap
     /// </summary>
     public static class WorldMapWebPage
     {
-        // How often an open page asks whether the map changed, in milliseconds.
+        // How often an open page asks whether the map changed, and where the players are, in milliseconds.
         private const int PollMilliseconds = 120_000;
+        private const int PlayersPollMilliseconds = 5_000;
 
         private static readonly (WorldLocationKind Kind, string Css, string Color)[] Kinds =
         {
@@ -44,14 +45,20 @@ namespace ValheimServerGUI.Game.WorldMap
 
             var shown = Kinds.Where(k => markers.Any(m => m.Kind == k.Kind)).ToList();
             var legend = string.Concat(shown.Select(k =>
-                $"<span class=\"key\"><i class=\"dot {k.Css}\"></i>{Html(KindName(k.Kind))}</span>"));
-            var colors = string.Concat(Kinds.Select(k => $".{k.Css}{{background:{k.Color}}}"));
+                $"<span class=\"key\"><i class=\"dot {k.Css}\"></i>{Html(KindName(k.Kind))}</span>")) +
+                $"<span class=\"key\" id=\"playerkey\" hidden><i class=\"dot player\"></i>{Html(Strings.MapWeb_Players)}</span>";
+            var colors = string.Concat(Kinds.Select(k => $".{k.Css}{{background:{k.Color}}}")) + ".player{background:#3ddc84}";
 
             var title = string.Format(CultureInfo.CurrentCulture, Strings.MapWeb_Title, worldName);
             var updated = string.Format(CultureInfo.CurrentCulture, Strings.MapWeb_Updated, updatedAt);
 
             // System.Text.Json escapes <, > and & by default, so the data cannot close the script element.
-            var data = JsonSerializer.Serialize(new { w = picture.Width, h = picture.Height, v = version, places });
+            var r = picture.Region;
+            var data = JsonSerializer.Serialize(new
+            {
+                w = picture.Width, h = picture.Height, v = version, places,
+                left = r.Left, top = r.Top, mpp = r.MetersPerPixel,
+            });
 
             var page = new StringBuilder();
             page.Append("<!doctype html><html lang=\"").Append(Html(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)).Append("\"><head>")
@@ -63,7 +70,7 @@ namespace ValheimServerGUI.Game.WorldMap
                 .Append("\" src=\"map.png?v=").Append(Html(Uri.EscapeDataString(version))).Append("\"></div>")
                 .Append("<button id=\"reset\" type=\"button\">").Append(Html(Strings.MapWeb_Reset)).Append("</button></main>")
                 .Append("<footer><div class=\"legend\">").Append(legend).Append("</div><p>").Append(Html(Strings.MapWeb_Hint))
-                .Append("</p></footer><script>const MAP=").Append(data).Append(";const POLL=").Append(PollMilliseconds).Append(';')
+                .Append("</p></footer><script>const MAP=").Append(data).Append(";const POLL=").Append(PollMilliseconds).Append(";const PLAYERS_POLL=").Append(PlayersPollMilliseconds).Append(';')
                 .Append(Script).Append("</script></body></html>");
             return page.ToString();
         }
@@ -122,6 +129,14 @@ namespace ValheimServerGUI.Game.WorldMap
             "function up(e){ptrs.delete(e.pointerId);pinch=0;if(!ptrs.size)view.classList.remove('drag');}" +
             "view.addEventListener('pointerup',up);view.addEventListener('pointercancel',up);" +
             "document.getElementById('reset').addEventListener('click',fit);addEventListener('resize',fit);fit();" +
-            "setInterval(()=>fetch('version',{cache:'no-store'}).then(r=>r.text()).then(t=>{if(t&&t!==MAP.v)location.reload();}).catch(()=>{}),POLL);";
+            "setInterval(()=>fetch('version',{cache:'no-store'}).then(r=>r.text()).then(t=>{if(t&&t!==MAP.v)location.reload();}).catch(()=>{}),POLL);" +
+            "const players=[];function showPlayers(list){for(const e of players)e.remove();players.length=0;" +
+            "for(const p of list){const fx=(p.x-MAP.left)/(MAP.w*MAP.mpp),fy=(MAP.top-p.z)/(MAP.h*MAP.mpp);if(fx<0||fx>1||fy<0||fy>1)continue;" +
+            "const e=document.createElement('div');e.className='place';e.style.left=fx*100+'%';e.style.top=fy*100+'%';e.title=p.n;" +
+            "const d=document.createElement('i');d.className='dot player';e.appendChild(d);" +
+            "const l=document.createElement('span');l.className='label';l.textContent=p.n;e.appendChild(l);world.appendChild(e);players.push(e);}" +
+            "document.getElementById('playerkey').hidden=!players.length;}" +
+            "function pollPlayers(){fetch('players',{cache:'no-store'}).then(r=>r.json()).then(showPlayers).catch(()=>{});}" +
+            "pollPlayers();setInterval(pollPlayers,PLAYERS_POLL);";
     }
 }

@@ -244,6 +244,93 @@ public sealed class WorldMapViewModelTests : IDisposable
         Assert.StartsWith(expected[..expected.IndexOf('\0')], vm.StatusMessage);
     }
 
+    [AvaloniaFact]
+    public async Task Players_ShowOnceThePluginRunsOnTheServer()
+    {
+        WriteWorld();
+        var server = Directory.CreateDirectory(Path.Join(_saveFolder.FullName, "server"));
+        var exe = Path.Join(server.FullName, "valheim_server.exe");
+        File.WriteAllText(exe, "");
+        using var web = new WorldMapWebServer();
+        var vm = new WorldMapViewModel(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world,
+            web, serverExePath: () => exe);
+        await vm.LoadSelectedWorldAsync();
+
+        await vm.RefreshPlayersAsync();
+        Assert.Equal(ServerPluginState.NoBepInEx, vm.PluginState);
+        Assert.Equal(Strings.Map_Players_Status_NoBepInEx, vm.PlayersStatus);
+        Assert.False(vm.CanInstallPlugin);
+
+        var core = Directory.CreateDirectory(Path.Join(server.FullName, "BepInEx", "core"));
+        File.WriteAllText(Path.Join(core.FullName, "BepInEx.dll"), "");
+        await vm.RefreshPlayersAsync();
+        Assert.True(vm.CanInstallPlugin);
+
+        await vm.InstallPluginCommand.ExecuteAsync(null);
+        Assert.Equal(ServerPluginState.Installed, vm.PluginState);
+        Assert.Equal(Strings.Map_Players_Status_Installed, vm.PlayersStatus);
+        Assert.Empty(vm.Players);
+
+        void WritePlayers(string world, DateTime time) => File.WriteAllText(LivePlayerReader.FilePath(exe),
+            "{\"version\":1,\"time\":\"" + time.ToString("o") + "\",\"world\":\"" + world + "\",\"players\":[" +
+            "{\"name\":\"Ragnar\",\"x\":300,\"z\":400,\"public\":true},{\"name\":\"Lagertha\",\"x\":-10,\"z\":5,\"public\":false}]}");
+        Directory.CreateDirectory(Path.GetDirectoryName(LivePlayerReader.FilePath(exe))!);
+
+        WritePlayers("Viking", DateTime.UtcNow);
+        await vm.RefreshPlayersAsync();
+        Assert.Equal(new[] { "Ragnar", "Lagertha" }, vm.Players.Select(p => p.Name));
+        Assert.Equal(string.Format(Strings.Map_Players_Status_Other, 2), vm.PlayersStatus);
+
+        vm.SelectedPlayer = vm.Players[0];
+        Assert.Equal(300f, vm.Focus!.X);
+
+        vm.ShowPlayers = false;
+        Assert.Empty(vm.Players);
+        vm.ShowPlayers = true;
+
+        // Another world's players, or a file the stopped server left behind, do not count.
+        WritePlayers("Elsewhere", DateTime.UtcNow);
+        await vm.RefreshPlayersAsync();
+        Assert.Empty(vm.Players);
+        WritePlayers("Viking", DateTime.UtcNow.AddMinutes(-5));
+        await vm.RefreshPlayersAsync();
+        Assert.Empty(vm.Players);
+        Assert.Equal(Strings.Map_Players_Status_Waiting, vm.PlayersStatus);
+    }
+
+    [AvaloniaFact]
+    public async Task Players_OnTheWebPage_AreOnlyThoseVisibleOnTheInGameMap()
+    {
+        WriteWorld();
+        var server = Directory.CreateDirectory(Path.Join(_saveFolder.FullName, "server"));
+        var exe = Path.Join(server.FullName, "valheim_server.exe");
+        File.WriteAllText(exe, "");
+        Directory.CreateDirectory(Path.Join(server.FullName, "BepInEx", "core"));
+        File.WriteAllText(Path.Join(server.FullName, "BepInEx", "core", "BepInEx.dll"), "");
+        ServerPluginInstaller.Install(exe);
+        Directory.CreateDirectory(Path.GetDirectoryName(LivePlayerReader.FilePath(exe))!);
+        File.WriteAllText(LivePlayerReader.FilePath(exe),
+            "{\"time\":\"" + DateTime.UtcNow.ToString("o") + "\",\"world\":\"Viking\",\"players\":[" +
+            "{\"name\":\"Ragnar\",\"x\":300,\"z\":400,\"public\":true},{\"name\":\"Lagertha\",\"x\":-10,\"z\":5,\"public\":false}]}");
+        using var web = new WorldMapWebServer();
+        var vm = new WorldMapViewModel(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world,
+            web, serverExePath: () => exe) { PublishPort = FreePort() };
+        await vm.LoadSelectedWorldAsync();
+
+        vm.IsPublishing = true;
+        string players = "";
+        for (var i = 0; i < 200 && !players.Contains("Ragnar"); i++)
+        {
+            await Task.Delay(20);
+            players = System.Text.Encoding.UTF8.GetString(web.Respond("GET /players HTTP/1.1"));
+        }
+
+        Assert.Contains("Ragnar", players);
+        Assert.DoesNotContain("Lagertha", players);
+        Assert.Equal(2, vm.Players.Count);
+        vm.IsPublishing = false;
+    }
+
     private static int FreePort()
     {
         var probe = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);

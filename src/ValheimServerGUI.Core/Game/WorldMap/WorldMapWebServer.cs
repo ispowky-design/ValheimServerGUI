@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +16,8 @@ namespace ValheimServerGUI.Game.WorldMap
 
     /// <summary>
     /// A tiny read-only web server that shows the world map to players who are not in game: <c>/</c> is the page,
-    /// <c>/map.png</c> the picture and <c>/version</c> a stamp the page polls to reload itself when the map changes.
+    /// <c>/map.png</c> the picture, <c>/version</c> a stamp the page polls to reload itself when the map changes, and
+    /// <c>/players</c> the connected players the page shows (only those visible on the in-game map).
     /// Nothing else is served, and nothing a visitor sends is ever stored or acted on.
     ///
     /// <para>One per app (<see cref="Shared"/>), since a port can only be listened on once. Built on a plain socket
@@ -33,6 +37,7 @@ namespace ValheimServerGUI.Game.WorldMap
         private TcpListener? _listener;
         private CancellationTokenSource? _cts;
         private volatile WorldMapWebContent? _content;
+        private volatile string _players = "[]";
 
         /// <summary>The port being listened on, or null when stopped.</summary>
         public int? Port { get; private set; }
@@ -91,6 +96,10 @@ namespace ValheimServerGUI.Game.WorldMap
 
         /// <summary>Replaces what the page shows; visitors' pages pick it up on their next poll.</summary>
         public void Publish(WorldMapWebContent content) => _content = content;
+
+        /// <summary>Replaces the connected players the page shows; open pages poll for them every few seconds.</summary>
+        public void PublishPlayers(IEnumerable<LivePlayer> players)
+            => _players = JsonSerializer.Serialize(players.Select(p => new { n = p.Name, x = p.X, z = p.Z }));
 
         public void Dispose() => Stop();
 
@@ -198,6 +207,7 @@ namespace ValheimServerGUI.Game.WorldMap
                 "/" or "/index.html" => Response(200, "OK", "text/html; charset=utf-8",
                     Encoding.UTF8.GetBytes(content?.Html ?? WorldMapWebPage.NotReady()), head),
                 "/map.png" when content is not null => Response(200, "OK", "image/png", content.Png, head),
+                "/players" => Response(200, "OK", "application/json; charset=utf-8", Encoding.UTF8.GetBytes(_players), head),
                 "/version" => Response(200, "OK", "text/plain; charset=utf-8", Encoding.UTF8.GetBytes(content?.Version ?? ""), head),
                 _ => Response(404, "Not Found", "text/plain; charset=utf-8", "Not Found"u8.ToArray(), head),
             };

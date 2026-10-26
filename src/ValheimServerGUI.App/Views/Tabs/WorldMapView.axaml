@@ -3,6 +3,7 @@
              xmlns:loc="using:ValheimServerGUI.Localization"
              xmlns:c="using:ValheimServerGUI.App.Controls"
              xmlns:vm="using:ValheimServerGUI.App.ViewModels"
+             xmlns:game="using:ValheimServerGUI.Game.WorldMap"
              x:Class="ValheimServerGUI.App.Views.Tabs.WorldMapView"
              x:DataType="vm:MainWindowViewModel">
 
@@ -16,6 +17,7 @@
                     Background="{DynamicResource LayerDarkest}">
                 <c:WorldMapCanvas Renderer="{Binding WorldMap.Renderer}"
                                   Markers="{Binding WorldMap.Markers}"
+                                  Players="{Binding WorldMap.Players}"
                                   Exploration="{Binding WorldMap.Exploration}"
                                   ShowFog="{Binding WorldMap.ShowFog}"
                                   Focus="{Binding WorldMap.Focus}"
@@ -49,6 +51,29 @@
                                              PlaceholderText="{x:Static loc:Strings.Map_Exploration_None}"
                                              ItemsSource="{Binding WorldMap.ExplorationSources}" Value="{Binding WorldMap.SelectedExplorationSource}"
                                              IsEnabled="{Binding WorldMap.ShowFog}" />
+                    </StackPanel>
+                </c:GroupBox>
+
+                <c:GroupBox Header="{x:Static loc:Strings.Map_Players_Header}">
+                    <StackPanel Spacing="4">
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Players_Show}" HelpText="{x:Static loc:Strings.Map_Players_Show_Help}"
+                                             Value="{Binding WorldMap.ShowPlayers}" />
+                        <TextBlock TextWrapping="Wrap" Text="{Binding WorldMap.PlayersStatus}"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                        <Button Content="{x:Static loc:Strings.Map_Players_Install}" ToolTip.Tip="{x:Static loc:Strings.Map_Players_Install_Tip}"
+                                Command="{Binding WorldMap.InstallPluginCommand}" IsVisible="{Binding WorldMap.CanInstallPlugin}" />
+                        <c:DataListView Height="110" ItemsSource="{Binding WorldMap.Players}" SelectedItem="{Binding WorldMap.SelectedPlayer}"
+                                        IsVisible="{Binding WorldMap.HasPlayers}">
+                            <c:DataListView.Columns>
+                                <DataGridTemplateColumn Header="{x:Static loc:Strings.Map_Players_Column_Name}" Width="*" SortMemberPath="Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="game:LivePlayer">
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </c:DataListView.Columns>
+                        </c:DataListView>
                     </StackPanel>
                 </c:GroupBox>
 

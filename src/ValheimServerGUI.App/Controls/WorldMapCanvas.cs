@@ -32,6 +32,9 @@ public class WorldMapCanvas : Control
     public static readonly StyledProperty<IReadOnlyList<WorldMapMarker>?> MarkersProperty =
         AvaloniaProperty.Register<WorldMapCanvas, IReadOnlyList<WorldMapMarker>?>(nameof(Markers));
 
+    public static readonly StyledProperty<IReadOnlyList<LivePlayer>?> PlayersProperty =
+        AvaloniaProperty.Register<WorldMapCanvas, IReadOnlyList<LivePlayer>?>(nameof(Players));
+
     public static readonly StyledProperty<WorldMapExploration?> ExplorationProperty =
         AvaloniaProperty.Register<WorldMapCanvas, WorldMapExploration?>(nameof(Exploration));
 
@@ -49,6 +52,8 @@ public class WorldMapCanvas : Control
 
     public WorldMapRenderer? Renderer { get => GetValue(RendererProperty); set => SetValue(RendererProperty, value); }
     public IReadOnlyList<WorldMapMarker>? Markers { get => GetValue(MarkersProperty); set => SetValue(MarkersProperty, value); }
+    /// <summary>The connected players, drawn over everything else with their names.</summary>
+    public IReadOnlyList<LivePlayer>? Players { get => GetValue(PlayersProperty); set => SetValue(PlayersProperty, value); }
     /// <summary>The discovered area; with <see cref="ShowFog"/> on, everything else is covered.</summary>
     public WorldMapExploration? Exploration { get => GetValue(ExplorationProperty); set => SetValue(ExplorationProperty, value); }
     public bool ShowFog { get => GetValue(ShowFogProperty); set => SetValue(ShowFogProperty, value); }
@@ -82,6 +87,7 @@ public class WorldMapCanvas : Control
     private static readonly IBrush TraderBrush = new SolidColorBrush(Color.FromRgb(0xE8, 0xB9, 0x3C));
     private static readonly IBrush DungeonBrush = new SolidColorBrush(Color.FromRgb(0x9B, 0x7B, 0xD0));
     private static readonly IBrush CampBrush = new SolidColorBrush(Color.FromRgb(0xE0, 0x84, 0x2E));
+    private static readonly IBrush PlayerBrush = new SolidColorBrush(Color.FromRgb(0x3D, 0xDC, 0x84));
 
     private enum MapButton { None, ZoomIn, ZoomOut, Reset, Expand }
 
@@ -114,7 +120,7 @@ public class WorldMapCanvas : Control
 
     static WorldMapCanvas()
     {
-        AffectsRender<WorldMapCanvas>(MarkersProperty, ShowFogProperty, PlaceholderTextProperty, IsExpandedProperty);
+        AffectsRender<WorldMapCanvas>(MarkersProperty, PlayersProperty, ShowFogProperty, PlaceholderTextProperty, IsExpandedProperty);
         FocusableProperty.OverrideDefaultValue<WorldMapCanvas>(true);
         ClipToBoundsProperty.OverrideDefaultValue<WorldMapCanvas>(true);
     }
@@ -461,6 +467,18 @@ public class WorldMapCanvas : Control
         }
 
         if (_hovered is { } hovered) DrawLabel(context, hovered.Name, ToScreen(hovered.X, hovered.Z));
+
+        if (Players is { } players)
+        {
+            foreach (var player in players)
+            {
+                var p = ToScreen(player.X, player.Z);
+                if (p.X < -40 || p.Y < -40 || p.X > Bounds.Width + 40 || p.Y > Bounds.Height + 40) continue;
+                context.DrawEllipse(PlayerBrush, InkPen, p, 6.5, 6.5);
+                context.DrawEllipse(Brushes.White, null, p, 2, 2);
+                DrawLabel(context, player.Name, p);
+            }
+        }
     }
 
     private static void DrawMarker(DrawingContext context, WorldMapMarker marker, Point p)

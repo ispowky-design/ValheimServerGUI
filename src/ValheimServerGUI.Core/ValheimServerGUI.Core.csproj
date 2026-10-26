@@ -11,7 +11,7 @@
       cosmetic. SourceRevisionId appends a "+build<date>" suffix to the informational version (parsed by
       AssemblyHelper.GetApplicationBuildDate); GetApplicationVersion strips it before comparison.
     -->
-    <Version>3.5.1</Version>
+    <Version>3.6.0</Version>
     <SourceRevisionId Condition="'$(SourceRevisionId)' == ''">build$([System.DateTime]::UtcNow.ToString("yyyy-MM-dd"))</SourceRevisionId>
   </PropertyGroup>
 
@@ -32,7 +32,21 @@
   <ItemGroup>
     <ProjectReference Include="..\ValheimServerGUI.Localization\ValheimServerGUI.Localization.csproj" />
     <ProjectReference Include="..\ThirdParty\SeedLab.WorldGen\SeedLab.WorldGen.csproj" />
+    <!-- Built for the game's runtime, not referenced: its DLL is embedded (EmbedServerPlugin) for ServerPluginInstaller. -->
+    <ProjectReference Include="..\ValheimServerGUI.ServerPlugin\ValheimServerGUI.ServerPlugin.csproj"
+                      ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true"
+                      UndefineProperties="TargetFramework;RuntimeIdentifier;SelfContained;PublishSingleFile;PublishReadyToRun" />
   </ItemGroup>
+
+  <Target Name="EmbedServerPlugin" BeforeTargets="AssignTargetPaths" DependsOnTargets="ResolveProjectReferences">
+    <MSBuild Projects="..\ValheimServerGUI.ServerPlugin\ValheimServerGUI.ServerPlugin.csproj" Targets="GetTargetPath"
+             RemoveProperties="TargetFramework;RuntimeIdentifier;SelfContained;PublishSingleFile;PublishReadyToRun">
+      <Output TaskParameter="TargetOutputs" ItemName="_ServerPluginDll" />
+    </MSBuild>
+    <ItemGroup>
+      <EmbeddedResource Include="@(_ServerPluginDll)" LogicalName="ValheimServerGUI.ServerPlugin.dll" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <Compile Include="..\..\SolutionResources\ClientSecrets.cs" Link="ClientSecrets.cs"
