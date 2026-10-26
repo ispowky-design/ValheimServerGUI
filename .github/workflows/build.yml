@@ -46,7 +46,8 @@ jobs:
           else
             # Not a release: the version in Core.csproj, marked with the run number.
             base="$(grep -oP '<Version>\K[^<]+' src/ValheimServerGUI.Core/ValheimServerGUI.Core.csproj | head -1)"
-            version="${base}.ci.${GITHUB_RUN_NUMBER}"; release=false
+            if [[ "$base" == *-* ]]; then version="${base}.ci.${GITHUB_RUN_NUMBER}"; else version="${base}-ci.${GITHUB_RUN_NUMBER}"; fi
+            release=false
           fi
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.+][0-9A-Za-z.-]+)?$ ]] || { echo "::error::Bad version '$version'"; exit 1; }
           echo "version=$version" >> "$GITHUB_OUTPUT"
