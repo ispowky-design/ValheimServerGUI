@@ -32,6 +32,10 @@ internal sealed class FakeAppUpdater : IAppUpdater
 
     public void LaunchInstall(string downloadedFile) => Installs.Add(downloadedFile);
 
+    private readonly HashSet<string> _noticed = new();
+
+    public bool ClaimReadyNotice(string version) => _noticed.Add(version);
+
     public void CleanUpPreviousUpdate()
     {
     }

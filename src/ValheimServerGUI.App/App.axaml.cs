@@ -199,6 +199,9 @@ public partial class App : Application
             // Profiles' daily restart times apply to every running server, whichever window shows it.
             Services.GetRequiredService<ScheduledRestartService>().Start();
 
+            // The startup check ran above; keep watching for new releases while the app stays open.
+            Services.GetRequiredService<UpdateWatcher>().Start();
+
             splash.Close();
 
             Services.GetRequiredService<IApplicationLogger>().Information(
