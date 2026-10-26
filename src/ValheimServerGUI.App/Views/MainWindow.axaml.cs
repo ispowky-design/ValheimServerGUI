@@ -240,6 +240,7 @@ public partial class MainWindow : Window
         ViewModel.Details.SetActive(DetailsTab.IsSelected);
         ViewModel.Players.SetActive(PlayersTab.IsSelected);
         ViewModel.Backups.SetActive(BackupsTab.IsSelected);
+        ViewModel.WorldMap.SetActive(WorldMapTab.IsSelected);
     }
 
     private Task<CloudImportChoice> ShowCloudImportAsync(string worldName)

@@ -24,13 +24,16 @@ namespace ValheimServerGUI.Game
 
     /// <summary>
     /// What VSG reads from a world's metadata save: the starting global keys (the world's modifiers and world keys,
-    /// as the game stores them), the player history (every player who has joined; the server never removes one), and
-    /// the seed name the world was generated from (null when unknown).
+    /// as the game stores them), the player history (every player who has joined; the server never removes one), the
+    /// seed name the world was generated from (null when unknown), and what world generation reads: the integer seed
+    /// the game derived from that name and the world-gen version (null when unknown).
     /// </summary>
     public record WorldMetadata(
         IReadOnlyList<string> StartingGlobalKeys,
         IReadOnlyList<WorldPlayerHistoryEntry> PlayerHistory,
-        string? SeedName = null)
+        string? SeedName = null,
+        int? Seed = null,
+        int? WorldGenVersion = null)
     {
         public static readonly WorldMetadata Empty = new(Array.Empty<string>(), Array.Empty<WorldPlayerHistoryEntry>());
     }
@@ -148,9 +151,9 @@ namespace ValheimServerGUI.Game
                 // Every field below is present from PlayerHistoryVersion on.
                 reader.ReadString(); // name
                 var seedName = reader.ReadString();
-                reader.ReadInt32(); // seed
+                var seed = reader.ReadInt32();
                 reader.ReadInt64(); // uid
-                reader.ReadInt32(); // worldGenVersion
+                var worldGenVersion = reader.ReadInt32();
                 reader.ReadBoolean(); // needsDB
 
                 var globalKeyCount = reader.ReadCount(MinGlobalKeyBytes);
@@ -174,7 +177,7 @@ namespace ValheimServerGUI.Game
                         $"World save (version {version}) has {reader.Remaining} unread bytes after the player history; the layout is not recognized.");
                 }
 
-                return new WorldMetadata(globalKeys, history, string.IsNullOrEmpty(seedName) ? null : seedName);
+                return new WorldMetadata(globalKeys, history, string.IsNullOrEmpty(seedName) ? null : seedName, seed, worldGenVersion);
             }
             catch (Exception e) when (e is EndOfStreamException or FormatException)
             {

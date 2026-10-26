@@ -166,6 +166,9 @@
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Backups}" x:Name="BackupsTab">
                 <tabs:BackupsView />
             </TabItem>
+            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_WorldMap}" x:Name="WorldMapTab">
+                <tabs:WorldMapView />
+            </TabItem>
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Logs}">
                 <tabs:LogsView />
             </TabItem>

@@ -134,6 +134,9 @@
   <data name="MainWindow_Tab_Backups" xml:space="preserve">
     <value>⟦MainWindow_Tab_Backups⟧</value>
   </data>
+  <data name="MainWindow_Tab_WorldMap" xml:space="preserve">
+    <value>⟦MainWindow_Tab_WorldMap⟧</value>
+  </data>
   <data name="MainWindow_Tab_Logs" xml:space="preserve">
     <value>⟦MainWindow_Tab_Logs⟧</value>
   </data>
@@ -537,6 +540,205 @@
   </data>
   <data name="Backups_Error_DeleteAutomatic" xml:space="preserve">
     <value>⟦Backups_Error_DeleteAutomatic⟧</value>
+  </data>
+  <!-- World Map tab -->
+  <data name="Map_World_Label" xml:space="preserve">
+    <value>⟦Map_World_Label⟧</value>
+  </data>
+  <data name="Map_World_None" xml:space="preserve">
+    <value>⟦Map_World_None⟧</value>
+  </data>
+  <data name="Map_Seed_Label" xml:space="preserve">
+    <value>⟦Map_Seed_Label⟧</value>
+  </data>
+  <data name="Map_Seed_Help" xml:space="preserve">
+    <value>⟦Map_Seed_Help⟧</value>
+  </data>
+  <data name="Map_Seed_Watermark" xml:space="preserve">
+    <value>⟦Map_Seed_Watermark⟧</value>
+  </data>
+  <data name="Map_Preview" xml:space="preserve">
+    <value>⟦Map_Preview⟧</value>
+  </data>
+  <data name="Map_Preview_Tip" xml:space="preserve">
+    <value>⟦Map_Preview_Tip⟧</value>
+  </data>
+  <data name="Map_Refresh_Tip" xml:space="preserve">
+    <value>⟦Map_Refresh_Tip⟧</value>
+  </data>
+  <data name="Map_Layers_Header" xml:space="preserve">
+    <value>⟦Map_Layers_Header⟧</value>
+  </data>
+  <data name="Map_Layer_Spawn" xml:space="preserve">
+    <value>⟦Map_Layer_Spawn⟧</value>
+  </data>
+  <data name="Map_Layer_Bosses" xml:space="preserve">
+    <value>⟦Map_Layer_Bosses⟧</value>
+  </data>
+  <data name="Map_Layer_Traders" xml:space="preserve">
+    <value>⟦Map_Layer_Traders⟧</value>
+  </data>
+  <data name="Map_Layer_Dungeons" xml:space="preserve">
+    <value>⟦Map_Layer_Dungeons⟧</value>
+  </data>
+  <data name="Map_Layer_Camps" xml:space="preserve">
+    <value>⟦Map_Layer_Camps⟧</value>
+  </data>
+  <data name="Map_Layer_Fog" xml:space="preserve">
+    <value>⟦Map_Layer_Fog⟧</value>
+  </data>
+  <data name="Map_Layer_Fog_Help" xml:space="preserve">
+    <value>⟦Map_Layer_Fog_Help⟧</value>
+  </data>
+  <data name="Map_Search_Header" xml:space="preserve">
+    <value>⟦Map_Search_Header⟧</value>
+  </data>
+  <data name="Map_Search_Watermark" xml:space="preserve">
+    <value>⟦Map_Search_Watermark⟧</value>
+  </data>
+  <data name="Map_Search_Column_Name" xml:space="preserve">
+    <value>⟦Map_Search_Column_Name⟧</value>
+  </data>
+  <data name="Map_Search_Column_Distance" xml:space="preserve">
+    <value>⟦Map_Search_Column_Distance⟧</value>
+  </data>
+  <data name="Map_Search_Distance" xml:space="preserve">
+    <value>⟦Map_Search_Distance {0:N0}⟧</value>
+  </data>
+  <data name="Map_Search_EmptyText" xml:space="preserve">
+    <value>⟦Map_Search_EmptyText⟧</value>
+  </data>
+  <data name="Map_Legend_Header" xml:space="preserve">
+    <value>⟦Map_Legend_Header⟧</value>
+  </data>
+  <data name="Map_Biome_Meadows" xml:space="preserve">
+    <value>⟦Map_Biome_Meadows⟧</value>
+  </data>
+  <data name="Map_Biome_BlackForest" xml:space="preserve">
+    <value>⟦Map_Biome_BlackForest⟧</value>
+  </data>
+  <data name="Map_Biome_Swamp" xml:space="preserve">
+    <value>⟦Map_Biome_Swamp⟧</value>
+  </data>
+  <data name="Map_Biome_Mountain" xml:space="preserve">
+    <value>⟦Map_Biome_Mountain⟧</value>
+  </data>
+  <data name="Map_Biome_Plains" xml:space="preserve">
+    <value>⟦Map_Biome_Plains⟧</value>
+  </data>
+  <data name="Map_Biome_Mistlands" xml:space="preserve">
+    <value>⟦Map_Biome_Mistlands⟧</value>
+  </data>
+  <data name="Map_Biome_Ashlands" xml:space="preserve">
+    <value>⟦Map_Biome_Ashlands⟧</value>
+  </data>
+  <data name="Map_Biome_DeepNorth" xml:space="preserve">
+    <value>⟦Map_Biome_DeepNorth⟧</value>
+  </data>
+  <data name="Map_Biome_Ocean" xml:space="preserve">
+    <value>⟦Map_Biome_Ocean⟧</value>
+  </data>
+  <data name="Map_Status_Generating" xml:space="preserve">
+    <value>⟦Map_Status_Generating⟧</value>
+  </data>
+  <data name="Map_Status_NoWorld" xml:space="preserve">
+    <value>⟦Map_Status_NoWorld⟧</value>
+  </data>
+  <data name="Map_Status_NoSave" xml:space="preserve">
+    <value>⟦Map_Status_NoSave⟧</value>
+  </data>
+  <data name="Map_Status_World" xml:space="preserve">
+    <value>⟦Map_Status_World {0} {1:g}⟧</value>
+  </data>
+  <data name="Map_Status_TerrainOnly" xml:space="preserve">
+    <value>⟦Map_Status_TerrainOnly⟧</value>
+  </data>
+  <data name="Map_Status_Preview" xml:space="preserve">
+    <value>⟦Map_Status_Preview⟧</value>
+  </data>
+  <data name="Map_Status_ReadFailed" xml:space="preserve">
+    <value>⟦Map_Status_ReadFailed {0}⟧</value>
+  </data>
+  <data name="Map_Status_InvalidSeed" xml:space="preserve">
+    <value>⟦Map_Status_InvalidSeed⟧</value>
+  </data>
+  <data name="Map_Cursor" xml:space="preserve">
+    <value>⟦Map_Cursor {0:F0} {1:F0}⟧</value>
+  </data>
+  <data name="MapLocation_StartTemple" xml:space="preserve">
+    <value>⟦MapLocation_StartTemple⟧</value>
+  </data>
+  <data name="MapLocation_Eikthyr" xml:space="preserve">
+    <value>⟦MapLocation_Eikthyr⟧</value>
+  </data>
+  <data name="MapLocation_TheElder" xml:space="preserve">
+    <value>⟦MapLocation_TheElder⟧</value>
+  </data>
+  <data name="MapLocation_Bonemass" xml:space="preserve">
+    <value>⟦MapLocation_Bonemass⟧</value>
+  </data>
+  <data name="MapLocation_Moder" xml:space="preserve">
+    <value>⟦MapLocation_Moder⟧</value>
+  </data>
+  <data name="MapLocation_Yagluth" xml:space="preserve">
+    <value>⟦MapLocation_Yagluth⟧</value>
+  </data>
+  <data name="MapLocation_TheQueen" xml:space="preserve">
+    <value>⟦MapLocation_TheQueen⟧</value>
+  </data>
+  <data name="MapLocation_Fader" xml:space="preserve">
+    <value>⟦MapLocation_Fader⟧</value>
+  </data>
+  <data name="MapLocation_DeepNorthBoss" xml:space="preserve">
+    <value>⟦MapLocation_DeepNorthBoss⟧</value>
+  </data>
+  <data name="MapLocation_Haldor" xml:space="preserve">
+    <value>⟦MapLocation_Haldor⟧</value>
+  </data>
+  <data name="MapLocation_Hildir" xml:space="preserve">
+    <value>⟦MapLocation_Hildir⟧</value>
+  </data>
+  <data name="MapLocation_BogWitch" xml:space="preserve">
+    <value>⟦MapLocation_BogWitch⟧</value>
+  </data>
+  <data name="MapLocation_BurialChambers" xml:space="preserve">
+    <value>⟦MapLocation_BurialChambers⟧</value>
+  </data>
+  <data name="MapLocation_TrollCave" xml:space="preserve">
+    <value>⟦MapLocation_TrollCave⟧</value>
+  </data>
+  <data name="MapLocation_SunkenCrypt" xml:space="preserve">
+    <value>⟦MapLocation_SunkenCrypt⟧</value>
+  </data>
+  <data name="MapLocation_FrostCave" xml:space="preserve">
+    <value>⟦MapLocation_FrostCave⟧</value>
+  </data>
+  <data name="MapLocation_InfestedMine" xml:space="preserve">
+    <value>⟦MapLocation_InfestedMine⟧</value>
+  </data>
+  <data name="MapLocation_SmoulderingTombs" xml:space="preserve">
+    <value>⟦MapLocation_SmoulderingTombs⟧</value>
+  </data>
+  <data name="MapLocation_HowlingCavern" xml:space="preserve">
+    <value>⟦MapLocation_HowlingCavern⟧</value>
+  </data>
+  <data name="MapLocation_SealedTower" xml:space="preserve">
+    <value>⟦MapLocation_SealedTower⟧</value>
+  </data>
+  <data name="MapLocation_CharredFortress" xml:space="preserve">
+    <value>⟦MapLocation_CharredFortress⟧</value>
+  </data>
+  <data name="MapLocation_MorgenHole" xml:space="preserve">
+    <value>⟦MapLocation_MorgenHole⟧</value>
+  </data>
+  <data name="MapLocation_TheHole" xml:space="preserve">
+    <value>⟦MapLocation_TheHole⟧</value>
+  </data>
+  <data name="MapLocation_FulingVillage" xml:space="preserve">
+    <value>⟦MapLocation_FulingVillage⟧</value>
+  </data>
+  <data name="MapLocation_GreydwarfNest" xml:space="preserve">
+    <value>⟦MapLocation_GreydwarfNest⟧</value>
   </data>
   <!-- Install / Update Server (SteamCMD) -->
   <data name="SteamCmd_Title" xml:space="preserve">

@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="using:ValheimServerGUI.Localization"
+             xmlns:c="using:ValheimServerGUI.App.Controls"
+             xmlns:vm="using:ValheimServerGUI.App.ViewModels"
+             x:Class="ValheimServerGUI.App.Views.Tabs.WorldMapView"
+             x:DataType="vm:MainWindowViewModel">
+
+    <Grid ColumnDefinitions="*,Auto" Margin="8">
+        <!-- The map. Its own overlay buttons zoom, reset the view and expand it over the side panel. -->
+        <DockPanel Grid.Column="0">
+            <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0" TextWrapping="Wrap" FontStyle="Italic"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                       Text="{Binding WorldMap.StatusMessage}" />
+            <Border BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="1" CornerRadius="3"
+                    Background="{DynamicResource LayerDarkest}">
+                <c:WorldMapCanvas Renderer="{Binding WorldMap.Renderer}"
+                                  Markers="{Binding WorldMap.Markers}"
+                                  ExploredZones="{Binding WorldMap.ExploredZones}"
+                                  ShowFog="{Binding WorldMap.ShowFog}"
+                                  Focus="{Binding WorldMap.Focus}"
+                                  IsExpanded="{Binding WorldMap.IsExpanded}"
+                                  PlaceholderText="{Binding WorldMap.StatusMessage}" />
+            </Border>
+        </DockPanel>
+
+        <ScrollViewer Grid.Column="1" Width="260" Margin="8,0,0,0" IsVisible="{Binding !WorldMap.IsExpanded}">
+            <StackPanel Spacing="2">
+                <c:GroupBox Header="{x:Static loc:Strings.Map_World_Label}">
+                    <StackPanel Spacing="4">
+                        <c:LabelField LabelText="{x:Static loc:Strings.Map_World_Label}" Value="{Binding WorldMap.WorldText}" />
+                        <c:LabelField LabelText="{x:Static loc:Strings.Map_Seed_Label}" Value="{Binding WorldMap.SeedText}" />
+                        <c:TextFormField LabelText="{x:Static loc:Strings.Map_Seed_Label}" HelpText="{x:Static loc:Strings.Map_Seed_Help}"
+                                         Watermark="{x:Static loc:Strings.Map_Seed_Watermark}" Value="{Binding WorldMap.PreviewSeed}" MaxLength="64" />
+                        <Grid ColumnDefinitions="*,Auto,Auto">
+                            <c:RefreshButton Grid.Column="1" ToolTip.Tip="{x:Static loc:Strings.Map_Refresh_Tip}"
+                                             Command="{Binding WorldMap.RefreshCommand}" />
+                            <Button Grid.Column="2" Margin="4,0,0,0" Content="{x:Static loc:Strings.Map_Preview}"
+                                    ToolTip.Tip="{x:Static loc:Strings.Map_Preview_Tip}" Command="{Binding WorldMap.PreviewCommand}" />
+                        </Grid>
+                    </StackPanel>
+                </c:GroupBox>
+
+                <c:GroupBox Header="{x:Static loc:Strings.Map_Layers_Header}">
+                    <StackPanel>
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Spawn}" Value="{Binding WorldMap.ShowSpawn}" />
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Bosses}" Value="{Binding WorldMap.ShowBosses}" />
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Traders}" Value="{Binding WorldMap.ShowTraders}" />
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Dungeons}" Value="{Binding WorldMap.ShowDungeons}" />
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Camps}" Value="{Binding WorldMap.ShowCamps}" />
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Fog}" HelpText="{x:Static loc:Strings.Map_Layer_Fog_Help}"
+                                             Value="{Binding WorldMap.ShowFog}" IsEnabled="{Binding WorldMap.HasExploredZones}" />
+                    </StackPanel>
+                </c:GroupBox>
+
+                <c:GroupBox Header="{x:Static loc:Strings.Map_Search_Header}">
+                    <StackPanel Spacing="4">
+                        <c:TextFormField Watermark="{x:Static loc:Strings.Map_Search_Watermark}" Value="{Binding WorldMap.SearchText}" MaxLength="64" />
+                        <c:DataListView Height="200" ItemsSource="{Binding WorldMap.SearchResults}"
+                                        SelectedItem="{Binding WorldMap.SelectedResult}"
+                                        EmptyText="{Binding WorldMap.SearchEmptyText}">
+                            <c:DataListView.Columns>
+                                <DataGridTemplateColumn Header="{x:Static loc:Strings.Map_Search_Column_Name}" Width="*" SortMemberPath="Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:WorldMapSearchRow">
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{x:Static loc:Strings.Map_Search_Column_Distance}" Width="92" SortMemberPath="Distance">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:WorldMapSearchRow">
+                                            <TextBlock Text="{Binding DistanceText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </c:DataListView.Columns>
+                        </c:DataListView>
+                    </StackPanel>
+                </c:GroupBox>
+
+                <c:GroupBox Header="{x:Static loc:Strings.Map_Legend_Header}">
+                    <ItemsControl ItemsSource="{Binding WorldMap.Legend}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:WorldMapLegendRow">
+                                <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,1">
+                                    <Border Width="14" Height="14" CornerRadius="2" Background="{Binding Brush}"
+                                            BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="1" />
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </c:GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

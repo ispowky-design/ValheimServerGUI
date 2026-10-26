@@ -123,10 +123,15 @@ public partial class MainWindowViewModel : ViewModelBase
         Backups = new BackupsViewModel(worldBackups ?? new WorldBackupService(), shell, appLogger,
             ResolveSaveDataDirectory, () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
             IsSelectedWorldInUse);
+        WorldMap = new WorldMapViewModel(appLogger, ResolveSaveDataDirectory,
+            () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName);
         Form.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName is nameof(ServerFormViewModel.ExistingWorld) or nameof(ServerFormViewModel.UseNewWorld))
+            {
                 Backups.OnSelectionChanged();
+                WorldMap.OnSelectionChanged();
+            }
         };
 
         _updateProvider.UpdateCheckStarted += OnUpdateCheckStarted;
@@ -206,6 +211,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     /// <summary>Backups tab.</summary>
     public BackupsViewModel Backups { get; }
+
+    /// <summary>World Map tab.</summary>
+    public WorldMapViewModel WorldMap { get; }
 
     // --- profile identity (single CurrentProfile source) ---
     [ObservableProperty]
@@ -573,6 +581,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         // The same world name can live in another profile's save folder, so a switch always re-reads the list.
         Backups.OnSelectionChanged();
+        WorldMap.OnSelectionChanged();
     }
 
     /// <summary>
@@ -1345,6 +1354,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _forceStopTimer.Stop();
         Details.Dispose();
         Backups.Dispose();
+        WorldMap.Dispose();
         Players.Dispose();
         Logs.Dispose();
     }
