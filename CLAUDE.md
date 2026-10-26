@@ -54,6 +54,10 @@ message.
   `MainWindow_Menu_File`, `ServerControls_Port_Label` / `_Help`, `Prompt_RemoveProfile_Title` / `_Message`,
   `Validation_PortInUse`, `Role_Admin`, `Common_OK`.
 - **Copy moves verbatim** (see the verbatim-UI-copy rule): extraction never rewords English.
+- **Translations:** `Strings.fr.resx` ships French. Every key added to `Strings.resx` needs its French value
+  too, with the same `{0}` placeholders and, in menu captions, a `_` mnemonic;
+  `LocalizationTests.Translation_HasEveryKeyAndKeepsEveryPlaceholder` fails otherwise. The user picks the
+  language in File > Preferences (`AppLanguage`, read at startup by `Program.ConfigureCulture`).
 
 **Never localize:** log messages (logger calls, `PlayerListImportService.LogLines`, level prefixes; they go
 into bug/crash reports), crash-report context labels and bug-report field keys, server log-parse patterns,

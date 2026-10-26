@@ -54,6 +54,7 @@ Every push and pull request is built by GitHub Actions (`.github/workflows/build
 * **Automatic startup** - If enabled, can automatically start up your server when your computer starts
 * **Minimize to tray** - Minimize this app and control your server entirely from the system tray
 * **Multi-server support** - Run multiple servers at once by creating separate server profiles (see [FAQs](https://runeberry.com/valheim-server-gui/docs/frequently-asked-questions/) for details)
+* **English or French** - The interface follows your system language, or pick one under File > Preferences
 * **Works with mods!** - Tested and working with server-side mods such as [Valheim Plus](https://www.nexusmods.com/valheim/mods/2323)"
 
 ## Quick guide

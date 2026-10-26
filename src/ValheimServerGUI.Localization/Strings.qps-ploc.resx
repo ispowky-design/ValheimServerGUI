@@ -883,6 +883,16 @@
   <data name="Theme_Dark" xml:space="preserve">
     <value>⟦Theme_Dark⟧</value>
   </data>
+  <!-- Language -->
+  <data name="Language_System" xml:space="preserve">
+    <value>⟦Language_System⟧</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>⟦Language_English⟧</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>⟦Language_French⟧</value>
+  </data>
   <!-- Duration units -->
   <data name="DurationUnit_Seconds" xml:space="preserve">
     <value>⟦DurationUnit_Seconds⟧</value>
@@ -1085,6 +1095,12 @@
   </data>
   <data name="Preferences_Theme_Label" xml:space="preserve">
     <value>⟦Preferences_Theme_Label⟧</value>
+  </data>
+  <data name="Preferences_Language_Label" xml:space="preserve">
+    <value>⟦Preferences_Language_Label⟧</value>
+  </data>
+  <data name="Preferences_Language_Help" xml:space="preserve">
+    <value>⟦Preferences_Language_Help⟧</value>
   </data>
   <!-- Directories dialog -->
   <data name="Directories_Title" xml:space="preserve">

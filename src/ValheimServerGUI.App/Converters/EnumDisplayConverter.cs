@@ -53,6 +53,14 @@ public sealed class EnumDisplayConverter : IValueConverter
         _ => value.ToString(),
     };
 
+    public static string ToText(AppLanguage value) => value switch
+    {
+        AppLanguage.System => Strings.Language_System,
+        AppLanguage.English => Strings.Language_English,
+        AppLanguage.French => Strings.Language_French,
+        _ => value.ToString(),
+    };
+
     public static string ToText(DurationUnit value) => value switch
     {
         DurationUnit.Seconds => Strings.DurationUnit_Seconds,
@@ -82,6 +90,7 @@ public sealed class EnumDisplayConverter : IValueConverter
         PlayerStatus v => ToText(v),
         PlayerRole v => ToText(v),
         AppTheme v => ToText(v),
+        AppLanguage v => ToText(v),
         DurationUnit v => ToText(v),
         LogView v => ToText(v),
         WorldBackupKind v => ToText(v),

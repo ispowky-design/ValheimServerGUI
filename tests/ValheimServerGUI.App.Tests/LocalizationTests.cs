@@ -47,6 +47,35 @@ public class LocalizationTests
         }
     }
 
+    // Shipped translations: same keys as English, every placeholder kept, and a menu caption keeps its
+    // access-key mnemonic (the "_" before a letter).
+    [Theory]
+    [InlineData("fr")]
+    public void Translation_HasEveryKeyAndKeepsEveryPlaceholder(string culture)
+    {
+        var english = ResxValues("Strings.resx");
+        var translated = ResxValues($"Strings.{culture}.resx");
+
+        Assert.Empty(english.Keys.Except(translated.Keys));
+        Assert.Empty(translated.Keys.Except(english.Keys));
+        foreach (var (key, value) in translated)
+        {
+            Assert.False(string.IsNullOrWhiteSpace(value), key);
+            Assert.True(Placeholders(english[key]).SetEquals(Placeholders(value)), key);
+            if (key.StartsWith("MainWindow_Menu_") && english[key].Contains('_'))
+                Assert.Contains('_', value);
+        }
+    }
+
+    [Fact]
+    public void French_ResolvesFromItsSatellite()
+    {
+        var french = ResxValues("Strings.fr.resx");
+
+        WithUiCulture("fr", () => Assert.Equal(french[nameof(Strings.Common_Cancel)], Strings.Common_Cancel));
+        WithUiCulture("fr-CA", () => Assert.Equal(french[nameof(Strings.Common_Cancel)], Strings.Common_Cancel));
+    }
+
     [Fact]
     public void TestCulture_ResolvesFromItsSatellite()
     {
@@ -58,7 +87,7 @@ public class LocalizationTests
     {
         var english = Strings.ResourceManager.GetString(nameof(Strings.Common_OK), CultureInfo.InvariantCulture);
 
-        WithUiCulture("fr", () =>
+        WithUiCulture("ja", () =>
         {
             Assert.NotEqual("⟦Common_OK⟧", Strings.Common_OK);
             Assert.Equal(english, Strings.Common_OK);

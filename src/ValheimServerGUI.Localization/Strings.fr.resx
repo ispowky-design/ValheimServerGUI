@@ -1,0 +1,1839 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <!-- Common -->
+  <data name="Common_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Common_Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="Common_No" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="Common_RestoreDefaults" xml:space="preserve">
+    <value>Valeurs par défaut</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Common_Continue" xml:space="preserve">
+    <value>Continuer</value>
+  </data>
+  <data name="Common_NotAvailable" xml:space="preserve">
+    <value>N/D</value>
+  </data>
+  <data name="Common_Loading" xml:space="preserve">
+    <value>Chargement…</value>
+  </data>
+  <!-- Main window -->
+  <data name="MainWindow_Profile_Label" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="ServerAction_Start" xml:space="preserve">
+    <value>Démarrer le serveur</value>
+  </data>
+  <data name="ServerAction_Restart" xml:space="preserve">
+    <value>Redémarrer le serveur</value>
+  </data>
+  <data name="ServerAction_Stop" xml:space="preserve">
+    <value>Arrêter le serveur</value>
+  </data>
+  <data name="ServerAction_ForceStop" xml:space="preserve">
+    <value>Forcer l'arrêt</value>
+  </data>
+  <data name="ServerAction_ForceStop_Tip" xml:space="preserve">
+    <value>Le serveur met anormalement longtemps à s'arrêter. Le tuer maintenant (la progression depuis la dernière sauvegarde du monde sera perdue).</value>
+  </data>
+  <data name="MainWindow_Menu_File" xml:space="preserve">
+    <value>_Fichier</value>
+  </data>
+  <data name="MainWindow_Menu_NewWindow" xml:space="preserve">
+    <value>Nouvelle _fenêtre</value>
+  </data>
+  <data name="MainWindow_Menu_NewProfile" xml:space="preserve">
+    <value>Nouveau _profil</value>
+  </data>
+  <data name="MainWindow_Menu_SaveProfile" xml:space="preserve">
+    <value>_Enregistrer le profil</value>
+  </data>
+  <data name="MainWindow_Menu_SaveProfileAs" xml:space="preserve">
+    <value>Enregistrer le profil _sous…</value>
+  </data>
+  <data name="MainWindow_Menu_LoadProfile" xml:space="preserve">
+    <value>_Charger un profil</value>
+  </data>
+  <data name="MainWindow_Menu_RemoveProfile" xml:space="preserve">
+    <value>_Supprimer le profil</value>
+  </data>
+  <data name="MainWindow_Menu_Preferences" xml:space="preserve">
+    <value>_Préférences…</value>
+  </data>
+  <data name="MainWindow_Menu_SetDirectories" xml:space="preserve">
+    <value>_Dossiers…</value>
+  </data>
+  <data name="MainWindow_Menu_InstallServer" xml:space="preserve">
+    <value>Installer / mettre à jour le serveur…</value>
+  </data>
+  <data name="MainWindow_Menu_OpenSettingsDirectory" xml:space="preserve">
+    <value>_Ouvrir le dossier des réglages…</value>
+  </data>
+  <data name="MainWindow_Menu_Close" xml:space="preserve">
+    <value>_Quitter</value>
+  </data>
+  <data name="MainWindow_Menu_Help" xml:space="preserve">
+    <value>_Aide</value>
+  </data>
+  <data name="MainWindow_Menu_OnlineManual" xml:space="preserve">
+    <value>_Manuel en ligne</value>
+  </data>
+  <data name="MainWindow_Menu_PortForwarding" xml:space="preserve">
+    <value>_Redirection de ports</value>
+  </data>
+  <data name="MainWindow_Menu_BugReport" xml:space="preserve">
+    <value>Signaler un _bug…</value>
+  </data>
+  <data name="MainWindow_Menu_CheckForUpdates" xml:space="preserve">
+    <value>Rechercher des _mises à jour</value>
+  </data>
+  <data name="MainWindow_Menu_Discord" xml:space="preserve">
+    <value>Obtenir de l'aide sur _Discord</value>
+  </data>
+  <data name="MainWindow_Menu_About" xml:space="preserve">
+    <value>À _propos…</value>
+  </data>
+  <data name="MainWindow_Tab_ServerControls" xml:space="preserve">
+    <value>Serveur</value>
+  </data>
+  <data name="MainWindow_Tab_AdvancedControls" xml:space="preserve">
+    <value>Avancé</value>
+  </data>
+  <data name="MainWindow_Tab_ServerDetails" xml:space="preserve">
+    <value>Détails du serveur</value>
+  </data>
+  <data name="MainWindow_Tab_Players" xml:space="preserve">
+    <value>Joueurs</value>
+  </data>
+  <data name="MainWindow_Tab_Backups" xml:space="preserve">
+    <value>Sauvegardes</value>
+  </data>
+  <data name="MainWindow_Tab_WorldMap" xml:space="preserve">
+    <value>Carte du monde</value>
+  </data>
+  <data name="MainWindow_Tab_Logs" xml:space="preserve">
+    <value>Journaux</value>
+  </data>
+  <!-- Server Controls tab -->
+  <data name="ServerControls_Name_Label" xml:space="preserve">
+    <value>Nom du serveur</value>
+  </data>
+  <data name="ServerControls_Name_Help" xml:space="preserve">
+    <value>C'est le nom qui apparaîtra dans la liste des serveurs communautaires de Valheim.</value>
+  </data>
+  <data name="ServerControls_Port_Label" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="ServerControls_Port_Help" xml:space="preserve">
+    <value>Le port UDP à utiliser (1–65535). Valheim utilise aussi le port suivant.</value>
+  </data>
+  <data name="ServerControls_Password_Label" xml:space="preserve">
+    <value>Mot de passe</value>
+  </data>
+  <data name="ServerControls_Password_Help" xml:space="preserve">
+    <value>Ton serveur doit être protégé par un mot de passe. Il doit faire au moins 5 caractères et ne doit contenir ni le nom du serveur ni celui du monde hébergé.</value>
+  </data>
+  <data name="ServerControls_ShowPassword_Tip" xml:space="preserve">
+    <value>Afficher/masquer le mot de passe</value>
+  </data>
+  <data name="ServerControls_CopyPassword_Tip" xml:space="preserve">
+    <value>Copier le mot de passe</value>
+  </data>
+  <data name="ServerControls_World_Header" xml:space="preserve">
+    <value>Monde</value>
+  </data>
+  <data name="ServerControls_ExistingWorld_Label" xml:space="preserve">
+    <value>Existant</value>
+  </data>
+  <data name="ServerControls_NewWorld_Label" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="ServerControls_WorldSettings_Tip" xml:space="preserve">
+    <value>Modificateurs du monde</value>
+  </data>
+  <data name="ServerControls_RefreshWorlds_Tip" xml:space="preserve">
+    <value>Actualiser la liste des mondes</value>
+  </data>
+  <data name="ServerControls_OpenSaveFolder_Tip" xml:space="preserve">
+    <value>Ouvrir le dossier des sauvegardes dans l'explorateur</value>
+  </data>
+  <data name="ServerControls_WorldMap_Tip" xml:space="preserve">
+    <value>Voir la carte du monde sélectionné (ouvre valheim-map.world dans le navigateur)</value>
+  </data>
+  <data name="Validation_WorldMapNoSeed" xml:space="preserve">
+    <value>La carte a besoin d'un monde sauvegardé. Choisis un monde local existant que le serveur a sauvegardé au moins une fois.</value>
+  </data>
+  <data name="Validation_WorldMapFailed" xml:space="preserve">
+    <value>Impossible de lire la seed du monde : {0}</value>
+  </data>
+  <data name="ServerControls_SelectWorld_Label" xml:space="preserve">
+    <value>Choisir un monde</value>
+  </data>
+  <data name="ServerControls_SelectWorld_Placeholder" xml:space="preserve">
+    <value>(aucun monde)</value>
+  </data>
+  <data name="ServerControls_NewWorldName_Label" xml:space="preserve">
+    <value>Nom du nouveau monde</value>
+  </data>
+  <data name="ServerControls_NewWorldName_Watermark" xml:space="preserve">
+    <value>5 à 20 caractères</value>
+  </data>
+  <data name="ServerControls_JoinOptions_Header" xml:space="preserve">
+    <value>Options de connexion</value>
+  </data>
+  <data name="ServerControls_Public_Label" xml:space="preserve">
+    <value>Serveur communautaire (public)</value>
+  </data>
+  <data name="ServerControls_Public_Help" xml:space="preserve">
+    <value>Si cette case est cochée, ton serveur apparaîtra dans la liste des serveurs communautaires de Valheim. Sinon, les autres joueurs devront utiliser « Rejoindre par IP » pour se connecter.
+
+REMARQUE : le serveur met en général 1 à 2 minutes à apparaître dans la liste en jeu, parfois jusqu'à 15 minutes, et il arrive qu'il n'apparaisse pas du tout. « Rejoindre par IP » marche toujours en secours.</value>
+  </data>
+  <data name="ServerControls_Crossplay_Label" xml:space="preserve">
+    <value>Activer le crossplay</value>
+  </data>
+  <data name="ServerControls_Crossplay_Help" xml:space="preserve">
+    <value>Permet aux joueurs d'autres plateformes de rejoindre ta partie (Microsoft Store, Xbox, etc.)
+
+Tu devras peut-être leur donner un code d'invitation, affiché en jeu et dans les journaux du serveur.</value>
+  </data>
+  <data name="ServerControls_CloudWorldSuffix" xml:space="preserve">
+    <value> (cloud)</value>
+  </data>
+  <!-- Advanced Controls tab -->
+  <data name="Paths_ServerExe_Label" xml:space="preserve">
+    <value>Exécutable de Valheim Dedicated Server</value>
+  </data>
+  <data name="Paths_SaveData_Label" xml:space="preserve">
+    <value>Dossier des sauvegardes de Valheim</value>
+  </data>
+  <data name="Paths_BepInExPreloader_Label" xml:space="preserve">
+    <value>.dll du préchargeur BepInEx</value>
+  </data>
+  <data name="Paths_DoorstopLibrary_Label" xml:space="preserve">
+    <value>Bibliothèque Doorstop .so</value>
+  </data>
+  <data name="AdvancedControls_SetDirectories" xml:space="preserve">
+    <value>Dossiers…</value>
+  </data>
+  <data name="AdvancedControls_OtherSettings_Header" xml:space="preserve">
+    <value>Autres réglages</value>
+  </data>
+  <data name="AdvancedControls_AutoStart_Label" xml:space="preserve">
+    <value>Démarrer ce serveur avec ValheimServerGUI</value>
+  </data>
+  <data name="AdvancedControls_AutoStart_Help" xml:space="preserve">
+    <value>Démarre automatiquement ce serveur à l'ouverture de ValheimServerGUI. Pour relancer le serveur à chaque redémarrage de l'ordinateur, active ce réglage ainsi que celui de Fichier &gt; Préférences.</value>
+  </data>
+  <data name="AdvancedControls_WriteLogs_Label" xml:space="preserve">
+    <value>Écrire les journaux du serveur dans un fichier</value>
+  </data>
+  <data name="AdvancedControls_WriteLogs_Help" xml:space="preserve">
+    <value>Si activé, les journaux de ce serveur sont écrits dans un fichier journalier sur le disque. Les journaux de plus de 30 jours sont supprimés automatiquement.</value>
+  </data>
+  <data name="AdvancedControls_AdditionalArgs_Label" xml:space="preserve">
+    <value>Arguments supplémentaires</value>
+  </data>
+  <data name="AdvancedControls_AdditionalArgs_Help" xml:space="preserve">
+    <value>Ajoute ici les arguments à passer en plus à la commande de lancement du serveur. Ils sont ajoutés à la fin de la commande générée par ValheimServerGUI.</value>
+  </data>
+  <data name="AdvancedControls_EnvironmentVariables_Label" xml:space="preserve">
+    <value>Variables d'environnement supplémentaires</value>
+  </data>
+  <data name="AdvancedControls_EnvironmentVariables_Help" xml:space="preserve">
+    <value>Définis ici des variables d'environnement supplémentaires. Elles sont placées au début de la commande générée par ValheimServerGUI.</value>
+  </data>
+  <data name="AdvancedControls_SavingBackups_Header" xml:space="preserve">
+    <value>Sauvegarde et copies</value>
+  </data>
+  <data name="AdvancedControls_Backups_Label" xml:space="preserve">
+    <value>Copies</value>
+  </data>
+  <data name="AdvancedControls_Backups_Help" xml:space="preserve">
+    <value>Nombre de copies de sauvegarde du monde à conserver. Une copie tournante est créée à l'intervalle court, les suivantes à l'intervalle long.</value>
+  </data>
+  <data name="AdvancedControls_SaveInterval_Label" xml:space="preserve">
+    <value>Intervalle de sauvegarde</value>
+  </data>
+  <data name="AdvancedControls_SaveInterval_Help" xml:space="preserve">
+    <value>Fréquence de sauvegarde du monde.</value>
+  </data>
+  <data name="AdvancedControls_ShortBackup_Label" xml:space="preserve">
+    <value>Copie courte</value>
+  </data>
+  <data name="AdvancedControls_ShortBackup_Help" xml:space="preserve">
+    <value>Fréquence de création d'une copie tournante de la sauvegarde du monde.</value>
+  </data>
+  <data name="AdvancedControls_LongBackup_Label" xml:space="preserve">
+    <value>Copie longue</value>
+  </data>
+  <data name="AdvancedControls_LongBackup_Help" xml:space="preserve">
+    <value>Fréquence de création des copies supplémentaires de la sauvegarde du monde. Cet intervalle doit être plus long que celui de la copie courte.</value>
+  </data>
+  <!-- Server Details tab -->
+  <data name="ServerDetails_Connection_Header" xml:space="preserve">
+    <value>Connexion</value>
+  </data>
+  <data name="ServerDetails_ExternalIp_Label" xml:space="preserve">
+    <value>Adresse IP externe :</value>
+  </data>
+  <data name="ServerDetails_ExternalIp_Help" xml:space="preserve">
+    <value>C'est l'adresse qu'utilisent les joueurs hors de ton réseau local pour se connecter à ton serveur. Donne-la à tes amis pour jouer en ligne.</value>
+  </data>
+  <data name="ServerDetails_ExternalIp_CopyTip" xml:space="preserve">
+    <value>Copier l'adresse IP externe</value>
+  </data>
+  <data name="ServerDetails_InternalIp_Label" xml:space="preserve">
+    <value>Adresse IP interne :</value>
+  </data>
+  <data name="ServerDetails_InternalIp_Help" xml:space="preserve">
+    <value>C'est l'adresse que les joueurs de ton réseau local (connectés à ta box) peuvent utiliser pour rejoindre ton serveur. Donne-la à tes amis en LAN, ou utilise-la toi-même si le serveur tourne sur une autre machine de ton réseau que celle où tu joues.</value>
+  </data>
+  <data name="ServerDetails_InternalIp_CopyTip" xml:space="preserve">
+    <value>Copier l'adresse IP interne</value>
+  </data>
+  <data name="ServerDetails_LocalIp_Label" xml:space="preserve">
+    <value>Adresse IP locale :</value>
+  </data>
+  <data name="ServerDetails_LocalIp_Help" xml:space="preserve">
+    <value>Utilise cette adresse pour te connecter si tu joues sur la machine qui héberge le serveur. C'est la connexion la plus rapide possible (« l'avantage de l'hôte ») !
+
+ASTUCE : tu peux aussi te connecter à « localhost », plus simple à taper que « 127.0.0.1 ».</value>
+  </data>
+  <data name="ServerDetails_LocalIp_CopyTip" xml:space="preserve">
+    <value>Copier l'adresse IP locale</value>
+  </data>
+  <data name="ServerDetails_InviteCode_Label" xml:space="preserve">
+    <value>Code d'invitation :</value>
+  </data>
+  <data name="ServerDetails_InviteCode_Help" xml:space="preserve">
+    <value>Les codes d'invitation n'existent que si le crossplay est activé, et changent à chaque redémarrage du serveur. Les joueurs de toutes les plateformes peuvent se connecter avec ce code au lieu d'une adresse IP.</value>
+  </data>
+  <data name="ServerDetails_InviteCode_CopyTip" xml:space="preserve">
+    <value>Copier le code d'invitation</value>
+  </data>
+  <data name="ServerDetails_TroubleConnecting" xml:space="preserve">
+    <value>Problème de connexion ? Voir Aide &gt; Redirection de ports.</value>
+  </data>
+  <data name="ServerDetails_Statistics_Header" xml:space="preserve">
+    <value>Statistiques</value>
+  </data>
+  <data name="ServerDetails_Uptime_Label" xml:space="preserve">
+    <value>Temps de fonctionnement :</value>
+  </data>
+  <data name="ServerDetails_LastWorldSave_Label" xml:space="preserve">
+    <value>Dernière sauvegarde :</value>
+  </data>
+  <data name="ServerDetails_AvgWorldSave_Label" xml:space="preserve">
+    <value>Sauvegarde moyenne :</value>
+  </data>
+  <data name="ServerDetails_AvgWorldSave_Help" xml:space="preserve">
+    <value>Durée moyenne de sauvegarde du monde sur les 10 dernières sauvegardes.</value>
+  </data>
+  <data name="ServerDetails_Uptime_OneDay" xml:space="preserve">
+    <value>1 jour + {0}</value>
+  </data>
+  <data name="ServerDetails_Uptime_Days" xml:space="preserve">
+    <value>{0} jours + {1}</value>
+  </data>
+  <data name="ServerDetails_LastWorldSave_Value" xml:space="preserve">
+    <value>{0:G} ({1:F0} ms)</value>
+  </data>
+  <data name="ServerDetails_AvgWorldSave_Value" xml:space="preserve">
+    <value>{0:F0} ms</value>
+  </data>
+  <!-- Players tab -->
+  <data name="Players_ManagePlayers" xml:space="preserve">
+    <value>Gérer les joueurs…</value>
+  </data>
+  <data name="Players_CharacterNamesHelp" xml:space="preserve">
+    <value>Noms de personnages incorrects ? Clique ici.</value>
+  </data>
+  <data name="Players_UsePermittedList_Label" xml:space="preserve">
+    <value>Utiliser la liste des autorisés</value>
+  </data>
+  <data name="Players_UsePermittedList_Help" xml:space="preserve">
+    <value>Si activé, seuls les joueurs de la liste des autorisés peuvent rejoindre le serveur. Ajoute des joueurs à cette liste avec le tableau ci-dessous.</value>
+  </data>
+  <data name="Players_ShowBanned_Label" xml:space="preserve">
+    <value>Afficher les joueurs bannis</value>
+  </data>
+  <data name="Players_Menu_ViewDetails" xml:space="preserve">
+    <value>Voir les détails du joueur…</value>
+  </data>
+  <data name="Players_Menu_SetServerRole" xml:space="preserve">
+    <value>Définir le rôle</value>
+  </data>
+  <data name="Role_Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Role_Permitted" xml:space="preserve">
+    <value>Autorisé</value>
+  </data>
+  <data name="Role_Banned" xml:space="preserve">
+    <value>Banni</value>
+  </data>
+  <data name="Players_Menu_AddPlayer" xml:space="preserve">
+    <value>Ajouter un joueur…</value>
+  </data>
+  <data name="Players_Menu_RemovePlayer" xml:space="preserve">
+    <value>Retirer le joueur</value>
+  </data>
+  <data name="Players_Column_Player" xml:space="preserve">
+    <value>Joueur (personnage)</value>
+  </data>
+  <data name="Players_Column_Role" xml:space="preserve">
+    <value>Rôle</value>
+  </data>
+  <data name="Players_Column_Status" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="Players_Column_Since" xml:space="preserve">
+    <value>Depuis</value>
+  </data>
+  <data name="Players_ViewDetails_Tip" xml:space="preserve">
+    <value>Voir les détails du joueur</value>
+  </data>
+  <data name="Players_ImportLists_Tip" xml:space="preserve">
+    <value>Importer des listes de joueurs</value>
+  </data>
+  <data name="Players_AddPlayer_Tip" xml:space="preserve">
+    <value>Ajouter un joueur</value>
+  </data>
+  <data name="Players_RemovePlayer_Tip" xml:space="preserve">
+    <value>Retirer le joueur</value>
+  </data>
+  <data name="Players_EmptyText" xml:space="preserve">
+    <value>Les joueurs apparaîtront ici quand ils rejoindront ton serveur.</value>
+  </data>
+  <data name="Players_Menu_DefaultRole" xml:space="preserve">
+    <value>Rôle par défaut ({0})</value>
+  </data>
+  <data name="Players_UnknownName" xml:space="preserve">
+    <value>[inconnu]</value>
+  </data>
+  <!-- Backups tab -->
+  <data name="Backups_World_Label" xml:space="preserve">
+    <value>Monde</value>
+  </data>
+  <data name="Backups_World_None" xml:space="preserve">
+    <value>(aucun monde sélectionné)</value>
+  </data>
+  <data name="Backups_BackUpNow" xml:space="preserve">
+    <value>Sauvegarder maintenant</value>
+  </data>
+  <data name="Backups_BackUpNow_Tip" xml:space="preserve">
+    <value>Compresser les fichiers actuels du monde dans une nouvelle sauvegarde</value>
+  </data>
+  <data name="Backups_Restore" xml:space="preserve">
+    <value>Restaurer</value>
+  </data>
+  <data name="Backups_Restore_Tip" xml:space="preserve">
+    <value>Remplacer le monde par la sauvegarde sélectionnée</value>
+  </data>
+  <data name="Backups_Delete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="Backups_Delete_Tip" xml:space="preserve">
+    <value>Supprimer la sauvegarde sélectionnée</value>
+  </data>
+  <data name="Backups_OpenFolder_Tip" xml:space="preserve">
+    <value>Ouvrir le dossier des sauvegardes de ce monde</value>
+  </data>
+  <data name="Backups_Refresh_Tip" xml:space="preserve">
+    <value>Actualiser la liste des sauvegardes</value>
+  </data>
+  <data name="Backups_Column_Created" xml:space="preserve">
+    <value>Créée le</value>
+  </data>
+  <data name="Backups_Column_Kind" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Backups_Column_Size" xml:space="preserve">
+    <value>Taille</value>
+  </data>
+  <data name="Backups_EmptyText" xml:space="preserve">
+    <value>Aucune sauvegarde de ce monde pour l'instant.</value>
+  </data>
+  <data name="Backups_NoWorldText" xml:space="preserve">
+    <value>Choisis un monde existant dans l'onglet Serveur pour voir ses sauvegardes.</value>
+  </data>
+  <data name="Backups_Help" xml:space="preserve">
+    <value>Les sauvegardes automatiques sont faites par le serveur lui-même (voir l'onglet Avancé). Une restauration sauvegarde d'abord le monde dans son état actuel, elle peut donc toujours être annulée.</value>
+  </data>
+  <data name="Backups_Status_Working" xml:space="preserve">
+    <value>En cours…</value>
+  </data>
+  <data name="Backups_Status_Created" xml:space="preserve">
+    <value>Sauvegarde créée : {0}</value>
+  </data>
+  <data name="Backups_Status_Restored" xml:space="preserve">
+    <value>Monde restauré depuis la sauvegarde du {0:g}.</value>
+  </data>
+  <data name="Backups_Status_RestoredWithSafety" xml:space="preserve">
+    <value>Monde restauré depuis la sauvegarde du {0:g}. L'état précédent a été sauvegardé sous {1}.</value>
+  </data>
+  <data name="Backups_Status_Deleted" xml:space="preserve">
+    <value>Sauvegarde supprimée.</value>
+  </data>
+  <data name="Backups_Size_KB" xml:space="preserve">
+    <value>{0:N0} Ko</value>
+  </data>
+  <data name="Backups_Size_MB" xml:space="preserve">
+    <value>{0:N1} Mo</value>
+  </data>
+  <data name="Backups_Kind_Manual" xml:space="preserve">
+    <value>Manuelle</value>
+  </data>
+  <data name="Backups_Kind_Automatic" xml:space="preserve">
+    <value>Automatique</value>
+  </data>
+  <data name="Backups_WorldInUse" xml:space="preserve">
+    <value>Arrête le serveur qui utilise ce monde avant de restaurer une sauvegarde.</value>
+  </data>
+  <data name="Prompt_RestoreBackup_Title" xml:space="preserve">
+    <value>Restaurer la sauvegarde</value>
+  </data>
+  <data name="Prompt_RestoreBackup_Message" xml:space="preserve">
+    <value>Remplacer le monde « {0} » par la sauvegarde du {1:g} ?
+
+Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
+  </data>
+  <data name="Prompt_DeleteBackup_Title" xml:space="preserve">
+    <value>Supprimer la sauvegarde</value>
+  </data>
+  <data name="Prompt_DeleteBackup_Message" xml:space="preserve">
+    <value>Supprimer la sauvegarde du {0:g} ? C'est définitif.</value>
+  </data>
+  <data name="Prompt_BackupFailed_Title" xml:space="preserve">
+    <value>Erreur de sauvegarde</value>
+  </data>
+  <data name="Backups_Error_WorldNotFound" xml:space="preserve">
+    <value>Le monde « {0} » n'a pas encore de fichiers de sauvegarde.</value>
+  </data>
+  <data name="Backups_Error_BackupNotFound" xml:space="preserve">
+    <value>La sauvegarde n'existe plus : {0}</value>
+  </data>
+  <data name="Backups_Error_BackupEmpty" xml:space="preserve">
+    <value>La sauvegarde ne contient aucun fichier de monde : {0}</value>
+  </data>
+  <data name="Backups_Error_ForeignEntry" xml:space="preserve">
+    <value>La sauvegarde contient « {0} », qui ne fait pas partie du monde « {1} ». Rien n'a été restauré.</value>
+  </data>
+  <data name="Backups_Error_DeleteAutomatic" xml:space="preserve">
+    <value>Les sauvegardes automatiques sont gérées par le serveur et ne peuvent pas être supprimées ici.</value>
+  </data>
+  <!-- World Map tab -->
+  <data name="Map_World_Label" xml:space="preserve">
+    <value>Monde</value>
+  </data>
+  <data name="Map_World_None" xml:space="preserve">
+    <value>(aucun monde sélectionné)</value>
+  </data>
+  <data name="Map_Seed_Label" xml:space="preserve">
+    <value>Seed</value>
+  </data>
+  <data name="Map_Seed_Help" xml:space="preserve">
+    <value>La seed à partir de laquelle le monde a été généré. Tape n'importe quelle seed et clique sur Aperçu pour voir son terrain avant de créer un monde.</value>
+  </data>
+  <data name="Map_Seed_Watermark" xml:space="preserve">
+    <value>Seed à prévisualiser</value>
+  </data>
+  <data name="Map_Preview" xml:space="preserve">
+    <value>Aperçu</value>
+  </data>
+  <data name="Map_Preview_Tip" xml:space="preserve">
+    <value>Dessiner la carte de la seed tapée (terrain seulement)</value>
+  </data>
+  <data name="Map_Refresh_Tip" xml:space="preserve">
+    <value>Recharger la carte du monde sélectionné depuis sa dernière sauvegarde complète</value>
+  </data>
+  <data name="Map_Layers_Header" xml:space="preserve">
+    <value>Calques</value>
+  </data>
+  <data name="Map_Layer_Spawn" xml:space="preserve">
+    <value>Point d'apparition</value>
+  </data>
+  <data name="Map_Layer_Bosses" xml:space="preserve">
+    <value>Boss</value>
+  </data>
+  <data name="Map_Layer_Traders" xml:space="preserve">
+    <value>Marchands</value>
+  </data>
+  <data name="Map_Layer_Dungeons" xml:space="preserve">
+    <value>Donjons</value>
+  </data>
+  <data name="Map_Layer_Camps" xml:space="preserve">
+    <value>Camps</value>
+  </data>
+  <data name="Map_Layer_Fog" xml:space="preserve">
+    <value>Brouillard sur les zones inexplorées</value>
+  </data>
+  <data name="Map_Layer_Fog_Help" xml:space="preserve">
+    <value>Couvre les zones que le serveur n'a pas encore générées. C'est une approximation tirée de la sauvegarde du monde, qui ne lit pas les cartes des joueurs.</value>
+  </data>
+  <data name="Map_Search_Header" xml:space="preserve">
+    <value>Recherche</value>
+  </data>
+  <data name="Map_Search_Watermark" xml:space="preserve">
+    <value>Nom du lieu</value>
+  </data>
+  <data name="Map_Search_Column_Name" xml:space="preserve">
+    <value>Nom</value>
+  </data>
+  <data name="Map_Search_Column_Distance" xml:space="preserve">
+    <value>Distance</value>
+  </data>
+  <data name="Map_Search_Distance" xml:space="preserve">
+    <value>{0:N0} m</value>
+  </data>
+  <data name="Map_Search_EmptyText" xml:space="preserve">
+    <value>Aucun lieu ne correspond.</value>
+  </data>
+  <data name="Map_Legend_Header" xml:space="preserve">
+    <value>Biomes</value>
+  </data>
+  <data name="Map_Biome_Meadows" xml:space="preserve">
+    <value>Prairies</value>
+  </data>
+  <data name="Map_Biome_BlackForest" xml:space="preserve">
+    <value>Forêt noire</value>
+  </data>
+  <data name="Map_Biome_Swamp" xml:space="preserve">
+    <value>Marécages</value>
+  </data>
+  <data name="Map_Biome_Mountain" xml:space="preserve">
+    <value>Montagnes</value>
+  </data>
+  <data name="Map_Biome_Plains" xml:space="preserve">
+    <value>Plaines</value>
+  </data>
+  <data name="Map_Biome_Mistlands" xml:space="preserve">
+    <value>Terres brumeuses</value>
+  </data>
+  <data name="Map_Biome_Ashlands" xml:space="preserve">
+    <value>Terres cendrées</value>
+  </data>
+  <data name="Map_Biome_DeepNorth" xml:space="preserve">
+    <value>Grand Nord</value>
+  </data>
+  <data name="Map_Biome_Ocean" xml:space="preserve">
+    <value>Océan</value>
+  </data>
+  <data name="Map_Status_Generating" xml:space="preserve">
+    <value>Génération de la carte…</value>
+  </data>
+  <data name="Map_Status_NoWorld" xml:space="preserve">
+    <value>Choisis un monde existant, ou tape une seed et clique sur Aperçu.</value>
+  </data>
+  <data name="Map_Status_NoSave" xml:space="preserve">
+    <value>Aucune sauvegarde Valheim 1.0 complète n'a encore été trouvée pour ce monde.</value>
+  </data>
+  <data name="Map_Status_World" xml:space="preserve">
+    <value>{0} lieux lus dans la dernière sauvegarde ({1:g}).</value>
+  </data>
+  <data name="Map_Status_TerrainOnly" xml:space="preserve">
+    <value>Ce monde n'a pas encore de données de lieux ; seul son terrain est affiché.</value>
+  </data>
+  <data name="Map_Status_Preview" xml:space="preserve">
+    <value>Aperçu de la seed : terrain seulement. Les boss, marchands et donjons sont lus dans la sauvegarde d'un monde.</value>
+  </data>
+  <data name="Map_Status_ReadFailed" xml:space="preserve">
+    <value>Impossible de lire la sauvegarde du monde : {0}</value>
+  </data>
+  <data name="Map_Status_InvalidSeed" xml:space="preserve">
+    <value>Tape une seed à prévisualiser.</value>
+  </data>
+  <data name="Map_Cursor" xml:space="preserve">
+    <value>X {0:F0}   Z {1:F0}</value>
+  </data>
+  <data name="MapLocation_StartTemple" xml:space="preserve">
+    <value>Pierres sacrificielles</value>
+  </data>
+  <data name="MapLocation_Eikthyr" xml:space="preserve">
+    <value>Eikthyr</value>
+  </data>
+  <data name="MapLocation_TheElder" xml:space="preserve">
+    <value>L'Ancien</value>
+  </data>
+  <data name="MapLocation_Bonemass" xml:space="preserve">
+    <value>Masse d'os</value>
+  </data>
+  <data name="MapLocation_Moder" xml:space="preserve">
+    <value>Moder</value>
+  </data>
+  <data name="MapLocation_Yagluth" xml:space="preserve">
+    <value>Yagluth</value>
+  </data>
+  <data name="MapLocation_TheQueen" xml:space="preserve">
+    <value>La Reine</value>
+  </data>
+  <data name="MapLocation_Fader" xml:space="preserve">
+    <value>Fader</value>
+  </data>
+  <data name="MapLocation_DeepNorthBoss" xml:space="preserve">
+    <value>Boss du Grand Nord</value>
+  </data>
+  <data name="MapLocation_Haldor" xml:space="preserve">
+    <value>Haldor</value>
+  </data>
+  <data name="MapLocation_Hildir" xml:space="preserve">
+    <value>Hildir</value>
+  </data>
+  <data name="MapLocation_BogWitch" xml:space="preserve">
+    <value>Sorcière des marais</value>
+  </data>
+  <data name="MapLocation_BurialChambers" xml:space="preserve">
+    <value>Chambres funéraires</value>
+  </data>
+  <data name="MapLocation_TrollCave" xml:space="preserve">
+    <value>Caverne de troll</value>
+  </data>
+  <data name="MapLocation_SunkenCrypt" xml:space="preserve">
+    <value>Crypte engloutie</value>
+  </data>
+  <data name="MapLocation_FrostCave" xml:space="preserve">
+    <value>Grotte gelée</value>
+  </data>
+  <data name="MapLocation_InfestedMine" xml:space="preserve">
+    <value>Mine infestée</value>
+  </data>
+  <data name="MapLocation_SmoulderingTombs" xml:space="preserve">
+    <value>Tombeaux fumants</value>
+  </data>
+  <data name="MapLocation_HowlingCavern" xml:space="preserve">
+    <value>Caverne hurlante</value>
+  </data>
+  <data name="MapLocation_SealedTower" xml:space="preserve">
+    <value>Tour scellée</value>
+  </data>
+  <data name="MapLocation_CharredFortress" xml:space="preserve">
+    <value>Forteresse calcinée</value>
+  </data>
+  <data name="MapLocation_MorgenHole" xml:space="preserve">
+    <value>Trou de Morgen</value>
+  </data>
+  <data name="MapLocation_TheHole" xml:space="preserve">
+    <value>Le Trou</value>
+  </data>
+  <data name="MapLocation_FulingVillage" xml:space="preserve">
+    <value>Village de Gobelins</value>
+  </data>
+  <data name="MapLocation_GreydwarfNest" xml:space="preserve">
+    <value>Nid de Nains gris</value>
+  </data>
+  <!-- Install / Update Server (SteamCMD) -->
+  <data name="SteamCmd_Title" xml:space="preserve">
+    <value>Installer / mettre à jour le serveur</value>
+  </data>
+  <data name="SteamCmd_Intro" xml:space="preserve">
+    <value>Télécharge gratuitement Valheim Dedicated Server depuis Steam avec SteamCMD (connexion anonyme, aucun compte Steam nécessaire). SteamCMD est lui-même téléchargé la première fois.</value>
+  </data>
+  <data name="SteamCmd_Folder_Label" xml:space="preserve">
+    <value>Dossier d'installation</value>
+  </data>
+  <data name="SteamCmd_Folder_Help" xml:space="preserve">
+    <value>Le dossier où le serveur dédié est installé. Une mise à jour installe dans le même dossier. Garde-le séparé des sauvegardes de tes mondes.</value>
+  </data>
+  <data name="SteamCmd_Installed_Label" xml:space="preserve">
+    <value>Version installée</value>
+  </data>
+  <data name="SteamCmd_Latest_Label" xml:space="preserve">
+    <value>Dernière version</value>
+  </data>
+  <data name="SteamCmd_NotInstalled" xml:space="preserve">
+    <value>Non installé</value>
+  </data>
+  <data name="SteamCmd_Unknown" xml:space="preserve">
+    <value>Non vérifié</value>
+  </data>
+  <data name="SteamCmd_UpToDate" xml:space="preserve">
+    <value>{0} (à jour)</value>
+  </data>
+  <data name="SteamCmd_UpdateAvailable" xml:space="preserve">
+    <value>{0} (mise à jour disponible)</value>
+  </data>
+  <data name="SteamCmd_Validate_Label" xml:space="preserve">
+    <value>Vérifier tous les fichiers</value>
+  </data>
+  <data name="SteamCmd_Validate_Help" xml:space="preserve">
+    <value>Compare chaque fichier installé avec Steam et répare ceux qui diffèrent. Plus lent ; à utiliser si le serveur ne démarre plus après une mise à jour.</value>
+  </data>
+  <data name="SteamCmd_CheckForUpdate" xml:space="preserve">
+    <value>Vérifier les mises à jour</value>
+  </data>
+  <data name="SteamCmd_Install" xml:space="preserve">
+    <value>Installer / mettre à jour</value>
+  </data>
+  <data name="SteamCmd_UseServer" xml:space="preserve">
+    <value>Utiliser ce serveur</value>
+  </data>
+  <data name="SteamCmd_UseServer_Tip" xml:space="preserve">
+    <value>Faire pointer tous les profils vers le serveur de ce dossier (Fichier &gt; Dossiers)</value>
+  </data>
+  <data name="SteamCmd_Status_Working" xml:space="preserve">
+    <value>En cours…</value>
+  </data>
+  <data name="SteamCmd_Status_Installed" xml:space="preserve">
+    <value>Le serveur dédié est installé et à jour.</value>
+  </data>
+  <data name="SteamCmd_Status_Checked" xml:space="preserve">
+    <value>Vérification terminée.</value>
+  </data>
+  <data name="SteamCmd_Status_UsingServer" xml:space="preserve">
+    <value>Tous les profils utilisent maintenant ce serveur.</value>
+  </data>
+  <data name="SteamCmd_Status_Cancelled" xml:space="preserve">
+    <value>Annulé.</value>
+  </data>
+  <data name="SteamCmd_ServerRunning" xml:space="preserve">
+    <value>Arrête tous les serveurs lancés depuis ce dossier avant de le mettre à jour.</value>
+  </data>
+  <data name="SteamCmd_Log_Downloading" xml:space="preserve">
+    <value>Téléchargement de SteamCMD depuis {0}…</value>
+  </data>
+  <data name="SteamCmd_Log_Downloaded" xml:space="preserve">
+    <value>SteamCMD téléchargé.</value>
+  </data>
+  <data name="SteamCmd_Error_NotInArchive" xml:space="preserve">
+    <value>Le téléchargement de SteamCMD ne contenait pas {0}.</value>
+  </data>
+  <data name="SteamCmd_Error_NoFolder" xml:space="preserve">
+    <value>Choisis d'abord un dossier d'installation.</value>
+  </data>
+  <data name="SteamCmd_Error_NoSuccess" xml:space="preserve">
+    <value>SteamCMD s'est terminé sans signaler de réussite.</value>
+  </data>
+  <data name="SteamCmd_Error_Failed" xml:space="preserve">
+    <value>L'installation du serveur dédié a échoué : {0}</value>
+  </data>
+  <data name="Prompt_SteamCmdFailed_Title" xml:space="preserve">
+    <value>Installer / mettre à jour le serveur</value>
+  </data>
+  <!-- Server status -->
+  <data name="ServerStatus_Stopped" xml:space="preserve">
+    <value>Arrêté</value>
+  </data>
+  <data name="ServerStatus_Starting" xml:space="preserve">
+    <value>Démarrage</value>
+  </data>
+  <data name="ServerStatus_Running" xml:space="preserve">
+    <value>En marche</value>
+  </data>
+  <data name="ServerStatus_Stopping" xml:space="preserve">
+    <value>Arrêt en cours</value>
+  </data>
+  <!-- Player status -->
+  <data name="PlayerStatus_Offline" xml:space="preserve">
+    <value>Hors ligne</value>
+  </data>
+  <data name="PlayerStatus_Joining" xml:space="preserve">
+    <value>Connexion</value>
+  </data>
+  <data name="PlayerStatus_Online" xml:space="preserve">
+    <value>En ligne</value>
+  </data>
+  <data name="PlayerStatus_Leaving" xml:space="preserve">
+    <value>Déconnexion</value>
+  </data>
+  <data name="Players_RoleOverridden" xml:space="preserve">
+    <value>{0} (*)</value>
+  </data>
+  <!-- Logs tab -->
+  <data name="Logs_ViewFor_Label" xml:space="preserve">
+    <value>Journaux de :</value>
+  </data>
+  <data name="Logs_OpenFolder_Tip" xml:space="preserve">
+    <value>Ouvrir le dossier des journaux dans l'explorateur</value>
+  </data>
+  <data name="Logs_SaveLogs" xml:space="preserve">
+    <value>Enregistrer les journaux…</value>
+  </data>
+  <data name="Logs_ClearLogs" xml:space="preserve">
+    <value>Effacer les journaux</value>
+  </data>
+  <!-- Theme -->
+  <data name="Theme_System" xml:space="preserve">
+    <value>Système</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>Clair</value>
+  </data>
+  <data name="Theme_Valheim" xml:space="preserve">
+    <value>Valheim (bois et or)</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>Sombre</value>
+  </data>
+  <!-- Language -->
+  <data name="Language_System" xml:space="preserve">
+    <value>Langue du système</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>Français</value>
+  </data>
+  <!-- Duration units -->
+  <data name="DurationUnit_Seconds" xml:space="preserve">
+    <value>Secondes</value>
+  </data>
+  <data name="DurationUnit_Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="DurationUnit_Hours" xml:space="preserve">
+    <value>Heures</value>
+  </data>
+  <data name="DurationUnit_Days" xml:space="preserve">
+    <value>Jours</value>
+  </data>
+  <data name="Logs_View_Server" xml:space="preserve">
+    <value>Serveur</value>
+  </data>
+  <data name="Logs_View_Application" xml:space="preserve">
+    <value>Application</value>
+  </data>
+  <!-- Prompts -->
+  <data name="Prompt_UnsavedChanges_Title" xml:space="preserve">
+    <value>Modifications non enregistrées</value>
+  </data>
+  <data name="Prompt_UnsavedChanges_DiscardMessage" xml:space="preserve">
+    <value>Tu as des modifications non enregistrées. Les abandonner ?</value>
+  </data>
+  <data name="Prompt_UnsavedChanges_SaveMessage" xml:space="preserve">
+    <value>Tu as des modifications non enregistrées. Les enregistrer avant de fermer ?</value>
+  </data>
+  <data name="Prompt_UnsavedChanges_Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Prompt_UnsavedChanges_Discard" xml:space="preserve">
+    <value>Abandonner</value>
+  </data>
+  <data name="Prompt_Warning_Title" xml:space="preserve">
+    <value>Attention</value>
+  </data>
+  <data name="Prompt_ErrorStartingServer_Title" xml:space="preserve">
+    <value>Erreur au démarrage du serveur</value>
+  </data>
+  <data name="Prompt_CheckForUpdates_Title" xml:space="preserve">
+    <value>Mises à jour</value>
+  </data>
+  <data name="Prompt_RoleConflict_UseServerProfile" xml:space="preserve">
+    <value>Garder le profil du serveur</value>
+  </data>
+  <data name="Prompt_RoleConflict_UseRolesFromFile" xml:space="preserve">
+    <value>Utiliser les rôles du fichier</value>
+  </data>
+  <data name="Prompt_ProfileName_Title" xml:space="preserve">
+    <value>Nom du profil</value>
+  </data>
+  <data name="Prompt_ProfileName_Message" xml:space="preserve">
+    <value>Nom du profil de serveur :</value>
+  </data>
+  <data name="Prompt_ProfileName_Invalid" xml:space="preserve">
+    <value>Le nom du profil doit faire de 1 à 30 caractères et ne pas reprendre le nom d'un profil existant.</value>
+  </data>
+  <data name="Prompt_ProfileName_CopyOf" xml:space="preserve">
+    <value>Copie de {0}</value>
+  </data>
+  <data name="Prompt_ForceStop_Title" xml:space="preserve">
+    <value>Forcer l'arrêt</value>
+  </data>
+  <data name="Prompt_ForceStop_Message" xml:space="preserve">
+    <value>Le serveur du monde « {0} » est en train de s'arrêter depuis {1:F0} min sans se fermer.
+
+Forcer l'arrêt le tue immédiatement. Tout ce qui s'est passé depuis la dernière sauvegarde du monde est perdu. Le tuer maintenant ?</value>
+  </data>
+  <data name="Prompt_RemoveProfile_Title" xml:space="preserve">
+    <value>Supprimer le profil</value>
+  </data>
+  <data name="Prompt_RemoveProfile_Message" xml:space="preserve">
+    <value>Supprimer le profil de serveur « {0} » ?</value>
+  </data>
+  <data name="Prompt_WorldNameMissing_Title" xml:space="preserve">
+    <value>Nom du monde manquant</value>
+  </data>
+  <data name="Prompt_WorldNameMissing_NewWorld" xml:space="preserve">
+    <value>Saisis un nom pour le nouveau monde avant de changer ses modificateurs.</value>
+  </data>
+  <data name="Prompt_WorldNameMissing_NoWorld" xml:space="preserve">
+    <value>Impossible de changer les modificateurs : aucun monde n'est sélectionné.</value>
+  </data>
+  <data name="Prompt_ServerExeNotFound_Title" xml:space="preserve">
+    <value>Fichier introuvable</value>
+  </data>
+  <data name="Prompt_ServerExeNotFound_Message" xml:space="preserve">
+    <value>{0}
+
+Cela arrive si Valheim Dedicated Server n'est pas installé, ou s'il est installé dans un autre dossier. Voir l'Aide pour plus d'informations.
+
+Veux-tu changer les dossiers maintenant ?</value>
+  </data>
+  <data name="Prompt_CloudImport_Title" xml:space="preserve">
+    <value>Importer un monde cloud</value>
+  </data>
+  <data name="Prompt_CloudImport_Message" xml:space="preserve">
+    <value>Héberger le monde cloud « {0} » ?
+
+Ce monde est sauvegardé sur Steam Cloud et doit être placé dans le dossier de sauvegarde local du serveur pour être hébergé.
+
+Déplacer : rapatrier le monde et supprimer la copie Steam Cloud.
+Copier : rapatrier une copie et laisser la copie Steam Cloud en place.</value>
+  </data>
+  <data name="Prompt_CloudImport_Move" xml:space="preserve">
+    <value>Déplacer</value>
+  </data>
+  <data name="Prompt_CloudImport_Copy" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="Prompt_PathNotFound_Title" xml:space="preserve">
+    <value>Chemin introuvable</value>
+  </data>
+  <data name="Prompt_PathNotFound_Message" xml:space="preserve">
+    <value>{0}
+
+Enregistrer quand même ?</value>
+  </data>
+  <data name="Prompt_AddCharacter_Title" xml:space="preserve">
+    <value>Ajouter un personnage</value>
+  </data>
+  <data name="Prompt_AddCharacter_Message" xml:space="preserve">
+    <value>Ajoute un nom de personnage Valheim pour ce joueur :</value>
+  </data>
+  <data name="Prompt_EditCharacter_Title" xml:space="preserve">
+    <value>Modifier le personnage</value>
+  </data>
+  <data name="Prompt_EditCharacter_Message" xml:space="preserve">
+    <value>Modifier le nom du personnage « {0} »</value>
+  </data>
+  <data name="Prompt_EditPlayerName_Title" xml:space="preserve">
+    <value>Modifier le nom du joueur</value>
+  </data>
+  <data name="Prompt_EditPlayerName_Message" xml:space="preserve">
+    <value>Nom d'affichage de ce joueur (laisser vide pour l'effacer) :</value>
+  </data>
+  <data name="Prompt_ExitWhileRunning" xml:space="preserve">
+    <value>Un serveur Valheim tourne encore. L'arrêter et quitter ?</value>
+  </data>
+  <data name="Prompt_ExitWhileStopping" xml:space="preserve">
+    <value>Un serveur Valheim est en cours d'arrêt. Quitter quand même ?
+Tu risques de perdre des données de sauvegarde !</value>
+  </data>
+  <data name="Prompt_WorldSettingsChange_Title" xml:space="preserve">
+    <value>Les réglages du monde vont changer</value>
+  </data>
+  <data name="Prompt_WorldSettingsChange_Message" xml:space="preserve">
+    <value>Démarrer le serveur va modifier ces réglages du monde « {0} » pour qu'ils correspondent à ses réglages de monde :
+
+{1}
+
+Continuer ?</value>
+  </data>
+  <!-- Tray -->
+  <data name="Tray_Profile" xml:space="preserve">
+    <value>Profil : {0}</value>
+  </data>
+  <data name="Tray_NoProfile" xml:space="preserve">
+    <value>Aucun profil sélectionné</value>
+  </data>
+  <data name="Logs_SaveDialog_Title" xml:space="preserve">
+    <value>Enregistrer les journaux</value>
+  </data>
+  <data name="Logs_NothingToSave" xml:space="preserve">
+    <value>Aucun journal à enregistrer !</value>
+  </data>
+  <!-- Roles -->
+  <data name="Role_None" xml:space="preserve">
+    <value>Aucun</value>
+  </data>
+  <!-- Preferences dialog -->
+  <data name="Preferences_Title" xml:space="preserve">
+    <value>Préférences</value>
+  </data>
+  <data name="Preferences_CheckForUpdates_Label" xml:space="preserve">
+    <value>Rechercher automatiquement les mises à jour</value>
+  </data>
+  <data name="Preferences_CheckForUpdates_Help" xml:space="preserve">
+    <value>Si activé, ValheimServerGUI recherche les mises à jour au démarrage de l'appli, puis toutes les 24 heures.
+
+Sinon, tu peux les rechercher à tout moment avec Aide &gt; Rechercher des mises à jour.</value>
+  </data>
+  <data name="Preferences_StartWithOs_Label" xml:space="preserve">
+    <value>Démarrer avec le système</value>
+  </data>
+  <data name="Preferences_StartWithOs_Help" xml:space="preserve">
+    <value>Pour démarrer tes serveurs au démarrage de l'ordinateur, active ce réglage ainsi que « Démarrer ce serveur avec ValheimServerGUI » dans l'onglet Avancé de chaque serveur.</value>
+  </data>
+  <data name="Preferences_StartMinimized_Label" xml:space="preserve">
+    <value>Démarrer ValheimServerGUI réduit</value>
+  </data>
+  <data name="Preferences_StartMinimized_Help" xml:space="preserve">
+    <value>Active ce réglage pour réduire VSG dans la zone de notification à son démarrage.</value>
+  </data>
+  <data name="Preferences_SaveOnStart_Label" xml:space="preserve">
+    <value>Enregistrer le profil au démarrage du serveur</value>
+  </data>
+  <data name="Preferences_SaveOnStart_Help" xml:space="preserve">
+    <value>Si activé, les modifications de ton profil de serveur sont enregistrées quand tu cliques sur Démarrer le serveur. Sinon, tu dois les enregistrer toi-même avec Fichier &gt; Enregistrer.</value>
+  </data>
+  <data name="Preferences_WriteAppLogs_Label" xml:space="preserve">
+    <value>Écrire les journaux de l'appli dans un fichier</value>
+  </data>
+  <data name="Preferences_WriteAppLogs_Help" xml:space="preserve">
+    <value>Si activé, les journaux de ValheimServerGUI sont écrits dans un fichier journalier sur le disque. Les journaux de plus de 30 jours sont supprimés automatiquement.
+
+Remarque : ce réglage ne concerne pas les journaux de ton serveur, qui se règlent dans l'onglet Avancé de chaque profil.</value>
+  </data>
+  <data name="Preferences_ValidatePassword_Label" xml:space="preserve">
+    <value>Vérifier le mot de passe au démarrage du serveur</value>
+  </data>
+  <data name="Preferences_ValidatePassword_Help" xml:space="preserve">
+    <value>Valheim Dedicated Server refuse de démarrer si le mot de passe ne respecte pas certaines règles, et VSG les applique.
+
+Ne désactive ce réglage que si tu utilises un mod qui contourne ces règles et que tu veux que VSG arrête aussi de vérifier les mots de passe.</value>
+  </data>
+  <data name="Preferences_ForceStopOffer_Label" xml:space="preserve">
+    <value>Proposer de forcer l'arrêt après</value>
+  </data>
+  <data name="Preferences_ForceStopOffer_Help" xml:space="preserve">
+    <value>Si un serveur est encore en train de s'arrêter après ce délai, un bouton Forcer l'arrêt apparaît. Le serveur n'est jamais tué sans que tu cliques dessus : un arrêt normal peut prendre du temps car le serveur sauvegarde d'abord le monde.</value>
+  </data>
+  <data name="Preferences_Theme_Label" xml:space="preserve">
+    <value>Thème</value>
+  </data>
+  <data name="Preferences_Language_Label" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="Preferences_Language_Help" xml:space="preserve">
+    <value>La langue de l'appli. Redémarre ValheimServerGUI pour appliquer un changement.</value>
+  </data>
+  <!-- Directories dialog -->
+  <data name="Directories_Title" xml:space="preserve">
+    <value>Dossiers</value>
+  </data>
+  <data name="Directories_ServerExe_Help" xml:space="preserve">
+    <value>L'emplacement de Valheim Dedicated Server.
+
+REMARQUE : Valheim Dedicated Server doit être installé pour utiliser cette appli. Voir l'Aide pour l'installation.</value>
+  </data>
+  <data name="Directories_SaveData_Help" xml:space="preserve">
+    <value>L'emplacement des sauvegardes de ton serveur Valheim, avec le dossier « worlds », les listes d'admins, etc.</value>
+  </data>
+  <data name="Directories_Target_Label" xml:space="preserve">
+    <value>Dossiers pour :</value>
+  </data>
+  <data name="Directories_Target_AllProfiles" xml:space="preserve">
+    <value>Tous les profils</value>
+  </data>
+  <data name="Directories_UseDefault" xml:space="preserve">
+    <value>(utiliser la valeur commune à tous les profils)</value>
+  </data>
+  <data name="Directories_Target_Profile" xml:space="preserve">
+    <value>Profil : {0}</value>
+  </data>
+  <data name="Directories_BepInExPreloader_Help" xml:space="preserve">
+    <value>L'emplacement de BepInEx.Preloader.dll. Cette bibliothèque est nécessaire pour charger des mods sous Linux.</value>
+  </data>
+  <data name="Directories_DoorstopLibrary_Help" xml:space="preserve">
+    <value>L'emplacement de libdoorstop_x64.so. Cette bibliothèque est nécessaire pour charger des mods sous Linux.</value>
+  </data>
+  <data name="Directories_MissingServerExe" xml:space="preserve">
+    <value>L'exécutable du serveur n'existe pas :
+{0}</value>
+  </data>
+  <data name="Directories_MissingSaveData" xml:space="preserve">
+    <value>Le dossier des sauvegardes n'existe pas :
+{0}</value>
+  </data>
+  <data name="Directories_MissingBepInExPreloader" xml:space="preserve">
+    <value>Le préchargeur BepInEx n'existe pas :
+{0}</value>
+  </data>
+  <data name="Directories_MissingDoorstopLibrary" xml:space="preserve">
+    <value>La bibliothèque Doorstop n'existe pas :
+{0}</value>
+  </data>
+  <!-- Known characters -->
+  <data name="KnownCharacters_Header" xml:space="preserve">
+    <value>Personnages connus</value>
+  </data>
+  <data name="KnownCharacters_Help" xml:space="preserve">
+    <value>Les noms de personnages Valheim connus pour ce joueur. Les noms sont ajoutés automatiquement quand le joueur rejoint le serveur, mais tu peux les modifier toi-même.
+
+Un nom suivi de (!) n'est peut-être pas associé au bon joueur (limite du serveur Valheim). Supprime-le s'il est faux, ou sélectionne-le et clique sur Confirmer pour retirer l'avertissement.</value>
+  </data>
+  <data name="KnownCharacters_Menu_Rename" xml:space="preserve">
+    <value>Renommer le personnage</value>
+  </data>
+  <data name="KnownCharacters_Menu_Remove" xml:space="preserve">
+    <value>Retirer le nom du personnage</value>
+  </data>
+  <data name="KnownCharacters_Column_Name" xml:space="preserve">
+    <value>Nom du personnage</value>
+  </data>
+  <data name="KnownCharacters_Column_Status" xml:space="preserve">
+    <value>Statut</value>
+  </data>
+  <data name="KnownCharacters_Column_Since" xml:space="preserve">
+    <value>Depuis</value>
+  </data>
+  <data name="KnownCharacters_Add_Tip" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="KnownCharacters_Rename_Tip" xml:space="preserve">
+    <value>Renommer</value>
+  </data>
+  <data name="KnownCharacters_Remove_Tip" xml:space="preserve">
+    <value>Retirer</value>
+  </data>
+  <!-- Manage Players dialog -->
+  <data name="ManagePlayers_Title" xml:space="preserve">
+    <value>Gérer les joueurs</value>
+  </data>
+  <data name="ManagePlayers_Tab_Accounts" xml:space="preserve">
+    <value>Comptes des joueurs</value>
+  </data>
+  <data name="ManagePlayers_Tab_Banned" xml:space="preserve">
+    <value>Bannis</value>
+  </data>
+  <data name="ManagePlayers_Menu_SetDefaultRole" xml:space="preserve">
+    <value>Définir le rôle par défaut</value>
+  </data>
+  <data name="ManagePlayers_Column_PlayerName" xml:space="preserve">
+    <value>Nom du joueur</value>
+  </data>
+  <data name="ManagePlayers_NameUnknown" xml:space="preserve">
+    <value>(nom inconnu)</value>
+  </data>
+  <data name="ManagePlayers_Column_PlatformId" xml:space="preserve">
+    <value>ID de plateforme</value>
+  </data>
+  <data name="ManagePlayers_Column_DefaultRole" xml:space="preserve">
+    <value>Rôle par défaut</value>
+  </data>
+  <data name="ManagePlayers_NoAccounts" xml:space="preserve">
+    <value>Ajoute un compte avec le bouton ci-dessous.</value>
+  </data>
+  <data name="ManagePlayers_NoAccountSelected" xml:space="preserve">
+    <value>Sélectionne un compte pour voir ses personnages connus.</value>
+  </data>
+  <data name="ManagePlayers_NoKnownCharacters" xml:space="preserve">
+    <value>Aucun personnage connu pour ce compte.</value>
+  </data>
+  <data name="ManagePlayers_Menu_EditName" xml:space="preserve">
+    <value>Modifier le nom du joueur…</value>
+  </data>
+  <data name="ManagePlayers_Menu_CopyId" xml:space="preserve">
+    <value>Copier l'ID</value>
+  </data>
+  <data name="ManagePlayers_EditName_Tip" xml:space="preserve">
+    <value>Modifier le nom du joueur</value>
+  </data>
+  <data name="ManagePlayers_CopyId_Tip" xml:space="preserve">
+    <value>Copier l'ID</value>
+  </data>
+  <!-- Add Player dialog -->
+  <data name="AddPlayer_Title" xml:space="preserve">
+    <value>Ajouter un joueur</value>
+  </data>
+  <data name="AddPlayer_Platform_Label" xml:space="preserve">
+    <value>Plateforme</value>
+  </data>
+  <data name="AddPlayer_PlatformId_Label" xml:space="preserve">
+    <value>ID de plateforme</value>
+  </data>
+  <data name="AddPlayer_PlatformId_Watermark" xml:space="preserve">
+    <value>ex. 76561198000000000</value>
+  </data>
+  <data name="AddPlayer_PlayerName_Label" xml:space="preserve">
+    <value>Nom du joueur</value>
+  </data>
+  <data name="AddPlayer_DefaultRole_Label" xml:space="preserve">
+    <value>Rôle par défaut</value>
+  </data>
+  <data name="AddPlayer_ServerRole_Label" xml:space="preserve">
+    <value>Rôle sur ce serveur</value>
+  </data>
+  <data name="AddPlayer_SetAsDefault_Label" xml:space="preserve">
+    <value>Définir comme rôle par défaut de ce joueur</value>
+  </data>
+  <data name="AddPlayer_Submit" xml:space="preserve">
+    <value>Ajouter le joueur</value>
+  </data>
+  <data name="AddPlayer_DefaultRole_Help" xml:space="preserve">
+    <value>Le rôle par défaut que ce joueur reçoit sur tous les serveurs que tu héberges.</value>
+  </data>
+  <data name="AddPlayer_ServerRole_Help" xml:space="preserve">
+    <value>Le rôle de ce joueur quand il rejoint ce serveur.</value>
+  </data>
+  <data name="AddPlayer_SetAsDefault_Help" xml:space="preserve">
+    <value>Appliquer ce rôle à ce joueur sur tous tes serveurs, sauf ceux où un rôle propre au serveur le remplace.</value>
+  </data>
+  <!-- World Settings dialog -->
+  <data name="WorldPreferences_Preset_Label" xml:space="preserve">
+    <value>Préréglage de difficulté</value>
+  </data>
+  <data name="WorldPreferences_Preset_Help" xml:space="preserve">
+    <value>Les préréglages sont des ensembles d'options pour lancer un serveur rapidement.
+
+Si tu choisis un préréglage puis modifies un réglage, le préréglage est désélectionné.</value>
+  </data>
+  <data name="WorldPreferences_WikiPrefix" xml:space="preserve">
+    <value>En savoir plus sur les modificateurs de monde sur le</value>
+  </data>
+  <data name="WorldPreferences_WikiLink" xml:space="preserve">
+    <value>wiki Valheim.</value>
+  </data>
+  <data name="WorldPreferences_Modifiers_Header" xml:space="preserve">
+    <value>Modificateurs</value>
+  </data>
+  <data name="WorldPreferences_Keys_Header" xml:space="preserve">
+    <value>Clés supplémentaires</value>
+  </data>
+  <data name="WorldPreferences_Title" xml:space="preserve">
+    <value>Réglages du monde - {0}</value>
+  </data>
+  <data name="WorldGen_Preset_Custom" xml:space="preserve">
+    <value>Personnalisé (sans préréglage)</value>
+  </data>
+  <data name="WorldGen_Preset_Easy" xml:space="preserve">
+    <value>Facile</value>
+  </data>
+  <data name="WorldGen_Preset_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="WorldGen_Preset_Hard" xml:space="preserve">
+    <value>Difficile</value>
+  </data>
+  <data name="WorldGen_Preset_Hardcore" xml:space="preserve">
+    <value>Hardcore</value>
+  </data>
+  <data name="WorldGen_Preset_Casual" xml:space="preserve">
+    <value>Décontracté</value>
+  </data>
+  <data name="WorldGen_Preset_Hammer" xml:space="preserve">
+    <value>Mode marteau (créatif)</value>
+  </data>
+  <data name="WorldGen_Preset_Immersive" xml:space="preserve">
+    <value>Immersif</value>
+  </data>
+  <data name="WorldGen_Preset_Extras" xml:space="preserve">
+    <value>{0}+</value>
+  </data>
+  <data name="WorldGen_Change_Modifier" xml:space="preserve">
+    <value>{0} : {1} → {2}</value>
+  </data>
+  <data name="WorldGen_Change_KeyOff" xml:space="preserve">
+    <value>{0} : activé → désactivé</value>
+  </data>
+  <data name="WorldGen_Change_CustomValue" xml:space="preserve">
+    <value>{0} (valeur personnalisée ; sera remplacée)</value>
+  </data>
+  <data name="WorldGen_Value_Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="WorldGen_Combat_Name" xml:space="preserve">
+    <value>Combat</value>
+  </data>
+  <data name="WorldGen_Combat_Help" xml:space="preserve">
+    <value>Règle les dégâts infligés et subis. Règle aussi la probabilité de croiser des ennemis de plus haut niveau, et leur dangerosité.</value>
+  </data>
+  <data name="WorldGen_Combat_VeryEasy" xml:space="preserve">
+    <value>Très facile</value>
+  </data>
+  <data name="WorldGen_Combat_Easy" xml:space="preserve">
+    <value>Facile</value>
+  </data>
+  <data name="WorldGen_Combat_Hard" xml:space="preserve">
+    <value>Difficile</value>
+  </data>
+  <data name="WorldGen_Combat_VeryHard" xml:space="preserve">
+    <value>Très difficile</value>
+  </data>
+  <data name="WorldGen_DeathPenalty_Name" xml:space="preserve">
+    <value>Pénalité de mort</value>
+  </data>
+  <data name="WorldGen_DeathPenalty_Help" xml:space="preserve">
+    <value>Règle ce qui se passe quand tu meurs. Voir le wiki pour le détail des options.</value>
+  </data>
+  <data name="WorldGen_DeathPenalty_Casual" xml:space="preserve">
+    <value>Décontracté</value>
+  </data>
+  <data name="WorldGen_DeathPenalty_VeryEasy" xml:space="preserve">
+    <value>Très facile</value>
+  </data>
+  <data name="WorldGen_DeathPenalty_Easy" xml:space="preserve">
+    <value>Facile</value>
+  </data>
+  <data name="WorldGen_DeathPenalty_Hard" xml:space="preserve">
+    <value>Difficile</value>
+  </data>
+  <data name="WorldGen_DeathPenalty_Hardcore" xml:space="preserve">
+    <value>Hardcore</value>
+  </data>
+  <data name="WorldGen_Resources_Name" xml:space="preserve">
+    <value>Taux de ressources</value>
+  </data>
+  <data name="WorldGen_Resources_Help" xml:space="preserve">
+    <value>Règle la quantité de ressources obtenues dans le monde et sur les ennemis.</value>
+  </data>
+  <data name="WorldGen_Resources_MuchLess" xml:space="preserve">
+    <value>Beaucoup moins (0,5x)</value>
+  </data>
+  <data name="WorldGen_Resources_Less" xml:space="preserve">
+    <value>Moins (0,75x)</value>
+  </data>
+  <data name="WorldGen_Resources_More" xml:space="preserve">
+    <value>Plus (1,5x)</value>
+  </data>
+  <data name="WorldGen_Resources_MuchMore" xml:space="preserve">
+    <value>Beaucoup plus (2x)</value>
+  </data>
+  <data name="WorldGen_Resources_Most" xml:space="preserve">
+    <value>Maximum (3x)</value>
+  </data>
+  <data name="WorldGen_Raids_Name" xml:space="preserve">
+    <value>Raids</value>
+  </data>
+  <data name="WorldGen_Raids_Help" xml:space="preserve">
+    <value>Règle la fréquence des raids ennemis sur ta base.</value>
+  </data>
+  <data name="WorldGen_Raids_None" xml:space="preserve">
+    <value>Aucun</value>
+  </data>
+  <data name="WorldGen_Raids_MuchLess" xml:space="preserve">
+    <value>Beaucoup moins</value>
+  </data>
+  <data name="WorldGen_Raids_Less" xml:space="preserve">
+    <value>Moins</value>
+  </data>
+  <data name="WorldGen_Raids_More" xml:space="preserve">
+    <value>Plus</value>
+  </data>
+  <data name="WorldGen_Raids_MuchMore" xml:space="preserve">
+    <value>Beaucoup plus</value>
+  </data>
+  <data name="WorldGen_Portals_Name" xml:space="preserve">
+    <value>Portails</value>
+  </data>
+  <data name="WorldGen_Portals_Help" xml:space="preserve">
+    <value>Change le fonctionnement des portails.</value>
+  </data>
+  <data name="WorldGen_Portals_Casual" xml:space="preserve">
+    <value>Décontracté (objets dans les portails)</value>
+  </data>
+  <data name="WorldGen_Portals_Hard" xml:space="preserve">
+    <value>Difficile (pas de portail de boss)</value>
+  </data>
+  <data name="WorldGen_Portals_VeryHard" xml:space="preserve">
+    <value>Très difficile (aucun portail)</value>
+  </data>
+  <data name="WorldGen_NoBuildCost_Name" xml:space="preserve">
+    <value>Construction gratuite</value>
+  </data>
+  <data name="WorldGen_NoBuildCost_Help" xml:space="preserve">
+    <value>Les éléments de construction ne demandent aucun matériau. Il faut toujours découvrir les recettes comme d'habitude.</value>
+  </data>
+  <data name="WorldGen_PlayerEvents_Name" xml:space="preserve">
+    <value>Raids selon le joueur</value>
+  </data>
+  <data name="WorldGen_PlayerEvents_Help" xml:space="preserve">
+    <value>Les raids dépendent de la progression de chaque joueur plutôt que des boss tués sur le serveur. Recommandé si tu veux un jeu un peu plus clément pour des joueurs à des stades différents.</value>
+  </data>
+  <data name="WorldGen_PassiveMobs_Name" xml:space="preserve">
+    <value>Ennemis passifs</value>
+  </data>
+  <data name="WorldGen_PassiveMobs_Help" xml:space="preserve">
+    <value>Les ennemis n'attaquent pas tant que tu ne les provoques pas.</value>
+  </data>
+  <data name="WorldGen_NoMap_Name" xml:space="preserve">
+    <value>Pas de carte</value>
+  </data>
+  <data name="WorldGen_NoMap_Help" xml:space="preserve">
+    <value>Tu n'auras accès ni à la carte ni à la minicarte. Le jeu devient plus difficile que prévu.</value>
+  </data>
+  <data name="WorldGen_Fire_Name" xml:space="preserve">
+    <value>Risques d'incendie</value>
+  </data>
+  <data name="WorldGen_Fire_Help" xml:space="preserve">
+    <value>Le bois peut prendre feu et le feu se propager dans tout le monde, pas seulement dans les Terres cendrées.</value>
+  </data>
+  <!-- Bug Report dialog -->
+  <data name="BugReport_Title" xml:space="preserve">
+    <value>Signaler un bug</value>
+  </data>
+  <data name="BugReport_Intro" xml:space="preserve">
+    <value>Décris le problème. Un rapport avec les détails de l'appli et du système et les journaux récents est joint.</value>
+  </data>
+  <data name="BugReport_Description_Label" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="BugReport_Description_Help" xml:space="preserve">
+    <value>Décris le bug en détail, avec :
+- une description précise du problème
+- les étapes pour le reproduire
+
+Ton rapport sera envoyé avec quelques informations sur ton ordinateur, la version utilisée, etc. pour nous aider à trouver le problème. Aucune donnée personnelle ou identifiante n'est collectée.</value>
+  </data>
+  <data name="BugReport_Contact_Label" xml:space="preserve">
+    <value>(Facultatif) Contact pour le suivi</value>
+  </data>
+  <data name="BugReport_Contact_Help" xml:space="preserve">
+    <value>Si tu veux, indique ton e-mail, ton compte Twitter ou tout autre moyen de te contacter si nous avons besoin de plus d'informations sur ton rapport.
+
+Nous ne partagerons jamais ces informations avec des tiers. (Je ne saurais même pas comment faire)</value>
+  </data>
+  <data name="BugReport_Submit" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="BugReport_Submitting" xml:space="preserve">
+    <value>Envoi du rapport de bug...</value>
+  </data>
+  <data name="BugReport_Submitted" xml:space="preserve">
+    <value>Rapport de bug envoyé. Merci !</value>
+  </data>
+  <data name="BugReport_Failed" xml:space="preserve">
+    <value>Impossible d'envoyer le rapport de bug.
+Contacte Runeberry Software pour de l'aide.</value>
+  </data>
+  <!-- About dialog -->
+  <data name="About_Title" xml:space="preserve">
+    <value>À propos</value>
+  </data>
+  <data name="About_TipJar" xml:space="preserve">
+    <value>Faire un don</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>Code source</value>
+  </data>
+  <data name="About_BuyValheim" xml:space="preserve">
+    <value>Tu n'as pas encore Valheim ? Pourquoi ? Achète-le ici !</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>Version : {0}</value>
+  </data>
+  <data name="About_BuildDate" xml:space="preserve">
+    <value>Date de compilation : {0}</value>
+  </data>
+  <data name="About_License" xml:space="preserve">
+    <value>Sous licence GNU GPLv3</value>
+  </data>
+  <data name="About_Disclaimer" xml:space="preserve">
+    <value>Ce projet est fait par des fans. Runeberry Software n'est pas affilié à Valheim ni à Iron Gate Studio. Nous ne sommes pas responsables de la perte de données de sauvegarde. À utiliser à tes risques et périls !</value>
+  </data>
+  <!-- Controls -->
+  <data name="Controls_Browse" xml:space="preserve">
+    <value>Parcourir…</value>
+  </data>
+  <data name="Controls_Browse_Tip" xml:space="preserve">
+    <value>Choisir un emplacement</value>
+  </data>
+  <data name="Controls_OpenThisFolder_Tip" xml:space="preserve">
+    <value>Ouvrir ce dossier dans l'explorateur</value>
+  </data>
+  <data name="Controls_LogViewer_Copy" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="Controls_LogViewer_SelectAll" xml:space="preserve">
+    <value>Tout sélectionner</value>
+  </data>
+  <data name="Controls_OpenFolder_Tip" xml:space="preserve">
+    <value>Ouvrir le dossier</value>
+  </data>
+  <data name="Controls_Refresh_Tip" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
+  <data name="Controls_Edit_Tip" xml:space="preserve">
+    <value>Modifier</value>
+  </data>
+  <data name="Controls_Settings_Tip" xml:space="preserve">
+    <value>Réglages</value>
+  </data>
+  <data name="Controls_Copy_Tip" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <!-- Async operation dialog -->
+  <data name="AsyncOperation_Failure" xml:space="preserve">
+    <value>{0} : {1}</value>
+  </data>
+  <!-- Startup -->
+  <data name="Startup_Starting" xml:space="preserve">
+    <value>Démarrage…</value>
+  </data>
+  <data name="Update_Checking" xml:space="preserve">
+    <value>Recherche de mises à jour…</value>
+  </data>
+  <data name="Startup_LoadingPlayerData" xml:space="preserve">
+    <value>Chargement des données des joueurs…</value>
+  </data>
+  <data name="Startup_Ready" xml:space="preserve">
+    <value>Prêt</value>
+  </data>
+  <!-- Update check -->
+  <data name="Update_StatusFailed" xml:space="preserve">
+    <value>Échec de la recherche de mises à jour</value>
+  </data>
+  <data name="Update_StatusAvailable" xml:space="preserve">
+    <value>Mise à jour disponible ({0})</value>
+  </data>
+  <data name="Update_StatusUpToDate" xml:space="preserve">
+    <value>À jour ({0})</value>
+  </data>
+  <data name="Update_StatusPreRelease" xml:space="preserve">
+    <value>Version préliminaire ({0})</value>
+  </data>
+  <data name="Update_StatusUnparsable" xml:space="preserve">
+    <value>Version illisible ({0})</value>
+  </data>
+  <data name="Update_ManualPrompt" xml:space="preserve">
+    <value>{0}
+Ouvrir la page de téléchargement ?</value>
+  </data>
+  <data name="Update_ManualFailed" xml:space="preserve">
+    <value>Échec de la recherche de mises à jour : {0}.</value>
+  </data>
+  <data name="Update_ManualAvailable" xml:space="preserve">
+    <value>Une nouvelle version de ValheimServerGUI est disponible.</value>
+  </data>
+  <data name="Update_ManualUpToDate" xml:space="preserve">
+    <value>Tu utilises la dernière version de ValheimServerGUI.</value>
+  </data>
+  <data name="Update_ManualPreRelease" xml:space="preserve">
+    <value>Tu utilises une version préliminaire de ValheimServerGUI. La dernière version stable est ({0}).</value>
+  </data>
+  <data name="Update_ManualUnparsable" xml:space="preserve">
+    <value>Échec de la recherche de mises à jour : version illisible ({0}).</value>
+  </data>
+  <!-- Start server validation -->
+  <data name="Validation_OpenSaveFolderFailed" xml:space="preserve">
+    <value>Impossible d'ouvrir le dossier des sauvegardes : {0}</value>
+  </data>
+  <data name="Validation_OpenServerFolderFailed" xml:space="preserve">
+    <value>Impossible d'ouvrir le dossier du serveur : {0}</value>
+  </data>
+  <data name="Validation_CloudImportFailed" xml:space="preserve">
+    <value>Impossible d'importer le monde cloud « {0} » : {1}</value>
+  </data>
+  <data name="Validation_PortInUse" xml:space="preserve">
+    <value>Le port {0} ou {1} est déjà utilisé.
+Valheim a besoin de deux ports consécutifs pour un serveur dédié.
+Ferme les applications UDP qui utilisent ces ports, ou choisis un autre port pour ton serveur.</value>
+  </data>
+  <data name="Validation_WorldNameRequired" xml:space="preserve">
+    <value>Saisis un nom de monde ou choisis un monde existant.</value>
+  </data>
+  <data name="Validation_WorldNameLength" xml:space="preserve">
+    <value>Le nom du monde doit faire de 5 à 20 caractères.</value>
+  </data>
+  <data name="Validation_WorldNameTaken" xml:space="preserve">
+    <value>Un monde nommé « {0} » existe déjà.</value>
+  </data>
+  <data name="Validation_WorldNotFound" xml:space="preserve">
+    <value>Aucun monde ne s'appelle « {0} ».</value>
+  </data>
+  <data name="Validation_ServerNameRequired" xml:space="preserve">
+    <value>Le nom du serveur est obligatoire.</value>
+  </data>
+  <data name="Validation_WorldNameMissing" xml:space="preserve">
+    <value>Le nom du monde est obligatoire.</value>
+  </data>
+  <data name="Validation_ServerNameMatchesWorld" xml:space="preserve">
+    <value>Le nom du serveur ne peut pas être celui du monde ({0}).</value>
+  </data>
+  <data name="Validation_PasswordRequired" xml:space="preserve">
+    <value>Un mot de passe est obligatoire pour toute partie publique. Définis un mot de passe ou désactive l'option Serveur communautaire.</value>
+  </data>
+  <data name="Validation_PasswordLength" xml:space="preserve">
+    <value>Le mot de passe doit faire au moins 5 caractères.</value>
+  </data>
+  <data name="Validation_PasswordContainsServerName" xml:space="preserve">
+    <value>Le mot de passe ne peut pas contenir le nom du serveur ({0}).</value>
+  </data>
+  <data name="Validation_PasswordContainsWorldName" xml:space="preserve">
+    <value>Le mot de passe ne peut pas contenir le nom du monde ({0}).</value>
+  </data>
+  <data name="Validation_PortRange" xml:space="preserve">
+    <value>Le port doit être compris entre 1 et 65535</value>
+  </data>
+  <data name="Validation_SaveIntervalPositive" xml:space="preserve">
+    <value>L'intervalle de sauvegarde doit être supérieur à 0.</value>
+  </data>
+  <data name="Validation_ShortBackupPositive" xml:space="preserve">
+    <value>L'intervalle de copie courte doit être supérieur à 0.</value>
+  </data>
+  <data name="Validation_LongBackupPositive" xml:space="preserve">
+    <value>L'intervalle de copie longue doit être supérieur à 0.</value>
+  </data>
+  <data name="Validation_SaveIntervalOrder" xml:space="preserve">
+    <value>L'intervalle de sauvegarde doit être inférieur ou égal aux intervalles de copie.</value>
+  </data>
+  <data name="Validation_BackupIntervalOrder" xml:space="preserve">
+    <value>L'intervalle de copie courte doit être inférieur ou égal à celui de la copie longue.</value>
+  </data>
+  <data name="Validation_WorldModifierKeyInvalid" xml:space="preserve">
+    <value>La clé de modificateur « {0} » n'est pas autorisée. Valeurs possibles : {1}</value>
+  </data>
+  <data name="Validation_WorldModifierValueInvalid" xml:space="preserve">
+    <value>La valeur « {0} » n'est pas autorisée pour la clé « {1} ». Valeurs possibles : {2}</value>
+  </data>
+  <data name="Validation_WorldKeyInvalid" xml:space="preserve">
+    <value>La clé de monde « {0} » n'est pas autorisée. Valeurs possibles : {1}</value>
+  </data>
+  <data name="Validation_LogFileArgument" xml:space="preserve">
+    <value>ValheimServerGUI ne gère pas l'argument serveur « -logFile ». Active plutôt l'écriture des journaux du serveur dans un fichier dans l'onglet Avancé.</value>
+  </data>
+  <data name="Validation_EnvVarMissingEquals" xml:space="preserve">
+    <value>« {0} » n'est pas une variable d'environnement valide. Utilise la forme NOM=valeur.</value>
+  </data>
+  <data name="Validation_EnvVarInvalidName" xml:space="preserve">
+    <value>« {0} » n'est pas un nom de variable d'environnement valide. Seuls les lettres, chiffres et tirets bas sont permis, et le nom ne peut pas commencer par un chiffre.</value>
+  </data>
+  <data name="Validation_EnvVarUnterminatedQuote" xml:space="preserve">
+    <value>Une variable d'environnement a un guillemet jamais fermé : {0}</value>
+  </data>
+  <data name="Validation_EnvVarSetByApp" xml:space="preserve">
+    <value>ValheimServerGUI définit lui-même la variable d'environnement « {0} », elle ne peut donc pas être définie dans l'onglet Avancé.</value>
+  </data>
+  <data name="Validation_EnvVarSetForBepInEx" xml:space="preserve">
+    <value>ValheimServerGUI définit lui-même la variable d'environnement « {0} » pour charger les mods BepInEx, elle ne peut donc pas être définie dans l'onglet Avancé. Pour changer les fichiers BepInEx chargés, voir Fichier &gt; Dossiers.</value>
+  </data>
+  <data name="Validation_ListBackupFailed" xml:space="preserve">
+    <value>Impossible de sauvegarder {0} avant de le réécrire ; aucun fichier de liste n'a été modifié.</value>
+  </data>
+  <!-- Player list import -->
+  <data name="Import_Title" xml:space="preserve">
+    <value>Importer des listes de joueurs</value>
+  </data>
+  <data name="Import_NoFiles" xml:space="preserve">
+    <value>Aucun fichier à importer.</value>
+  </data>
+  <data name="Import_NoRoles" xml:space="preserve">
+    <value>Aucun rôle à mettre à jour.</value>
+  </data>
+  <data name="Import_Confirm" xml:space="preserve">
+    <value>{0} rôle(s) vont être mis à jour depuis les fichiers de listes de joueurs.</value>
+  </data>
+  <data name="Import_Updated" xml:space="preserve">
+    <value>{0} rôle(s) mis à jour.</value>
+  </data>
+  <data name="Import_Failed" xml:space="preserve">
+    <value>Impossible d'importer les listes de joueurs. Voir les journaux de l'appli pour le détail.</value>
+  </data>
+  <data name="Import_PermittedFileError_Title" xml:space="preserve">
+    <value>Erreur du fichier des autorisés</value>
+  </data>
+  <data name="Import_PermittedFileError_Message" xml:space="preserve">
+    <value>Le serveur doit démarrer sans liste de joueurs autorisés, mais {0} est présent sur le disque et n'a pas pu être déplacé. Déplace ou supprime ce fichier, ou configure le serveur pour utiliser la liste des autorisés.</value>
+  </data>
+  <data name="Import_RoleConflict_Title" xml:space="preserve">
+    <value>Conflits de rôles</value>
+  </data>
+  <data name="Import_RoleConflict_Message" xml:space="preserve">
+    <value>{0} joueur(s) figurent dans les fichiers de listes avec des rôles contradictoires. Que veux-tu faire ?
+
+Voir les journaux de l'appli pour le détail.</value>
+  </data>
+  <!-- Relative time -->
+  <data name="RelativeTime_JustNow" xml:space="preserve">
+    <value>à l'instant</value>
+  </data>
+  <data name="RelativeTime_Seconds_One" xml:space="preserve">
+    <value>1 seconde</value>
+  </data>
+  <data name="RelativeTime_Seconds_Other" xml:space="preserve">
+    <value>{0} secondes</value>
+  </data>
+  <data name="RelativeTime_Minutes_One" xml:space="preserve">
+    <value>1 minute</value>
+  </data>
+  <data name="RelativeTime_Minutes_Other" xml:space="preserve">
+    <value>{0} minutes</value>
+  </data>
+  <data name="RelativeTime_Hours_One" xml:space="preserve">
+    <value>1 heure</value>
+  </data>
+  <data name="RelativeTime_Hours_Other" xml:space="preserve">
+    <value>{0} heures</value>
+  </data>
+  <data name="RelativeTime_Days_One" xml:space="preserve">
+    <value>1 jour</value>
+  </data>
+  <data name="RelativeTime_Days_Other" xml:space="preserve">
+    <value>{0} jours</value>
+  </data>
+  <data name="RelativeTime_Past" xml:space="preserve">
+    <value>il y a {0}</value>
+  </data>
+  <data name="RelativeTime_Future" xml:space="preserve">
+    <value>dans {0}</value>
+  </data>
+  <!-- Paths -->
+  <data name="Path_FileNotDefined" xml:space="preserve">
+    <value>Impossible d'ouvrir le fichier : aucun chemin défini.</value>
+  </data>
+  <data name="Path_FileWrongType" xml:space="preserve">
+    <value>Impossible d'ouvrir le fichier, il doit s'agir d'un fichier {0} valide :
+{1}</value>
+  </data>
+  <data name="Path_FileNotFound" xml:space="preserve">
+    <value>Fichier introuvable :
+{0}</value>
+  </data>
+  <data name="Path_DirectoryNotDefined" xml:space="preserve">
+    <value>Impossible d'ouvrir le dossier : aucun chemin défini.</value>
+  </data>
+  <data name="Path_DirectoryNotFound" xml:space="preserve">
+    <value>Dossier introuvable :
+{0}</value>
+  </data>
+  <!-- Steam Cloud worlds -->
+  <data name="CloudWorld_NotFound" xml:space="preserve">
+    <value>Aucun dossier de monde Steam Cloud trouvé pour « {0} ».</value>
+  </data>
+  <data name="CloudWorld_AlreadyExists" xml:space="preserve">
+    <value>Un monde nommé « {0} » existe déjà dans le dossier de sauvegarde local.</value>
+  </data>
+  <!-- Online services -->
+  <data name="Api_UpdateServerUnreachable" xml:space="preserve">
+    <value>Impossible de joindre le serveur de mises à jour</value>
+  </data>
+  <data name="Api_RuneberryUnreachable" xml:space="preserve">
+    <value>Impossible de joindre l'API Runeberry</value>
+  </data>
+  <data name="Api_UnknownError" xml:space="preserve">
+    <value>Erreur inconnue</value>
+  </data>
+  <!-- Crash report -->
+  <data name="CrashReport_Prompt" xml:space="preserve">
+    <value>Une erreur fatale s'est produite : {0}
+
+Veux-tu envoyer un rapport de plantage automatique au développeur ?</value>
+  </data>
+</root>

@@ -45,6 +45,9 @@ namespace ValheimServerGUI.Game
         /// <summary>UI theme. Defaults to following the OS.</summary>
         public AppTheme Theme { get; set; } = AppTheme.System;
 
+        /// <summary>UI language, applied at the next start. Defaults to following the OS.</summary>
+        public AppLanguage Language { get; set; } = AppLanguage.System;
+
         public List<ServerPreferences> Servers { get; set; } = new();
 
         public List<WorldPreferences> Worlds { get; set; } = new();
@@ -73,6 +76,7 @@ namespace ValheimServerGUI.Game
             prefs.EnablePasswordValidation = file.EnablePasswordValidation ?? prefs.EnablePasswordValidation;
             prefs.LastActiveProfile = file.LastActiveProfile ?? prefs.LastActiveProfile;
             prefs.Theme = file.Theme ?? prefs.Theme;
+            prefs.Language = file.Language ?? prefs.Language;
             prefs.ServerInstallFolder = file.ServerInstallFolder ?? prefs.ServerInstallFolder;
             prefs.ForceStopOfferSeconds = file.ForceStopOfferSeconds is > 0 ? file.ForceStopOfferSeconds.Value : prefs.ForceStopOfferSeconds;
 
@@ -124,6 +128,7 @@ namespace ValheimServerGUI.Game
                 EnablePasswordValidation = EnablePasswordValidation,
                 LastActiveProfile = LastActiveProfile,
                 Theme = Theme,
+                Language = Language,
                 ForceStopOfferSeconds = ForceStopOfferSeconds,
                 ServerInstallFolder = ServerInstallFolder,
                 Servers = new(),

@@ -31,6 +31,10 @@
         <c:DropdownFormField LabelText="{x:Static loc:Strings.Preferences_Theme_Label}" Width="200" HorizontalAlignment="Left" Margin="0,4,0,0"
                              ItemsSource="{Binding Themes}" Value="{Binding Theme}" />
 
+        <c:DropdownFormField LabelText="{x:Static loc:Strings.Preferences_Language_Label}" Width="200" HorizontalAlignment="Left" Margin="0,4,0,0"
+                             ItemsSource="{Binding Languages}" Value="{Binding Language}"
+                             HelpText="{x:Static loc:Strings.Preferences_Language_Help}" />
+
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,12,0,0">
             <Button Content="{x:Static loc:Strings.Common_RestoreDefaults}" Click="OnRestoreDefaults" HorizontalAlignment="Left" />
             <Button Content="{x:Static loc:Strings.Common_OK}" MinWidth="80" IsDefault="True" Click="OnOk"
