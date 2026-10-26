@@ -1,0 +1,173 @@
+name: build
+
+# Every push and pull request: run the tests, then build the Windows installer, the portable Windows exe
+# and the Linux tarball, kept as workflow artifacts for 14 days.
+# A "v*" tag, or a manual run with a version, also publishes them as a GitHub release.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, without the v (e.g. 3.1.0). Creates the tag v<version> on the selected branch."
+        required: true
+        type: string
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  APP_CSPROJ: src/ValheimServerGUI.App/ValheimServerGUI.App.csproj
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      release: ${{ steps.v.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        shell: bash
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch ]]; then
+            version="${INPUT_VERSION#v}"; release=true
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            version="${GITHUB_REF_NAME#v}"; release=true
+          else
+            # Not a release: the version in Core.csproj, marked with the run number.
+            base="$(grep -oP '<Version>\K[^<]+' src/ValheimServerGUI.Core/ValheimServerGUI.Core.csproj | head -1)"
+            version="${base}.ci.${GITHUB_RUN_NUMBER}"; release=false
+          fi
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.+][0-9A-Za-z.-]+)?$ ]] || { echo "::error::Bad version '$version'"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "release=$release" >> "$GITHUB_OUTPUT"
+          echo "Version $version (release: $release)"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Core tests
+        run: dotnet test tests/ValheimServerGUI.Core.Tests --blame-hang --blame-hang-timeout 120s
+      - name: App tests
+        run: dotnet test tests/ValheimServerGUI.App.Tests --blame-hang --blame-hang-timeout 120s
+
+  windows:
+    needs: version
+    runs-on: windows-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # Release builds need this file; this fork has no Runeberry API key, so its values stay empty.
+      - name: Client secrets (empty)
+        shell: bash
+        run: bash packaging/write-empty-secrets.sh
+
+      - name: Publish the self-contained exe
+        shell: bash
+        run: |
+          set -euo pipefail
+          dotnet publish "$APP_CSPROJ" -c Release -r win-x64 --self-contained true \
+            -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
+            -p:EnableCompressionInSingleFile=true -p:DebugType=None \
+            -p:Version="$VERSION" -o publish/win
+          mkdir -p dist
+          cp publish/win/ValheimServerGUI.App.exe "dist/ValheimServerGUI-$VERSION-win-x64-portable.exe"
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress | Out-Host }
+          if (-not (Test-Path $iscc)) { throw "ISCC.exe not found after install" }
+          "ISCC=$iscc" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build the installer
+        shell: pwsh
+        run: |
+          $fileVersion = ($env:VERSION -split '[-+]')[0]
+          & $env:ISCC "/DAppVersion=$env:VERSION" "/DFileVersion=$fileVersion" "/DSourceExe=$PWD\publish\win\ValheimServerGUI.App.exe" "/DOutputDir=$PWD\dist" packaging\windows\ValheimServerGUI.iss
+          if ($LASTEXITCODE -ne 0) { throw "ISCC failed ($LASTEXITCODE)" }
+          Get-ChildItem dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*
+          retention-days: 14
+
+  linux:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Client secrets (empty)
+        run: bash packaging/write-empty-secrets.sh
+      - name: Publish and pack
+        run: |
+          set -euo pipefail
+          name="ValheimServerGUI-$VERSION-linux-x64"
+          dotnet publish "$APP_CSPROJ" -c Release -r linux-x64 --self-contained true \
+            -p:DebugType=None -p:Version="$VERSION" -o "pack/$name"
+          chmod +x "pack/$name/ValheimServerGUI.App"
+          cp src/ValheimServerGUI.App/Assets/vsg_logo_256.png "pack/$name/valheim-server-gui.png"
+          printf '%s\n' '[Desktop Entry]' 'Type=Application' 'Name=ValheimServerGUI' \
+            'Comment=Manage a Valheim dedicated server' 'Exec=ValheimServerGUI.App' \
+            'Icon=valheim-server-gui' 'Terminal=false' 'Categories=Game;Utility;' > "pack/$name/ValheimServerGUI.desktop"
+          mkdir -p dist
+          tar czf "dist/$name.tar.gz" -C pack "$name"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: dist/*
+          retention-days: 14
+
+  release:
+    needs: [version, test, windows, linux]
+    if: needs.version.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Publish the GitHub release
+        shell: bash
+        run: |
+          set -euo pipefail
+          ls -la dist
+          (cd dist && sha256sum * > SHA256SUMS.txt)
+          prerelease=()
+          [[ "$VERSION" == *-* ]] && prerelease=(--prerelease)
+          gh release create "v$VERSION" dist/* \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "ValheimServerGUI $VERSION" --notes-file packaging/release-notes.md "${prerelease[@]}"

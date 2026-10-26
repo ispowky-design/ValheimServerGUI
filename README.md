@@ -2,7 +2,7 @@
 
 A simple user interface for running a [Valheim](https://www.valheimgame.com/) Dedicated Server on your Windows or Linux PC.
 
-Download the [latest release here](https://github.com/runeberry/ValheimServerGUI/releases).
+Download the [latest release here](https://github.com/ispowky-design/ValheimServerGUI/releases/latest). This fork adds world backups, SteamCMD install, a world map and a wood-and-gold theme to [runeberry/ValheimServerGUI](https://github.com/runeberry/ValheimServerGUI).
 
 Need help? Join our [Discord server](https://discord.gg/HBsNJTY) to ask questions or give feedback, or check out [Online Manual](https://runeberry.com/valheim-server-gui/) for answers to some common questions.
 
@@ -25,17 +25,19 @@ On all platforms, you must have **Valheim Dedicated Server** installed. This com
 
 ### Windows
 
-**Requirements:** Windows 10 or later and the ".NET Runtime 10.X.X". If you don't already have this installed, you can download it [here](https://dotnet.microsoft.com/download/dotnet/10.0).
+**Requirements:** Windows 10 or later. The .NET runtime is bundled, nothing else to install.
 
-**Setup:** Download the latest `ValheimServerGUI-<version>-win-x64.zip` from the [Releases page](https://github.com/runeberry/ValheimServerGUI/releases), extract it, and run `ValheimServerGUI.exe`.
+**Setup:** Download `ValheimServerGUI-<version>-win-x64-setup.exe` from the [Releases page](https://github.com/ispowky-design/ValheimServerGUI/releases/latest) and run it. It installs for your account (no admin prompt), adds a Start menu entry and, if you tick it, a desktop shortcut. To update, run the newer installer over it; your profiles and settings are kept. Prefer no install? Download `ValheimServerGUI-<version>-win-x64-portable.exe` and run it from anywhere.
+
+The files are not code-signed, so SmartScreen may say "Windows protected your PC": choose **More info**, then **Run anyway**.
 
 ### Linux
 
-**Requirements:** Any x64 Linux distribution and the ".NET Runtime 10.X.X", which you can install from your package manager (e.g. `dotnet-runtime-10.0`) or download directly from [here](https://dotnet.microsoft.com/download/dotnet/10.0).
+**Setup:** Download `ValheimServerGUI-<version>-linux-x64.tar.gz` from the [Releases page](https://github.com/ispowky-design/ValheimServerGUI/releases/latest), extract it anywhere and run `ValheimServerGUI.App`. The .NET runtime is bundled. Includes a `.desktop` file and icon if you'd like to add it to your app menu.
 
-**Setup:** Download the latest `ValheimServerGUI-<version>-x86_64.AppImage`, make it executable with `chmod +x`, and run it.
+### Making a release
 
-If your platform does not support AppImage files, you can download `ValheimServerGUI-<version>-linux-x64.tar.gz` instead. Extract it anywhere and run `ValheimServerGUI.App`. Includes a `.desktop` file and icon if you'd like to add it to your app menu.
+Every push and pull request is built by GitHub Actions (`.github/workflows/build.yml`), which runs the tests and keeps the installer, portable exe and Linux tarball as downloadable artifacts. To publish a release, push a `v<version>` tag, or run the **build** workflow from the Actions tab with a version: it creates the tag and a GitHub release with the files attached.
 
 ## Features
 
