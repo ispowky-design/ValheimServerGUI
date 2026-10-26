@@ -245,6 +245,24 @@ public sealed class WorldMapViewModelTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task Players_NameTheServerPathThatWasNotFound()
+    {
+        WriteWorld();
+        var exe = Path.Join(_saveFolder.FullName, "missing", "valheim_server.exe");
+        using var web = new WorldMapWebServer();
+        var vm = new WorldMapViewModel(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world,
+            web, serverExePath: () => exe);
+
+        await vm.RefreshPlayersAsync();
+        Assert.Equal(ServerPluginState.NoServer, vm.PluginState);
+        Assert.Equal(string.Format(Strings.Map_Players_Status_NotFound, exe), vm.PlayersStatus);
+
+        exe = "";
+        await vm.RefreshPlayersAsync();
+        Assert.Equal(Strings.Map_Players_Status_NoServer, vm.PlayersStatus);
+    }
+
+    [AvaloniaFact]
     public async Task Players_ShowOnceThePluginRunsOnTheServer()
     {
         WriteWorld();

@@ -133,7 +133,7 @@ public partial class MainWindowViewModel : ViewModelBase
         WorldMap = new WorldMapViewModel(appLogger, ResolveSaveDataDirectory,
             () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
             WorldMapWebServer.Shared, userPrefs, () => _ipProvider.ExternalIpAddress, shell.OpenWebAddress,
-            () => OverrideOr(BuildPreferences().ServerExePath, _userPrefs.LoadPreferences().ServerExePath));
+            CurrentServerExePath);
         Dashboard = new DashboardViewModel(Players, Backups);
         Form.PropertyChanged += (_, e) =>
         {
@@ -851,6 +851,17 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         return options;
+    }
+
+    /// <summary>
+    /// The server executable of the active profile: the one its server was started with while it runs (the settings
+    /// may have changed since), else the profile's or the app's setting.
+    /// </summary>
+    private string? CurrentServerExePath()
+    {
+        if (_currentServer is { Status: not ServerStatus.Stopped } server && !string.IsNullOrWhiteSpace(server.Options.ServerExePath))
+            return server.Options.ServerExePath;
+        return OverrideOr(BuildPreferences().ServerExePath, _userPrefs.LoadPreferences().ServerExePath);
     }
 
     private static string OverrideOr(string? profileValue, string appValue)
