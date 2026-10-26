@@ -31,10 +31,11 @@ public class DialogViewModelTests
     public void Preferences_save_persists_the_stored_preferences()
     {
         var prefs = new FakeUserPreferencesProvider();
-        var vm = new PreferencesViewModel(prefs, new FakeStartupManager()) { Theme = AppTheme.Dark };
+        var vm = new PreferencesViewModel(prefs, new FakeStartupManager()) { Theme = AppTheme.Dark, Language = AppLanguage.French };
 
         vm.Save();
 
+        Assert.Equal(AppLanguage.French, prefs.LoadPreferences().Language);
         Assert.Equal(AppTheme.Dark, prefs.LoadPreferences().Theme);
         Assert.Equal(AppTheme.Dark, vm.SavedTheme);
     }

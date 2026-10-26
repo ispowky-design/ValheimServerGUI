@@ -53,6 +53,9 @@ namespace ValheimServerGUI.Game
         [JsonProperty("theme")]
         public AppTheme? Theme { get; set; }
 
+        [JsonProperty("language")]
+        public AppLanguage? Language { get; set; }
+
         [JsonProperty("serverInstallFolder")]
         public string? ServerInstallFolder { get; set; }
 

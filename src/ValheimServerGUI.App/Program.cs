@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using Avalonia;
 using ValheimServerGUI.App.Infrastructure;
+using ValheimServerGUI.Game;
 
 namespace ValheimServerGUI.App;
 
@@ -29,11 +30,17 @@ internal static class Program
     // Restart-to-switch localization: the UI culture is resolved ONCE here, before Avalonia builds any
     // control, so every resource lookup ({x:Static loc:Strings.*} / Strings.Key) binds against a single
     // culture for the process lifetime. VSG_LANG wins when set (QA: VSG_LANG=qps-ploc shows resource keys
-    // in place of text); otherwise the OS UI culture stands, and a culture without a satellite falls back
-    // to English. Only CurrentUICulture is set: CurrentCulture (number/date formatting) is left alone.
+    // in place of text); then the Language preference (File > Preferences); otherwise the OS UI culture
+    // stands, and a culture without a satellite falls back to English. Only CurrentUICulture is set:
+    // CurrentCulture (number/date formatting) is left alone.
     private static void ConfigureCulture()
     {
         var name = Environment.GetEnvironmentVariable("VSG_LANG");
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            IValheimPathResolver paths = OperatingSystem.IsWindows() ? new WindowsValheimPathResolver() : new LinuxValheimPathResolver();
+            name = AppLanguages.ReadCultureName(paths.UserPrefsFilePath);
+        }
         if (string.IsNullOrWhiteSpace(name))
             return;
 

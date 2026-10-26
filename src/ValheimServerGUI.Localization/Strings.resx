@@ -891,6 +891,16 @@ The world as it is now is backed up first, so you can undo this.</value>
   <data name="Theme_Dark" xml:space="preserve">
     <value>Dark</value>
   </data>
+  <!-- Language -->
+  <data name="Language_System" xml:space="preserve">
+    <value>System language</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language_French" xml:space="preserve">
+    <value>Français</value>
+  </data>
   <!-- Duration units -->
   <data name="DurationUnit_Seconds" xml:space="preserve">
     <value>Seconds</value>
@@ -1117,6 +1127,12 @@ Only disable this setting if you are running a mod that bypasses server password
   </data>
   <data name="Preferences_Theme_Label" xml:space="preserve">
     <value>Theme</value>
+  </data>
+  <data name="Preferences_Language_Label" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Preferences_Language_Help" xml:space="preserve">
+    <value>The language of the app. Restart ValheimServerGUI to apply a change.</value>
   </data>
   <!-- Directories dialog -->
   <data name="Directories_Title" xml:space="preserve">

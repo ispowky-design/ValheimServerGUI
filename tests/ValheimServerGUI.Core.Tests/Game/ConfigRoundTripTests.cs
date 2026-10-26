@@ -316,5 +316,19 @@ namespace ValheimServerGUI.Core.Tests.Game
         {
             Assert.Equal(AppTheme.System, UserPreferences.FromFile(new UserPreferencesFile()).Theme);
         }
+
+        // Language round-trips and defaults to System.
+        [Fact]
+        public void UserPreferences_Language_RoundTrips()
+        {
+            var restored = UserPreferences.FromFile(new UserPreferences { Language = AppLanguage.French }.ToFile());
+            Assert.Equal(AppLanguage.French, restored.Language);
+        }
+
+        [Fact]
+        public void UserPreferences_Language_DefaultsToSystem()
+        {
+            Assert.Equal(AppLanguage.System, UserPreferences.FromFile(new UserPreferencesFile()).Language);
+        }
     }
 }
