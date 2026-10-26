@@ -134,6 +134,9 @@
   <data name="MainWindow_Tab_Backups" xml:space="preserve">
     <value>Backups</value>
   </data>
+  <data name="MainWindow_Tab_WorldMap" xml:space="preserve">
+    <value>World Map</value>
+  </data>
   <data name="MainWindow_Tab_Logs" xml:space="preserve">
     <value>Logs</value>
   </data>
@@ -545,6 +548,205 @@ The world as it is now is backed up first, so you can undo this.</value>
   </data>
   <data name="Backups_Error_DeleteAutomatic" xml:space="preserve">
     <value>Automatic backups are managed by the server and cannot be deleted here.</value>
+  </data>
+  <!-- World Map tab -->
+  <data name="Map_World_Label" xml:space="preserve">
+    <value>World</value>
+  </data>
+  <data name="Map_World_None" xml:space="preserve">
+    <value>(no world selected)</value>
+  </data>
+  <data name="Map_Seed_Label" xml:space="preserve">
+    <value>Seed</value>
+  </data>
+  <data name="Map_Seed_Help" xml:space="preserve">
+    <value>The seed the world was generated from. Type any seed and press Preview to see its terrain before you create a world.</value>
+  </data>
+  <data name="Map_Seed_Watermark" xml:space="preserve">
+    <value>Seed to preview</value>
+  </data>
+  <data name="Map_Preview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Map_Preview_Tip" xml:space="preserve">
+    <value>Draw the map of the typed seed (terrain only)</value>
+  </data>
+  <data name="Map_Refresh_Tip" xml:space="preserve">
+    <value>Reload the selected world's map from its latest completed save</value>
+  </data>
+  <data name="Map_Layers_Header" xml:space="preserve">
+    <value>Layers</value>
+  </data>
+  <data name="Map_Layer_Spawn" xml:space="preserve">
+    <value>Spawn</value>
+  </data>
+  <data name="Map_Layer_Bosses" xml:space="preserve">
+    <value>Bosses</value>
+  </data>
+  <data name="Map_Layer_Traders" xml:space="preserve">
+    <value>Traders</value>
+  </data>
+  <data name="Map_Layer_Dungeons" xml:space="preserve">
+    <value>Dungeons</value>
+  </data>
+  <data name="Map_Layer_Camps" xml:space="preserve">
+    <value>Camps</value>
+  </data>
+  <data name="Map_Layer_Fog" xml:space="preserve">
+    <value>Fog over unexplored areas</value>
+  </data>
+  <data name="Map_Layer_Fog_Help" xml:space="preserve">
+    <value>Covers the zones the server has not generated yet. It is an approximation from the world save and does not read players' own maps.</value>
+  </data>
+  <data name="Map_Search_Header" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Map_Search_Watermark" xml:space="preserve">
+    <value>Location name</value>
+  </data>
+  <data name="Map_Search_Column_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Map_Search_Column_Distance" xml:space="preserve">
+    <value>Distance</value>
+  </data>
+  <data name="Map_Search_Distance" xml:space="preserve">
+    <value>{0:N0} m</value>
+  </data>
+  <data name="Map_Search_EmptyText" xml:space="preserve">
+    <value>No location matches.</value>
+  </data>
+  <data name="Map_Legend_Header" xml:space="preserve">
+    <value>Biomes</value>
+  </data>
+  <data name="Map_Biome_Meadows" xml:space="preserve">
+    <value>Meadows</value>
+  </data>
+  <data name="Map_Biome_BlackForest" xml:space="preserve">
+    <value>Black Forest</value>
+  </data>
+  <data name="Map_Biome_Swamp" xml:space="preserve">
+    <value>Swamp</value>
+  </data>
+  <data name="Map_Biome_Mountain" xml:space="preserve">
+    <value>Mountains</value>
+  </data>
+  <data name="Map_Biome_Plains" xml:space="preserve">
+    <value>Plains</value>
+  </data>
+  <data name="Map_Biome_Mistlands" xml:space="preserve">
+    <value>Mistlands</value>
+  </data>
+  <data name="Map_Biome_Ashlands" xml:space="preserve">
+    <value>Ashlands</value>
+  </data>
+  <data name="Map_Biome_DeepNorth" xml:space="preserve">
+    <value>Deep North</value>
+  </data>
+  <data name="Map_Biome_Ocean" xml:space="preserve">
+    <value>Ocean</value>
+  </data>
+  <data name="Map_Status_Generating" xml:space="preserve">
+    <value>Generating the map…</value>
+  </data>
+  <data name="Map_Status_NoWorld" xml:space="preserve">
+    <value>Select an existing world, or type a seed and press Preview.</value>
+  </data>
+  <data name="Map_Status_NoSave" xml:space="preserve">
+    <value>No completed Valheim 1.0 save was found for this world yet.</value>
+  </data>
+  <data name="Map_Status_World" xml:space="preserve">
+    <value>{0} locations read from the latest save ({1:g}).</value>
+  </data>
+  <data name="Map_Status_TerrainOnly" xml:space="preserve">
+    <value>This world has no location data yet; showing its terrain only.</value>
+  </data>
+  <data name="Map_Status_Preview" xml:space="preserve">
+    <value>Seed preview: terrain only. Bosses, traders and dungeons are read from a world's save.</value>
+  </data>
+  <data name="Map_Status_ReadFailed" xml:space="preserve">
+    <value>Could not read the world's save: {0}</value>
+  </data>
+  <data name="Map_Status_InvalidSeed" xml:space="preserve">
+    <value>Type a seed to preview.</value>
+  </data>
+  <data name="Map_Cursor" xml:space="preserve">
+    <value>X {0:F0}   Z {1:F0}</value>
+  </data>
+  <data name="MapLocation_StartTemple" xml:space="preserve">
+    <value>Sacrificial Stones</value>
+  </data>
+  <data name="MapLocation_Eikthyr" xml:space="preserve">
+    <value>Eikthyr</value>
+  </data>
+  <data name="MapLocation_TheElder" xml:space="preserve">
+    <value>The Elder</value>
+  </data>
+  <data name="MapLocation_Bonemass" xml:space="preserve">
+    <value>Bonemass</value>
+  </data>
+  <data name="MapLocation_Moder" xml:space="preserve">
+    <value>Moder</value>
+  </data>
+  <data name="MapLocation_Yagluth" xml:space="preserve">
+    <value>Yagluth</value>
+  </data>
+  <data name="MapLocation_TheQueen" xml:space="preserve">
+    <value>The Queen</value>
+  </data>
+  <data name="MapLocation_Fader" xml:space="preserve">
+    <value>Fader</value>
+  </data>
+  <data name="MapLocation_DeepNorthBoss" xml:space="preserve">
+    <value>Deep North boss</value>
+  </data>
+  <data name="MapLocation_Haldor" xml:space="preserve">
+    <value>Haldor</value>
+  </data>
+  <data name="MapLocation_Hildir" xml:space="preserve">
+    <value>Hildir</value>
+  </data>
+  <data name="MapLocation_BogWitch" xml:space="preserve">
+    <value>Bog Witch</value>
+  </data>
+  <data name="MapLocation_BurialChambers" xml:space="preserve">
+    <value>Burial Chambers</value>
+  </data>
+  <data name="MapLocation_TrollCave" xml:space="preserve">
+    <value>Troll Cave</value>
+  </data>
+  <data name="MapLocation_SunkenCrypt" xml:space="preserve">
+    <value>Sunken Crypt</value>
+  </data>
+  <data name="MapLocation_FrostCave" xml:space="preserve">
+    <value>Frost Cave</value>
+  </data>
+  <data name="MapLocation_InfestedMine" xml:space="preserve">
+    <value>Infested Mine</value>
+  </data>
+  <data name="MapLocation_SmoulderingTombs" xml:space="preserve">
+    <value>Smouldering Tombs</value>
+  </data>
+  <data name="MapLocation_HowlingCavern" xml:space="preserve">
+    <value>Howling Cavern</value>
+  </data>
+  <data name="MapLocation_SealedTower" xml:space="preserve">
+    <value>Sealed Tower</value>
+  </data>
+  <data name="MapLocation_CharredFortress" xml:space="preserve">
+    <value>Charred Fortress</value>
+  </data>
+  <data name="MapLocation_MorgenHole" xml:space="preserve">
+    <value>Morgen Hole</value>
+  </data>
+  <data name="MapLocation_TheHole" xml:space="preserve">
+    <value>The Hole</value>
+  </data>
+  <data name="MapLocation_FulingVillage" xml:space="preserve">
+    <value>Fuling Village</value>
+  </data>
+  <data name="MapLocation_GreydwarfNest" xml:space="preserve">
+    <value>Greydwarf Nest</value>
   </data>
   <!-- Install / Update Server (SteamCMD) -->
   <data name="SteamCmd_Title" xml:space="preserve">
