@@ -154,7 +154,8 @@ namespace ValheimServerGUI.Game.WorldMap
             var others = p.ReadBytes(pixels);
             if (explored.Length != pixels || others.Length != pixels) throw new EndOfStreamException();
 
-            return WorldMapExploration.FromCharacterMap(size, explored, others);
+            // Both what the character explored and what was shared with them at a cartography table count.
+            return WorldMapExploration.FromMinimap(size, explored, others);
         }
 
         /// <summary>The stats section, in the three shapes <c>LoadPlayerFromDisk</c> branches on.</summary>

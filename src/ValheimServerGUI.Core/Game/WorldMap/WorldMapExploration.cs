@@ -84,11 +84,10 @@ namespace ValheimServerGUI.Game.WorldMap
         }
 
         /// <summary>
-        /// A character's own map of the world (<see cref="CharacterMapReader"/>): the game's minimap grid, 12 m per
-        /// pixel, centred on the world origin, with row 0 at the south. Both what the character explored and what was
-        /// shared with them at a cartography table count.
+        /// The game's minimap grid (a character's map, or a cartography table's): 12 m per pixel, centred on the world
+        /// origin, with row 0 at the south. A pixel is explored when any of the layers has it.
         /// </summary>
-        public static WorldMapExploration FromCharacterMap(int textureSize, byte[] explored, byte[] exploredOthers)
+        public static WorldMapExploration FromMinimap(int textureSize, params byte[][] layers)
         {
             var size = textureSize;
             var grid = new byte[size * size];
@@ -98,7 +97,12 @@ namespace ValheimServerGUI.Game.WorldMap
                 var target = (size - 1 - row) * size;
                 for (var col = 0; col < size; col++)
                 {
-                    if (explored[source + col] != 0 || exploredOthers[source + col] != 0) grid[target + col] = 1;
+                    foreach (var layer in layers)
+                    {
+                        if (layer[source + col] == 0) continue;
+                        grid[target + col] = 1;
+                        break;
+                    }
                 }
             }
 
@@ -106,6 +110,28 @@ namespace ValheimServerGUI.Game.WorldMap
             var half = size / 2;
             var pixel = CharacterMapReader.PixelSize;
             return new WorldMapExploration(size, pixel, (-half - 0.5) * pixel, (size - 1 - half + 0.5) * pixel, grid);
+        }
+
+        /// <summary>
+        /// Everything any of the maps has discovered, or null when there are none. Maps on a different grid than the
+        /// first are left out (every minimap grid is the same, so this only skips a mix of minimap and server zones).
+        /// </summary>
+        public static WorldMapExploration? Combine(IEnumerable<WorldMapExploration> maps)
+        {
+            WorldMapExploration? first = null;
+            byte[]? grid = null;
+            foreach (var map in maps)
+            {
+                if (first is null)
+                {
+                    first = map;
+                    grid = (byte[])map.Explored.Clone();
+                    continue;
+                }
+                if (map.Size != first.Size || map.MetersPerCell != first.MetersPerCell || map.Left != first.Left || map.Top != first.Top) continue;
+                for (var i = 0; i < grid!.Length; i++) grid[i] |= map.Explored[i];
+            }
+            return first is null ? null : new WorldMapExploration(first.Size, first.MetersPerCell, first.Left, first.Top, grid!);
         }
     }
 }

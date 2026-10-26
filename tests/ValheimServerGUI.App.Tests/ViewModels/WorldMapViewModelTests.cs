@@ -194,6 +194,33 @@ public sealed class WorldMapViewModelTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task Load_CombinesTheCartographyTablesAndEveryCharacter()
+    {
+        WriteWorld();
+        WriteCharacter("Ragnar", (300f, 400f), (5f, -3f));
+        File.WriteAllBytes(Path.Join(_saveFolder.GetLocalWorldFolder("Viking").FullName, "20_20__0_1.chunk"),
+            SharedMapFixtures.BuildChunk(new[] { new[] { SharedMapFixtures.Pixel(2000f, 0f) } }));
+        var vm = Build();
+
+        await vm.LoadSelectedWorldAsync();
+
+        Assert.Equal(
+            new[]
+            {
+                Strings.Map_Exploration_All, Strings.Map_Exploration_Tables_One,
+                string.Format(Strings.Map_Exploration_Character, "Ragnar"), Strings.Map_Exploration_ServerZones,
+            },
+            vm.ExplorationSources.Select(s => s.DisplayName));
+        // Eikthyr's altar is on Ragnar's map and Haldor on the table; the Elder is on neither.
+        Assert.Equal(
+            new[] { WorldLocationKind.Spawn, WorldLocationKind.Boss, WorldLocationKind.Trader },
+            vm.Markers.Select(m => m.Kind).OrderBy(k => k));
+
+        vm.SelectedExplorationSource = vm.ExplorationSources[1];
+        Assert.Equal(new[] { WorldLocationKind.Trader }, vm.Markers.Select(m => m.Kind));
+    }
+
+    [AvaloniaFact]
     public async Task CharacterFile_AddsThatCharactersMap()
     {
         WriteWorld();
