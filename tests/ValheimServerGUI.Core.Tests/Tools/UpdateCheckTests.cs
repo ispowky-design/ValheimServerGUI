@@ -82,6 +82,46 @@ namespace ValheimServerGUI.Core.Tests.Tools
             Assert.Equal(Strings.Api_UpdateServerUnreachable, e.Message);
         }
 
+        // ---- builds without a key: this fork's GitHub releases ----
+
+        private RuneberryApiClient NewKeylessClient()
+            => new(new RestClientContext(new LoggerConfiguration().CreateLogger(), _http), new RuneberryApiKey("", ""));
+
+        [Fact]
+        public async Task Without_a_key_asks_the_fork_github_releases_without_a_key_header()
+        {
+            _http.RespondWith(HttpStatusCode.OK, "{\"tag_name\":\"v3.1.0\",\"html_url\":\"https://github.com/o/r/releases/tag/v3.1.0\",\"prerelease\":false}");
+
+            var release = await NewKeylessClient().GetLatestReleaseAsync();
+
+            var (request, _) = Assert.Single(_http.Requests);
+            Assert.Equal(CoreConstants.UrlGitHubLatestRelease, request.RequestUri!.ToString());
+            Assert.False(request.Headers.Contains(ApiKey.Header));
+            Assert.Contains("ValheimServerGUI", request.Headers.UserAgent.ToString());
+            Assert.Equal("v3.1.0", release!.Version);
+            Assert.Equal("https://github.com/o/r/releases/tag/v3.1.0", release.Url);
+        }
+
+        [Fact]
+        public async Task Without_a_key_a_404_means_no_release_yet()
+        {
+            _http.RespondWith(HttpStatusCode.NotFound, "{\"message\":\"Not Found\"}");
+
+            Assert.Null(await NewKeylessClient().GetLatestReleaseAsync());
+        }
+
+        [Theory]
+        [InlineData(HttpStatusCode.Forbidden, "{\"message\":\"API rate limit exceeded\"}")]
+        [InlineData(HttpStatusCode.OK, "{\"html_url\":\"https://github.com/o/r\"}")]
+        [InlineData(HttpStatusCode.OK, "{\"tag_name\":\"latest\",\"html_url\":\"https://github.com/o/r\"}")]
+        public async Task Without_a_key_an_error_or_unusable_release_fails_the_check(HttpStatusCode status, string body)
+        {
+            _http.RespondWith(status, body);
+
+            var e = await Assert.ThrowsAsync<Exception>(() => NewKeylessClient().GetLatestReleaseAsync());
+            Assert.Equal(Strings.Api_UpdateServerUnreachable, e.Message);
+        }
+
         // ---- SoftwareUpdateProvider ----
 
         private static SoftwareUpdateEventArgs Check(FakeRuneberryApiClient api)

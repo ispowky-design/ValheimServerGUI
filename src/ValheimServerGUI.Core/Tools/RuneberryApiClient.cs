@@ -66,9 +66,12 @@ namespace ValheimServerGUI.Tools
 
         public async Task<LatestReleaseResponse?> GetLatestReleaseAsync()
         {
-            var response = await Get($"{CoreConstants.UrlRuneberryApi}/update-check")
-                .WithRuneberryApiKey(_apiKey)
-                .SendAsync();
+            // Without a key the Runeberry API refuses the check, so ask this fork's GitHub releases instead.
+            var url = _apiKey.IsEmpty ? CoreConstants.UrlGitHubLatestRelease : $"{CoreConstants.UrlRuneberryApi}/update-check";
+            var request = _apiKey.IsEmpty
+                ? Get(url).WithHeader("User-Agent", "ValheimServerGUI").WithHeader("Accept", "application/vnd.github+json")
+                : Get(url).WithRuneberryApiKey(_apiKey);
+            var response = await request.SendAsync();
 
             if (response?.StatusCode == HttpStatusCode.NotFound) return null;
             if (response == null || !response.IsSuccessStatusCode) throw new Exception(Strings.Api_UpdateServerUnreachable);
@@ -76,7 +79,10 @@ namespace ValheimServerGUI.Tools
             LatestReleaseResponse? release;
             try
             {
-                release = JsonConvert.DeserializeObject<LatestReleaseResponse>(await response.Content.ReadAsStringAsync());
+                var json = await response.Content.ReadAsStringAsync();
+                release = _apiKey.IsEmpty
+                    ? JsonConvert.DeserializeObject<GitHubReleaseResponse>(json)?.ToLatestRelease()
+                    : JsonConvert.DeserializeObject<LatestReleaseResponse>(json);
             }
             catch (JsonException)
             {
@@ -88,7 +94,7 @@ namespace ValheimServerGUI.Tools
                 || string.IsNullOrWhiteSpace(release.Url)
                 || !SemVersion.TryParse(release.Version, SemVersionStyles.Any, out _))
             {
-                Logger.Error("Update check returned an unusable response: {0}", CoreConstants.UrlRuneberryApi + "/update-check");
+                Logger.Error("Update check returned an unusable response: {0}", url);
                 throw new Exception(Strings.Api_UpdateServerUnreachable);
             }
 

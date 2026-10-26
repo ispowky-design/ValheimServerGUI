@@ -11,5 +11,9 @@ namespace ValheimServerGUI.Tools
         /// </summary>
         public static RuneberryApiKey FromClientSecrets()
             => new(ClientSecrets.RuneberryApiKeyHeader, ClientSecrets.RuneberryClientApiKey);
+
+        /// <summary>True in a build without the key, which the Runeberry API refuses: such a build checks for
+        /// updates and the external IP through public services instead.</summary>
+        public bool IsEmpty => string.IsNullOrEmpty(Header) || string.IsNullOrEmpty(Value);
     }
 }

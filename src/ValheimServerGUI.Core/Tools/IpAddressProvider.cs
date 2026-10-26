@@ -97,13 +97,17 @@ namespace ValheimServerGUI.Tools
             && address.AddressFamily == AddressFamily.InterNetwork
             && address.ToString() == text;
 
-        /// <summary>Fetches the external IP from the API's <c>/ip-check</c> route (<c>{"ip":…}</c>).</summary>
+        /// <summary>Fetches the external IP from the API's <c>/ip-check</c> route (<c>{"ip":…}</c>), or from
+        /// <see cref="CoreConstants.UrlPublicIpCheck"/> in a build without an API key.</summary>
         /// <remarks>Routed through <see cref="RestClient"/> (not a raw HttpClient) so the call is logged like every
         /// other external request.</remarks>
         private async Task<string?> FetchExternalIpAsync()
         {
-            var response = await Get($"{CoreConstants.UrlRuneberryApi}/ip-check")
-                .WithRuneberryApiKey(_apiKey)
+            // Without a key the Runeberry API refuses the lookup; the public service answers in the same shape.
+            var request = _apiKey.IsEmpty
+                ? Get(CoreConstants.UrlPublicIpCheck)
+                : Get($"{CoreConstants.UrlRuneberryApi}/ip-check").WithRuneberryApiKey(_apiKey);
+            var response = await request
                 .WithIPv4Only()
                 .SendAsync<ExternalIpResponse>();
             return response?.Ip;

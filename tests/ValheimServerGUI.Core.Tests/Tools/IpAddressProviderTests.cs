@@ -52,6 +52,21 @@ namespace ValheimServerGUI.Core.Tests.Tools
         }
 
         [Fact]
+        public async Task Without_a_key_asks_the_public_lookup_over_IPv4()
+        {
+            AnswerIp("203.0.113.9");
+            var p = new IpAddressProvider(new RestClientContext(new LoggerConfiguration().CreateLogger(), _http), new RuneberryApiKey("", ""));
+
+            await p.LoadExternalIpAddressAsync();
+
+            Assert.Equal("203.0.113.9", p.ExternalIpAddress);
+            var (request, ipv4Only) = Assert.Single(_http.Requests);
+            Assert.Equal(CoreConstants.UrlPublicIpCheck, request.RequestUri!.ToString());
+            Assert.False(request.Headers.Contains(ApiKey.Header));
+            Assert.True(ipv4Only);
+        }
+
+        [Fact]
         public async Task Result_is_trimmed()
         {
             _http.RespondWith(HttpStatusCode.OK, "{\"ip\":\"  4.4.4.4\\n\"}");
