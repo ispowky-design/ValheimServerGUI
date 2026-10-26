@@ -2,6 +2,7 @@
 using Semver;
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ValheimServerGUI.Localization;
 using ValheimServerGUI.Tools.Http;
@@ -19,6 +20,13 @@ namespace ValheimServerGUI.Tools
         /// reached, answers with an error, or returns a response without a parseable version and a URL.
         /// </summary>
         Task<LatestReleaseResponse?> GetLatestReleaseAsync();
+
+        /// <summary>
+        /// The newest release's tag, read cheaply from the latest-release page's redirect (no API rate limit), or null
+        /// when this build has no such quick look (builds with an API key) or the page answered no tag. Throws when the
+        /// page can't be reached.
+        /// </summary>
+        Task<string?> GetLatestTagAsync();
     }
 
     public class RuneberryApiClient : RestClient, IRuneberryApiClient
@@ -99,6 +107,30 @@ namespace ValheimServerGUI.Tools
             }
 
             return release;
+        }
+
+        public async Task<string?> GetLatestTagAsync()
+        {
+            if (!_apiKey.IsEmpty) return null;
+
+            using var client = Context.HttpClientProvider.CreateClient();
+            using var request = new HttpRequestMessage(HttpMethod.Head, CoreConstants.UrlGitHubLatestReleasePage);
+            request.Headers.UserAgent.ParseAdd("ValheimServerGUI");
+            using var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            // The page redirects to …/releases/tag/<tag>; the client follows it, so the final address carries the tag.
+            return ParseTagFromReleaseUrl(response.RequestMessage?.RequestUri);
+        }
+
+        internal static string? ParseTagFromReleaseUrl(Uri? url)
+        {
+            const string marker = "/releases/tag/";
+            var path = url?.AbsolutePath;
+            var index = path?.IndexOf(marker, StringComparison.Ordinal) ?? -1;
+            if (index < 0) return null;
+            var tag = Uri.UnescapeDataString(path![(index + marker.Length)..].TrimEnd('/'));
+            return tag.Length == 0 ? null : tag;
         }
 
         #endregion
