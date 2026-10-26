@@ -989,6 +989,12 @@ The world as it is now is backed up first, so you can undo this.</value>
   <data name="SteamCmd_Log_Downloaded" xml:space="preserve">
     <value>SteamCMD downloaded.</value>
   </data>
+  <data name="SteamCmd_Log_FirstRun" xml:space="preserve">
+    <value>Letting SteamCMD update itself (first run)…</value>
+  </data>
+  <data name="SteamCmd_Log_Retrying" xml:space="preserve">
+    <value>SteamCMD was not ready yet, trying again ({0}/{1})…</value>
+  </data>
   <data name="SteamCmd_Error_NotInArchive" xml:space="preserve">
     <value>The SteamCMD download did not contain {0}.</value>
   </data>

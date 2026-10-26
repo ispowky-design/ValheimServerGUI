@@ -979,6 +979,12 @@
   <data name="SteamCmd_Log_Downloaded" xml:space="preserve">
     <value>⟦SteamCmd_Log_Downloaded⟧</value>
   </data>
+  <data name="SteamCmd_Log_FirstRun" xml:space="preserve">
+    <value>⟦SteamCmd_Log_FirstRun⟧</value>
+  </data>
+  <data name="SteamCmd_Log_Retrying" xml:space="preserve">
+    <value>⟦SteamCmd_Log_Retrying {0} {1}⟧</value>
+  </data>
   <data name="SteamCmd_Error_NotInArchive" xml:space="preserve">
     <value>⟦SteamCmd_Error_NotInArchive {0}⟧</value>
   </data>
