@@ -292,6 +292,24 @@
   <data name="AdvancedControls_LongBackup_Help" xml:space="preserve">
     <value>⟦AdvancedControls_LongBackup_Help⟧</value>
   </data>
+  <data name="AdvancedControls_ScheduledRestart_Header" xml:space="preserve">
+    <value>⟦AdvancedControls_ScheduledRestart_Header⟧</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Label" xml:space="preserve">
+    <value>⟦AdvancedControls_RestartTimes_Label⟧</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Watermark" xml:space="preserve">
+    <value>⟦AdvancedControls_RestartTimes_Watermark⟧</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Help" xml:space="preserve">
+    <value>⟦AdvancedControls_RestartTimes_Help⟧</value>
+  </data>
+  <data name="AdvancedControls_RestartBackup_Label" xml:space="preserve">
+    <value>⟦AdvancedControls_RestartBackup_Label⟧</value>
+  </data>
+  <data name="AdvancedControls_RestartBackup_Help" xml:space="preserve">
+    <value>⟦AdvancedControls_RestartBackup_Help⟧</value>
+  </data>
   <!-- Server Details tab -->
   <data name="ServerDetails_Connection_Header" xml:space="preserve">
     <value>⟦ServerDetails_Connection_Header⟧</value>
@@ -350,6 +368,9 @@
   <data name="ServerDetails_AvgWorldSave_Help" xml:space="preserve">
     <value>⟦ServerDetails_AvgWorldSave_Help⟧</value>
   </data>
+  <data name="ServerDetails_NextRestart_Label" xml:space="preserve">
+    <value>⟦ServerDetails_NextRestart_Label⟧</value>
+  </data>
   <data name="ServerDetails_Uptime_OneDay" xml:space="preserve">
     <value>⟦ServerDetails_Uptime_OneDay {0}⟧</value>
   </data>
@@ -361,6 +382,9 @@
   </data>
   <data name="ServerDetails_AvgWorldSave_Value" xml:space="preserve">
     <value>⟦ServerDetails_AvgWorldSave_Value {0:F0}⟧</value>
+  </data>
+  <data name="ServerDetails_NextRestart_Value" xml:space="preserve">
+    <value>⟦ServerDetails_NextRestart_Value {0:t} {1}⟧</value>
   </data>
   <!-- Players tab -->
   <data name="Players_ManagePlayers" xml:space="preserve">
@@ -507,6 +531,9 @@
   </data>
   <data name="Backups_Kind_Automatic" xml:space="preserve">
     <value>⟦Backups_Kind_Automatic⟧</value>
+  </data>
+  <data name="Backups_Kind_Scheduled" xml:space="preserve">
+    <value>⟦Backups_Kind_Scheduled⟧</value>
   </data>
   <data name="Backups_WorldInUse" xml:space="preserve">
     <value>⟦Backups_WorldInUse⟧</value>
@@ -1644,6 +1671,9 @@
   </data>
   <data name="Validation_BackupIntervalOrder" xml:space="preserve">
     <value>⟦Validation_BackupIntervalOrder⟧</value>
+  </data>
+  <data name="Validation_RestartTimeInvalid" xml:space="preserve">
+    <value>⟦Validation_RestartTimeInvalid {0}⟧</value>
   </data>
   <data name="Validation_WorldModifierKeyInvalid" xml:space="preserve">
     <value>⟦Validation_WorldModifierKeyInvalid {0} {1}⟧</value>

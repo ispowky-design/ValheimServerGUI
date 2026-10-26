@@ -296,6 +296,26 @@ Tu devras peut-être leur donner un code d'invitation, affiché en jeu et dans l
   <data name="AdvancedControls_LongBackup_Help" xml:space="preserve">
     <value>Fréquence de création des copies supplémentaires de la sauvegarde du monde. Cet intervalle doit être plus long que celui de la copie courte.</value>
   </data>
+  <data name="AdvancedControls_ScheduledRestart_Header" xml:space="preserve">
+    <value>Redémarrage planifié</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Label" xml:space="preserve">
+    <value>Redémarrer chaque jour à</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Watermark" xml:space="preserve">
+    <value>ex. 06:00, 18:00</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Help" xml:space="preserve">
+    <value>Heures de la journée (format 24 h, séparées par des virgules) auxquelles ValheimServerGUI redémarre ce serveur pendant qu'il tourne. Le serveur sauvegarde le monde en s'arrêtant, comme avec Redémarrer le serveur. Laisse vide pour ne pas planifier de redémarrage.
+
+Les joueurs sont déconnectés pendant le redémarrage, qui prend environ une minute. Un changement s'applique au prochain démarrage du serveur.</value>
+  </data>
+  <data name="AdvancedControls_RestartBackup_Label" xml:space="preserve">
+    <value>Sauvegarder le monde à chaque redémarrage planifié</value>
+  </data>
+  <data name="AdvancedControls_RestartBackup_Help" xml:space="preserve">
+    <value>Pendant que le serveur est arrêté pour un redémarrage planifié, le monde est compressé dans une sauvegarde (affichée comme « Planifiée » dans l'onglet Sauvegardes). Les 10 sauvegardes planifiées les plus récentes de chaque monde sont gardées ; tes sauvegardes manuelles ne sont jamais supprimées.</value>
+  </data>
   <!-- Server Details tab -->
   <data name="ServerDetails_Connection_Header" xml:space="preserve">
     <value>Connexion</value>
@@ -356,6 +376,9 @@ ASTUCE : tu peux aussi te connecter à « localhost », plus simple à taper que
   <data name="ServerDetails_AvgWorldSave_Help" xml:space="preserve">
     <value>Durée moyenne de sauvegarde du monde sur les 10 dernières sauvegardes.</value>
   </data>
+  <data name="ServerDetails_NextRestart_Label" xml:space="preserve">
+    <value>Prochain redémarrage :</value>
+  </data>
   <data name="ServerDetails_Uptime_OneDay" xml:space="preserve">
     <value>1 jour + {0}</value>
   </data>
@@ -367,6 +390,9 @@ ASTUCE : tu peux aussi te connecter à « localhost », plus simple à taper que
   </data>
   <data name="ServerDetails_AvgWorldSave_Value" xml:space="preserve">
     <value>{0:F0} ms</value>
+  </data>
+  <data name="ServerDetails_NextRestart_Value" xml:space="preserve">
+    <value>{0:t} ({1})</value>
   </data>
   <!-- Players tab -->
   <data name="Players_ManagePlayers" xml:space="preserve">
@@ -513,6 +539,9 @@ ASTUCE : tu peux aussi te connecter à « localhost », plus simple à taper que
   </data>
   <data name="Backups_Kind_Automatic" xml:space="preserve">
     <value>Automatique</value>
+  </data>
+  <data name="Backups_Kind_Scheduled" xml:space="preserve">
+    <value>Planifiée</value>
   </data>
   <data name="Backups_WorldInUse" xml:space="preserve">
     <value>Arrête le serveur qui utilise ce monde avant de restaurer une sauvegarde.</value>
@@ -1696,6 +1725,9 @@ Ferme les applications UDP qui utilisent ces ports, ou choisis un autre port pou
   </data>
   <data name="Validation_BackupIntervalOrder" xml:space="preserve">
     <value>L'intervalle de copie courte doit être inférieur ou égal à celui de la copie longue.</value>
+  </data>
+  <data name="Validation_RestartTimeInvalid" xml:space="preserve">
+    <value>« {0} » n'est pas une heure de redémarrage valide. Utilise des heures au format 24 h comme 06:00 ou 18:30, séparées par des virgules.</value>
   </data>
   <data name="Validation_WorldModifierKeyInvalid" xml:space="preserve">
     <value>La clé de modificateur « {0} » n'est pas autorisée. Valeurs possibles : {1}</value>

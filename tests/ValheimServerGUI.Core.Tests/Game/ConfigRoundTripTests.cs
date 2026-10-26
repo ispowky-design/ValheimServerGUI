@@ -23,6 +23,8 @@ namespace ValheimServerGUI.Core.Tests.Game
             Assert.Equal(CoreConstants.DefaultBackupIntervalShort, prefs.BackupIntervalShort);
             Assert.Equal(CoreConstants.DefaultBackupIntervalLong, prefs.BackupIntervalLong);
             Assert.True(prefs.WriteServerLogsToFile);
+            Assert.Equal(string.Empty, prefs.ScheduledRestartTimes);
+            Assert.True(prefs.BackupOnScheduledRestart);
         }
 
         // A new profile starts with crossplay on, but a saved profile without the key (e.g. written before
@@ -61,9 +63,13 @@ namespace ValheimServerGUI.Core.Tests.Game
                 BackupCount = 7,
                 AdditionalArgs = "-foo",
                 WriteServerLogsToFile = false,
+                ScheduledRestartTimes = "06:00, 18:00",
+                BackupOnScheduledRestart = false,
             };
 
             var restored = ServerPreferences.FromFile(original.ToFile());
+            Assert.Equal("06:00, 18:00", restored.ScheduledRestartTimes);
+            Assert.False(restored.BackupOnScheduledRestart);
 
             Assert.Equal("MyProfile", restored.ProfileName);
             Assert.Equal("My Server", restored.Name);

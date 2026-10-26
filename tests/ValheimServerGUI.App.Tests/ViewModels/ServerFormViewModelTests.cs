@@ -23,6 +23,8 @@ public class ServerFormViewModelTests
             AutoStart = true,
             AdditionalArgs = "-foo",
             WriteServerLogsToFile = false,
+            ScheduledRestartTimes = "06:00",
+            BackupOnScheduledRestart = false,
         };
 
         var form = new ServerFormViewModel();
@@ -39,6 +41,8 @@ public class ServerFormViewModelTests
         Assert.True(restored.AutoStart);
         Assert.Equal("-foo", restored.AdditionalArgs);
         Assert.False(restored.WriteServerLogsToFile);
+        Assert.Equal("06:00", restored.ScheduledRestartTimes);
+        Assert.False(restored.BackupOnScheduledRestart);
     }
 
     [Fact]

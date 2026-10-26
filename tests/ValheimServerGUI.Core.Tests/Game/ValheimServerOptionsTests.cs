@@ -50,6 +50,14 @@ public class ValheimServerOptionsTests
         Assert.DoesNotContain("$", ex.Message);
     }
 
+    [Fact]
+    public void An_invalid_restart_time_fails_validation_naming_it()
+    {
+        var ex = Assert.Throws<ArgumentException>(() => Options(o => o.ScheduledRestartTimes = "06:00, 25:00").Validate());
+
+        Assert.Equal(string.Format(Strings.Validation_RestartTimeInvalid, "25:00"), ex.Message);
+    }
+
     // Environment variables are checked before the filesystem checks, so these options need no real paths.
 
     [Theory]

@@ -429,6 +429,134 @@ namespace ValheimServerGUI.Core.Tests.Game
             Assert.Equal(ServerStatus.Stopped, _server.Status);
         }
 
+        // ---- scheduled restarts ----
+
+        [Fact]
+        public void NextScheduledRestart_IsSetWhileRunning_FromTheSchedule()
+        {
+            _server.Clock = () => new DateTime(2026, 10, 26, 12, 0, 0);
+            _server.Start(Options(o => o.ScheduledRestartTimes = "06:00, 18:00"));
+            Assert.Null(_server.NextScheduledRestart); // Starting
+
+            FeedLog("Game server connected");
+            Assert.Equal(new DateTime(2026, 10, 26, 18, 0, 0), _server.NextScheduledRestart);
+
+            _server.Stop();
+            Assert.Null(_server.NextScheduledRestart);
+        }
+
+        [Fact]
+        public void NextScheduledRestart_IsNullWithoutASchedule()
+        {
+            _server.Start(Options());
+            FeedLog("Game server connected");
+
+            Assert.Null(_server.NextScheduledRestart);
+        }
+
+        [Fact]
+        public void ScheduledRestart_RunsTheStoppedTask_ThenStartsAgain()
+        {
+            _server.Start(Options());
+            FeedLog("Game server connected");
+            var statusDuringTask = (ServerStatus?)null;
+
+            _server.ScheduledRestart(_ => statusDuringTask = _server.Status);
+            _processProvider.SimulateExit();
+
+            WaitFor(() => _server.Status == ServerStatus.Starting);
+            Assert.Equal(ServerStatus.Stopped, statusDuringTask);
+            Assert.Equal(ServerStatus.Starting, _server.Status);
+        }
+
+        [Fact]
+        public void ScheduledRestart_StartsAgainWhenTheStoppedTaskFails()
+        {
+            _server.Start(Options());
+            FeedLog("Game server connected");
+
+            _server.ScheduledRestart(_ => throw new IOException("disk full"));
+            _processProvider.SimulateExit();
+
+            WaitFor(() => _server.Status == ServerStatus.Starting);
+            Assert.Equal(ServerStatus.Starting, _server.Status);
+            Assert.Contains(_appLogger.Messages, m => m.Contains("disk full"));
+        }
+
+        [Fact]
+        public void ForceStop_DuringAScheduledRestart_DropsTheStoppedTask()
+        {
+            _server.Start(Options());
+            FeedLog("Game server connected");
+            var ran = false;
+
+            _server.ScheduledRestart(_ => ran = true);
+            _server.ForceStop();
+            _processProvider.SimulateExit();
+
+            Thread.Sleep(800);
+            Assert.False(ran);
+            Assert.Equal(ServerStatus.Stopped, _server.Status);
+        }
+
+        [Fact]
+        public void ScheduledRestartService_RestartsADueServer_AndBacksUpItsWorld()
+        {
+            var world = Directory.CreateDirectory(Path.Join(_saveDir, "worlds_local", "MyWorld"));
+            File.WriteAllText(Path.Join(world.FullName, "_main.1.fwl2"), "w");
+            _server.Clock = () => new DateTime(2026, 10, 26, 5, 0, 0);
+            _server.Start(Options(o =>
+            {
+                o.ScheduledRestartTimes = "06:00";
+                o.BackupOnScheduledRestart = true;
+            }));
+            FeedLog("Game server connected");
+            var backups = new WorldBackupService();
+            var service = new ScheduledRestartService(new SingleServerManager(_server), backups, _appLogger);
+
+            service.CheckDue(new DateTime(2026, 10, 26, 5, 59, 0));
+            Assert.Equal(ServerStatus.Running, _server.Status); // not yet due
+
+            service.CheckDue(new DateTime(2026, 10, 26, 6, 0, 10));
+            Assert.Equal(ServerStatus.Stopping, _server.Status);
+            _processProvider.SimulateExit();
+
+            WaitFor(() => _server.Status == ServerStatus.Starting);
+            var backup = Assert.Single(backups.GetBackups(new DirectoryInfo(_saveDir), "MyWorld"));
+            Assert.Equal(WorldBackupKind.Scheduled, backup.Kind);
+        }
+
+        [Fact]
+        public void ScheduledRestartService_SkipsTheBackupWhenTheProfileTurnsItOff()
+        {
+            var world = Directory.CreateDirectory(Path.Join(_saveDir, "worlds_local", "MyWorld"));
+            File.WriteAllText(Path.Join(world.FullName, "_main.1.fwl2"), "w");
+            _server.Clock = () => new DateTime(2026, 10, 26, 5, 0, 0);
+            _server.Start(Options(o => o.ScheduledRestartTimes = "06:00"));
+            FeedLog("Game server connected");
+            var backups = new WorldBackupService();
+
+            new ScheduledRestartService(new SingleServerManager(_server), backups, _appLogger).CheckDue(new DateTime(2026, 10, 26, 6, 0, 0));
+            _processProvider.SimulateExit();
+
+            WaitFor(() => _server.Status == ServerStatus.Starting);
+            Assert.Empty(backups.GetBackups(new DirectoryInfo(_saveDir), "MyWorld"));
+        }
+
+        private sealed class SingleServerManager : IServerManager
+        {
+            private readonly ValheimServer _server;
+            public SingleServerManager(ValheimServer server) => _server = server;
+            public IReadOnlyCollection<ValheimServer> All => new[] { _server };
+            public ValheimServer GetOrCreate(string profileName) => _server;
+            public bool TryGet(string profileName, out ValheimServer server) { server = _server; return true; }
+            public System.Collections.ObjectModel.ObservableCollection<string> GetServerLog(string profileName) => new();
+            public Action<string> GetLogAppender(string profileName) => _ => { };
+            public void Remove(string profileName) { }
+            public void StopAllAndDispose() { }
+            public event EventHandler<PlayerRolesAdoptedEventArgs>? PlayerRolesAdopted { add { } remove { } }
+        }
+
         [Fact]
         public void StoppingSince_IsStampedOnStopping_AndClearedAfter()
         {

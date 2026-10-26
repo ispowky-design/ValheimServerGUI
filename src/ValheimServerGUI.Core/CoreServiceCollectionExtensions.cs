@@ -70,7 +70,8 @@ namespace ValheimServerGUI
                 // The manager is the single construction site for servers (one per profile, shared app-wide);
                 // the factory lets it build a fresh transient ValheimServer on first ask for a profile.
                 .AddSingleton<Func<ValheimServer>>(sp => sp.GetRequiredService<ValheimServer>)
-                .AddSingleton<IServerManager, ServerManager>();
+                .AddSingleton<IServerManager, ServerManager>()
+                .AddSingleton<ScheduledRestartService>();
 
             return services;
         }

@@ -66,6 +66,12 @@ namespace ValheimServerGUI.Game
         [JsonProperty("writeServerLogsToFile")]
         public bool? WriteServerLogsToFile { get; set; }
 
+        [JsonProperty("scheduledRestartTimes")]
+        public string? ScheduledRestartTimes { get; set; }
+
+        [JsonProperty("backupOnScheduledRestart")]
+        public bool? BackupOnScheduledRestart { get; set; }
+
         [JsonProperty("usePermittedList")]
         public bool? UsePermittedList { get; set; }
 

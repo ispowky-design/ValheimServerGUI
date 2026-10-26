@@ -154,7 +154,9 @@ public partial class App : Application
     private async Task StopAllThenShutdownAsync(IClassicDesktopStyleApplicationLifetime desktop, IServerManager manager)
     {
         // Off the UI thread: block until every server reports Stopped (the graceful world-save flush
-        // completes; returning early loses the save), then approve and re-trigger the shutdown.
+        // completes; returning early loses the save), then approve and re-trigger the shutdown. No scheduled
+        // restart may bring a server back up meanwhile.
+        Services.GetRequiredService<ScheduledRestartService>().Dispose();
         await Task.Run(manager.StopAllAndDispose);
         _shutdownApproved = true;
         Dispatcher.UIThread.Post(() => desktop.Shutdown());
@@ -174,6 +176,9 @@ public partial class App : Application
             var coordinator = Services.GetRequiredService<ShellCoordinator>();
             await coordinator.RunStartupTasksAsync(splashViewModel);
             coordinator.CreateAndShowStartupWindows();
+
+            // Profiles' daily restart times apply to every running server, whichever window shows it.
+            Services.GetRequiredService<ScheduledRestartService>().Start();
 
             splash.Close();
 

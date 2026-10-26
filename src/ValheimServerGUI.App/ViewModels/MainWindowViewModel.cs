@@ -789,6 +789,8 @@ public partial class MainWindowViewModel : ViewModelBase
             Backups = serverPrefs.BackupCount,
             BackupShort = serverPrefs.BackupIntervalShort,
             BackupLong = serverPrefs.BackupIntervalLong,
+            ScheduledRestartTimes = serverPrefs.ScheduledRestartTimes,
+            BackupOnScheduledRestart = serverPrefs.BackupOnScheduledRestart,
             AdditionalArgs = serverPrefs.AdditionalArgs,
             EnvironmentVariables = serverPrefs.EnvironmentVariables,
             // Directories: the profile's override (set in the Set Directories dialog), else the app-wide path.

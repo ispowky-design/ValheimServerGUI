@@ -29,6 +29,9 @@ namespace ValheimServerGUI
         /// </summary>
         public const int DefaultForceStopOfferSeconds = 120;
 
+        /// <summary>How many scheduled-restart backups each world keeps; older ones are deleted.</summary>
+        public const int ScheduledBackupsKept = 10;
+
         /// <summary>Name of the default server profile.</summary>
         public const string DefaultServerProfileName = "Default";
 

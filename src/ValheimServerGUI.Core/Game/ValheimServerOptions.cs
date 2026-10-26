@@ -29,6 +29,10 @@ namespace ValheimServerGUI.Game
 
         public int BackupLong { get; set; }
 
+        public string? ScheduledRestartTimes { get; set; }
+
+        public bool BackupOnScheduledRestart { get; set; }
+
         public string? AdditionalArgs { get; set; }
 
         public string? ServerExePath { get; set; }
@@ -95,6 +99,9 @@ namespace ValheimServerGUI.Game
             if (SaveInterval > BackupShort || SaveInterval > BackupLong) throw new ArgumentException(Strings.Validation_SaveIntervalOrder);
             if (BackupShort > BackupLong) throw new ArgumentException(Strings.Validation_BackupIntervalOrder);
 
+            // Scheduled restarts: throws on the first entry that is not a time of day.
+            RestartSchedule.Parse(ScheduledRestartTimes);
+
             // World generation settings
             if (WorldModifiers != null)
             {
@@ -155,6 +162,11 @@ namespace ValheimServerGUI.Game
         int BackupShort { get; }
 
         int BackupLong { get; }
+
+        /// <summary>Daily restart times ("06:00, 18:00"; see <see cref="RestartSchedule"/>). Empty: none.</summary>
+        string? ScheduledRestartTimes { get; }
+
+        bool BackupOnScheduledRestart { get; }
 
         string? AdditionalArgs { get; }
 
