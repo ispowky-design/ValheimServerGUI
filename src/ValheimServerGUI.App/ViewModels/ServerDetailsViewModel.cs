@@ -33,7 +33,11 @@ public partial class ServerDetailsViewModel : ViewModelBase
         _portProvider = portProvider;
 
         _uptimeTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-        _uptimeTimer.Tick += (_, _) => RefreshUptime();
+        _uptimeTimer.Tick += (_, _) =>
+        {
+            RefreshUptime();
+            RefreshNextRestart();
+        };
 
         _rawExternalIp = _ip.ExternalIpAddress;
         _rawInternalIp = _ip.InternalIpAddress;
@@ -75,6 +79,7 @@ public partial class ServerDetailsViewModel : ViewModelBase
         SetInviteCode(null); // the invite code only arrives via an event; a re-target has missed it
         _startedAt = _server.StartedAt;
         RefreshUptime();
+        RefreshNextRestart();
     }
 
     [ObservableProperty] private string _externalIp = Strings.Common_Loading;
@@ -85,6 +90,7 @@ public partial class ServerDetailsViewModel : ViewModelBase
     [ObservableProperty] private string _uptime = "00:00:00";
     [ObservableProperty] private string _lastWorldSave = Strings.Common_NotAvailable;
     [ObservableProperty] private string _averageWorldSave = Strings.Common_NotAvailable;
+    [ObservableProperty] private string _nextRestart = Strings.Common_NotAvailable;
 
     /// <summary>Called by the view when the tab becomes visible/hidden — drives the lazy 1s refresh.</summary>
     public void SetActive(bool active)
@@ -94,6 +100,7 @@ public partial class ServerDetailsViewModel : ViewModelBase
         {
             RefreshIpLabels();
             RefreshUptime();
+            RefreshNextRestart();
             LoadMissingIps();
             _uptimeTimer.Start();
         }
@@ -118,6 +125,14 @@ public partial class ServerDetailsViewModel : ViewModelBase
         if (elapsed.Days == 1) text = string.Format(Strings.ServerDetails_Uptime_OneDay, text);
         else if (elapsed.Days > 1) text = string.Format(Strings.ServerDetails_Uptime_Days, elapsed.Days, text);
         Uptime = text;
+    }
+
+    /// <summary>The running server's next scheduled restart ("18:00 (in 2 hours)"), or N/A without one.</summary>
+    private void RefreshNextRestart()
+    {
+        NextRestart = _server?.NextScheduledRestart is { } next
+            ? string.Format(Strings.ServerDetails_NextRestart_Value, next, RelativeTime.Format(next, DateTimeOffset.Now))
+            : Strings.Common_NotAvailable;
     }
 
     private void RefreshIpLabels()
@@ -146,6 +161,8 @@ public partial class ServerDetailsViewModel : ViewModelBase
             _startedAt = null;
             Uptime = "00:00:00";
         }
+
+        RefreshNextRestart();
 
         if (status == ServerStatus.Stopped)
             SetInviteCode(null);

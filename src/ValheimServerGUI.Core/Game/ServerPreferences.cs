@@ -46,6 +46,12 @@ namespace ValheimServerGUI.Game
 
         public bool WriteServerLogsToFile { get; set; } = true;
 
+        /// <summary>Daily restart times typed by the user ("06:00, 18:00"; see <see cref="RestartSchedule"/>). Empty: none.</summary>
+        public string ScheduledRestartTimes { get; set; } = string.Empty;
+
+        /// <summary>Whether a scheduled restart backs up the world while the server is stopped.</summary>
+        public bool BackupOnScheduledRestart { get; set; } = true;
+
         /// <summary>
         /// When true, the server runs in permitted-list mode: only players on <c>permittedlist.txt</c> may
         /// join and the ban list is ignored (see <see cref="PlayerAccessListRules"/>). When false, anyone
@@ -100,6 +106,8 @@ namespace ValheimServerGUI.Game
             prefs.DoorstopLibraryPath = file.DoorstopLibraryPath ?? prefs.DoorstopLibraryPath;
             prefs.EnvironmentVariables = file.EnvironmentVariables ?? prefs.EnvironmentVariables;
             prefs.WriteServerLogsToFile = file.WriteServerLogsToFile ?? prefs.WriteServerLogsToFile;
+            prefs.ScheduledRestartTimes = file.ScheduledRestartTimes ?? prefs.ScheduledRestartTimes;
+            prefs.BackupOnScheduledRestart = file.BackupOnScheduledRestart ?? prefs.BackupOnScheduledRestart;
             prefs.UsePermittedList = file.UsePermittedList ?? prefs.UsePermittedList;
 
             if (file.PlayerRoles != null)
@@ -140,6 +148,8 @@ namespace ValheimServerGUI.Game
                 DoorstopLibraryPath = DoorstopLibraryPath,
                 EnvironmentVariables = EnvironmentVariables,
                 WriteServerLogsToFile = WriteServerLogsToFile,
+                ScheduledRestartTimes = ScheduledRestartTimes,
+                BackupOnScheduledRestart = BackupOnScheduledRestart,
                 UsePermittedList = UsePermittedList,
             };
 

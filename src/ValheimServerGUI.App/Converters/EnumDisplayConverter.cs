@@ -81,6 +81,7 @@ public sealed class EnumDisplayConverter : IValueConverter
     {
         WorldBackupKind.Manual => Strings.Backups_Kind_Manual,
         WorldBackupKind.Automatic => Strings.Backups_Kind_Automatic,
+        WorldBackupKind.Scheduled => Strings.Backups_Kind_Scheduled,
         _ => value.ToString(),
     };
 

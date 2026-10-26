@@ -106,7 +106,7 @@ public sealed class BackupsViewModelTests : IDisposable
         await vm.BackUpNowCommand.ExecuteAsync(null);
 
         var row = Assert.Single(vm.Backups);
-        Assert.True(row.IsManual);
+        Assert.True(row.IsVsgBackup);
         Assert.Equal(string.Format(Strings.Backups_Status_Created, Path.GetFileName(row.Backup.Path)), vm.StatusMessage);
         Assert.False(vm.IsBusy);
     }
@@ -180,14 +180,14 @@ public sealed class BackupsViewModelTests : IDisposable
         var vm = Build();
         await vm.BackUpNowCommand.ExecuteAsync(null);
 
-        vm.SelectedBackup = vm.Backups.Single(b => !b.IsManual);
+        vm.SelectedBackup = vm.Backups.Single(b => !b.IsVsgBackup);
         Assert.False(vm.DeleteCommand.CanExecute(null));
 
-        vm.SelectedBackup = vm.Backups.Single(b => b.IsManual);
+        vm.SelectedBackup = vm.Backups.Single(b => b.IsVsgBackup);
         await vm.DeleteCommand.ExecuteAsync(null);
 
         Assert.Equal(1, _confirmCount);
-        Assert.DoesNotContain(vm.Backups, b => b.IsManual);
+        Assert.DoesNotContain(vm.Backups, b => b.IsVsgBackup);
     }
 
     [AvaloniaFact]

@@ -236,4 +236,51 @@ public class WorldBackupServiceTests : IDisposable
 
         Assert.Equal(new[] { "Viking" }, _saveFolder.GetWorldNames());
     }
+
+    // ---- scheduled backups ----
+
+    [Fact]
+    public void A_scheduled_backup_is_listed_as_scheduled_and_restores_like_a_manual_one()
+    {
+        WriteFolderWorld("Viking", "before");
+
+        var backup = _service.CreateBackup(_saveFolder, "Viking", WorldBackupKind.Scheduled);
+        File.WriteAllText(Path.Join(_worldsLocal, "Viking", "_main.1.fwl2"), "after");
+
+        Assert.EndsWith("_restart.zip", backup.Path);
+        var listed = Assert.Single(_service.GetBackups(_saveFolder, "Viking"), b => b.Path == backup.Path);
+        Assert.Equal(WorldBackupKind.Scheduled, listed.Kind);
+        Assert.Equal(Now, listed.CreatedAt);
+
+        _service.RestoreBackup(_saveFolder, listed);
+        Assert.Equal("before", ReadWorldFile("Viking", "_main.1.fwl2"));
+    }
+
+    [Fact]
+    public void Pruning_keeps_the_newest_scheduled_backups_and_never_touches_manual_ones()
+    {
+        WriteFolderWorld("Viking", "v");
+        var time = Now;
+        var service = new WorldBackupService(() => time);
+        var manual = service.CreateBackup(_saveFolder, "Viking");
+        for (var i = 0; i < 4; i++)
+        {
+            time = Now.AddHours(i + 1);
+            service.CreateBackup(_saveFolder, "Viking", WorldBackupKind.Scheduled);
+        }
+
+        Assert.Equal(2, service.PruneScheduledBackups(_saveFolder, "Viking", keep: 2));
+
+        var left = service.GetBackups(_saveFolder, "Viking");
+        Assert.Equal(new[] { Now.AddHours(4), Now.AddHours(3) }, left.Where(b => b.Kind == WorldBackupKind.Scheduled).Select(b => b.CreatedAt));
+        Assert.Contains(left, b => b.Path == manual.Path);
+    }
+
+    [Fact]
+    public void Server_made_backups_cannot_be_created_by_VSG()
+    {
+        WriteFolderWorld("Viking", "v");
+
+        Assert.Throws<ArgumentException>(() => _service.CreateBackup(_saveFolder, "Viking", WorldBackupKind.Automatic));
+    }
 }

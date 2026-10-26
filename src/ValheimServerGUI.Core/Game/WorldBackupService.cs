@@ -17,6 +17,9 @@ public enum WorldBackupKind
 
     /// <summary>A server-made <c>&lt;World&gt;_backup_…</c> folder or file pair next to the world (the <c>-backups</c> rotation).</summary>
     Automatic,
+
+    /// <summary>A zip VSG wrote during a scheduled restart (<c>…_restart.zip</c>); only the newest few are kept.</summary>
+    Scheduled,
 }
 
 /// <summary>One restorable copy of a world.</summary>
@@ -35,8 +38,14 @@ public interface IWorldBackupService
     /// <summary>Whether the world has data on disk that a backup would capture.</summary>
     bool WorldExists(DirectoryInfo saveFolder, string worldName);
 
-    /// <summary>Zips the world's current files into its VSG backup folder and returns the new backup.</summary>
-    WorldBackup CreateBackup(DirectoryInfo saveFolder, string worldName);
+    /// <summary>
+    /// Zips the world's current files into its VSG backup folder and returns the new backup.
+    /// <paramref name="kind"/> is <see cref="WorldBackupKind.Manual"/> or <see cref="WorldBackupKind.Scheduled"/>.
+    /// </summary>
+    WorldBackup CreateBackup(DirectoryInfo saveFolder, string worldName, WorldBackupKind kind = WorldBackupKind.Manual);
+
+    /// <summary>Deletes the world's oldest scheduled backups beyond the newest <paramref name="keep"/>; returns how many.</summary>
+    int PruneScheduledBackups(DirectoryInfo saveFolder, string worldName, int keep);
 
     /// <summary>
     /// Replaces the world's files with <paramref name="backup"/>. When the world exists, its current files are
@@ -44,7 +53,7 @@ public interface IWorldBackupService
     /// </summary>
     WorldBackup? RestoreBackup(DirectoryInfo saveFolder, WorldBackup backup);
 
-    /// <summary>Deletes a VSG backup. Server-made backups are left to the server's own rotation.</summary>
+    /// <summary>Deletes a VSG backup (manual or scheduled). Server-made backups are left to the server's own rotation.</summary>
     void DeleteBackup(WorldBackup backup);
 
     /// <summary>The folder VSG writes a world's backups to (it may not exist yet).</summary>
@@ -57,6 +66,9 @@ public sealed class WorldBackupService : IWorldBackupService
     public const string BackupFolderName = "vsg_backups";
 
     private const string ZipTimestampFormat = "yyyyMMdd-HHmmss";
+
+    /// <summary>Ends the file name of a zip written by a scheduled restart.</summary>
+    public const string ScheduledZipSuffix = "_restart";
     private static readonly string[] WorldsFolderNames = { "worlds_local", "worlds" };
     private static readonly string[] LegacyExtensions = { ".fwl", ".db" };
 
@@ -92,7 +104,10 @@ public sealed class WorldBackupService : IWorldBackupService
         {
             foreach (var zip in backupFolder.GetFiles("*.zip"))
             {
-                backups.Add(new WorldBackup(worldName, WorldBackupKind.Manual, ParseZipTime(zip, worldName), zip.Length, zip.FullName));
+                var kind = Path.GetFileNameWithoutExtension(zip.Name).EndsWith(ScheduledZipSuffix, StringComparison.OrdinalIgnoreCase)
+                    ? WorldBackupKind.Scheduled
+                    : WorldBackupKind.Manual;
+                backups.Add(new WorldBackup(worldName, kind, ParseZipTime(zip, worldName), zip.Length, zip.FullName));
             }
         }
 
@@ -119,8 +134,11 @@ public sealed class WorldBackupService : IWorldBackupService
         return backups.OrderByDescending(b => b.CreatedAt).ToList();
     }
 
-    public WorldBackup CreateBackup(DirectoryInfo saveFolder, string worldName)
+    public WorldBackup CreateBackup(DirectoryInfo saveFolder, string worldName, WorldBackupKind kind = WorldBackupKind.Manual)
     {
+        if (kind == WorldBackupKind.Automatic)
+            throw new ArgumentException("Only the server makes automatic backups.", nameof(kind));
+
         var files = GetWorldFiles(saveFolder, worldName).ToList();
         if (files.Count == 0)
             throw new FileNotFoundException(string.Format(Strings.Backups_Error_WorldNotFound, worldName));
@@ -129,7 +147,7 @@ public sealed class WorldBackupService : IWorldBackupService
         backupFolder.Create();
 
         var createdAt = _now();
-        var zipPath = NextFreeZipPath(backupFolder, worldName, createdAt);
+        var zipPath = NextFreeZipPath(backupFolder, worldName, createdAt, kind == WorldBackupKind.Scheduled ? ScheduledZipSuffix : string.Empty);
 
         // Written under a temporary name and moved into place, so a failed or interrupted backup never leaves a
         // half-written zip that looks like a real one.
@@ -155,7 +173,17 @@ public sealed class WorldBackupService : IWorldBackupService
             if (File.Exists(partial)) File.Delete(partial);
         }
 
-        return new WorldBackup(worldName, WorldBackupKind.Manual, createdAt, new FileInfo(zipPath).Length, zipPath);
+        return new WorldBackup(worldName, kind, createdAt, new FileInfo(zipPath).Length, zipPath);
+    }
+
+    public int PruneScheduledBackups(DirectoryInfo saveFolder, string worldName, int keep)
+    {
+        var stale = GetBackups(saveFolder, worldName)
+            .Where(b => b.Kind == WorldBackupKind.Scheduled)
+            .Skip(Math.Max(keep, 0)) // newest first
+            .ToList();
+        foreach (var backup in stale) DeleteBackup(backup);
+        return stale.Count;
     }
 
     public WorldBackup? RestoreBackup(DirectoryInfo saveFolder, WorldBackup backup)
@@ -168,7 +196,7 @@ public sealed class WorldBackupService : IWorldBackupService
         {
             switch (backup.Kind)
             {
-                case WorldBackupKind.Manual:
+                case WorldBackupKind.Manual or WorldBackupKind.Scheduled:
                     ExtractZip(backup.Path, staging, worldName);
                     break;
                 case WorldBackupKind.Automatic when Directory.Exists(backup.Path):
@@ -211,7 +239,7 @@ public sealed class WorldBackupService : IWorldBackupService
 
     public void DeleteBackup(WorldBackup backup)
     {
-        if (backup.Kind != WorldBackupKind.Manual)
+        if (backup.Kind == WorldBackupKind.Automatic)
             throw new InvalidOperationException(Strings.Backups_Error_DeleteAutomatic);
 
         if (File.Exists(backup.Path)) File.Delete(backup.Path);
@@ -273,12 +301,12 @@ public sealed class WorldBackupService : IWorldBackupService
         return zip.LastWriteTime;
     }
 
-    private static string NextFreeZipPath(DirectoryInfo backupFolder, string worldName, DateTime createdAt)
+    private static string NextFreeZipPath(DirectoryInfo backupFolder, string worldName, DateTime createdAt, string suffix)
     {
         var stamp = createdAt.ToString(ZipTimestampFormat, CultureInfo.InvariantCulture);
         for (var i = 1; ; i++)
         {
-            var name = i == 1 ? $"{worldName}_{stamp}.zip" : $"{worldName}_{stamp}_{i}.zip";
+            var name = i == 1 ? $"{worldName}_{stamp}{suffix}.zip" : $"{worldName}_{stamp}_{i}{suffix}.zip";
             var path = Path.Join(backupFolder.FullName, name);
             if (!File.Exists(path)) return path;
         }

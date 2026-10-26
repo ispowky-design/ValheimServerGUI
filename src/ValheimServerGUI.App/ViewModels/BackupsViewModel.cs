@@ -29,7 +29,8 @@ public sealed class BackupRowViewModel
     public string CreatedText { get; }
     public string KindText { get; }
     public string SizeText { get; }
-    public bool IsManual => Backup.Kind == WorldBackupKind.Manual;
+    /// <summary>A zip VSG made (manual or scheduled), which the user may delete; the server rotates its own.</summary>
+    public bool IsVsgBackup => Backup.Kind != WorldBackupKind.Automatic;
 
     internal static string FormatSize(long bytes)
     {
@@ -202,7 +203,7 @@ public partial class BackupsViewModel : ViewModelBase
         });
     }
 
-    private bool CanDelete => SelectedBackup is { IsManual: true } && !IsBusy;
+    private bool CanDelete => SelectedBackup is { IsVsgBackup: true } && !IsBusy;
 
     [RelayCommand(CanExecute = nameof(CanDelete))]
     private async Task Delete()

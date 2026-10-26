@@ -168,6 +168,8 @@ public partial class ServerFormViewModel : ObservableObject
     [ObservableProperty] private int _backupCount = CoreConstants.DefaultBackupCount;
     [ObservableProperty] private int _backupIntervalShort = CoreConstants.DefaultBackupIntervalShort;
     [ObservableProperty] private int _backupIntervalLong = CoreConstants.DefaultBackupIntervalLong;
+    [ObservableProperty] private string? _scheduledRestartTimes;
+    [ObservableProperty] private bool _backupOnScheduledRestart = true;
 
     /// <summary>Toggles password visibility (the in-field eye button).</summary>
     [RelayCommand]
@@ -210,6 +212,8 @@ public partial class ServerFormViewModel : ObservableObject
             AdditionalArgs = prefs.AdditionalArgs;
             EnvironmentVariables = prefs.EnvironmentVariables;
             WriteServerLogsToFile = prefs.WriteServerLogsToFile;
+            ScheduledRestartTimes = prefs.ScheduledRestartTimes;
+            BackupOnScheduledRestart = prefs.BackupOnScheduledRestart;
             UsePermittedList = prefs.UsePermittedList;
 
             _playerRoles.Clear();
@@ -236,6 +240,8 @@ public partial class ServerFormViewModel : ObservableObject
         prefs.AdditionalArgs = AdditionalArgs;
         prefs.EnvironmentVariables = EnvironmentVariables;
         prefs.WriteServerLogsToFile = WriteServerLogsToFile;
+        prefs.ScheduledRestartTimes = ScheduledRestartTimes?.Trim() ?? string.Empty;
+        prefs.BackupOnScheduledRestart = BackupOnScheduledRestart;
         ApplyRolesTo(prefs);
         return prefs;
     }

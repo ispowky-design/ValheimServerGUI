@@ -53,6 +53,7 @@
                 <StackPanel Spacing="2">
                     <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_Uptime_Label}" Value="{Binding Details.Uptime}" />
                     <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_LastWorldSave_Label}" Value="{Binding Details.LastWorldSave}" />
+                    <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_NextRestart_Label}" Value="{Binding Details.NextRestart}" />
                     <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_AvgWorldSave_Label}" Value="{Binding Details.AverageWorldSave}"
                                   HelpText="{x:Static loc:Strings.ServerDetails_AvgWorldSave_Help}">
                         <c:LabelField.TrailingContent>

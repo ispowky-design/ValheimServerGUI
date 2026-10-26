@@ -33,6 +33,7 @@ namespace ValheimServerGUI.Game
                 // Uptime is measured from the server's own start, so every window showing it agrees.
                 if (value == ServerStatus.Running) StartedAt = DateTimeOffset.Now;
                 else if (value == ServerStatus.Stopped) StartedAt = null;
+                NextScheduledRestart = value == ServerStatus.Running ? ComputeNextScheduledRestart() : null;
                 StoppingSince = value == ServerStatus.Stopping ? DateTimeOffset.Now : null;
                 StatusChanged?.Invoke(this, value);
             }
@@ -45,8 +46,20 @@ namespace ValheimServerGUI.Game
         /// <summary>When the current stop began (null unless <see cref="ServerStatus.Stopping"/>).</summary>
         public DateTimeOffset? StoppingSince { get; private set; }
 
+        /// <summary>
+        /// When the profile's restart schedule next restarts this server (null unless it is
+        /// <see cref="ServerStatus.Running"/> with a schedule). <see cref="ScheduledRestartService"/> acts on it.
+        /// </summary>
+        public DateTime? NextScheduledRestart { get; private set; }
+
+        /// <summary>Clock seam for the restart schedule; tests pin the time.</summary>
+        internal Func<DateTime> Clock { get; set; } = () => DateTime.Now;
+
         private string? ProcessKey;
         private bool IsRestarting;
+
+        // Run once while a restart has the server stopped, before it starts again (a scheduled restart's backup).
+        private Action<IValheimServerOptions>? WhileStopped;
 
         public event EventHandler<ServerStatus>? StatusChanged;
         public event EventHandler<decimal>? WorldSaved;
@@ -129,6 +142,19 @@ namespace ValheimServerGUI.Game
                         if (!IsRestarting) return;
 
                         IsRestarting = false;
+
+                        var whileStopped = WhileStopped;
+                        WhileStopped = null;
+                        try
+                        {
+                            whileStopped?.Invoke(Options);
+                        }
+                        catch (Exception ex)
+                        {
+                            // The restart goes on: a failed backup must not leave the server down.
+                            ApplicationLogger.Error(ex, "Scheduled restart task failed while the server was stopped: {message}", ex.Message);
+                        }
+
                         try
                         {
                             // A restart is still "during play": adopt list changes made since the last write.
@@ -253,6 +279,7 @@ namespace ValheimServerGUI.Game
             ProcessProvider.SafelyKillProcess(ProcessKey!);
 
             IsRestarting = false;
+            WhileStopped = null;
             Status = ServerStatus.Stopping;
         }
 
@@ -270,6 +297,7 @@ namespace ValheimServerGUI.Game
                 Options.Name, (DateTimeOffset.Now - (StoppingSince ?? DateTimeOffset.Now)).TotalSeconds);
 
             IsRestarting = false;
+            WhileStopped = null;
             ProcessProvider.ForceKillProcess(ProcessKey!);
         }
 
@@ -288,6 +316,32 @@ namespace ValheimServerGUI.Game
             Options = options ?? Options;
             IsRestarting = true;
             Status = ServerStatus.Stopping;
+        }
+
+        /// <summary>
+        /// Restarts the server for its schedule: like <see cref="Restart"/>, with <paramref name="whileStopped"/> run
+        /// once the server has stopped and before it starts again. A failure there is logged and the server still
+        /// starts.
+        /// </summary>
+        public void ScheduledRestart(Action<IValheimServerOptions>? whileStopped)
+        {
+            if (!CanRestart) return;
+
+            ApplicationLogger.Information("Scheduled restart of server: {name}", Options.Name);
+            WhileStopped = whileStopped;
+            Restart();
+        }
+
+        private DateTime? ComputeNextScheduledRestart()
+        {
+            try
+            {
+                return RestartSchedule.NextAfter(Clock(), RestartSchedule.Parse(Options.ScheduledRestartTimes));
+            }
+            catch (ArgumentException)
+            {
+                return null; // validated before every start; an invalid schedule never restarts anything
+            }
         }
 
         public bool IsAnyStatus(params ServerStatus[] statuses)

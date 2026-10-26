@@ -296,6 +296,26 @@ You may need to provide other players an Invite Code, which appears in game and 
   <data name="AdvancedControls_LongBackup_Help" xml:space="preserve">
     <value>How often to create additional backups of the world save data. This interval must be longer than the short backup interval.</value>
   </data>
+  <data name="AdvancedControls_ScheduledRestart_Header" xml:space="preserve">
+    <value>Scheduled Restart</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Label" xml:space="preserve">
+    <value>Restart every day at</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Watermark" xml:space="preserve">
+    <value>e.g. 06:00, 18:00</value>
+  </data>
+  <data name="AdvancedControls_RestartTimes_Help" xml:space="preserve">
+    <value>Times of day (24-hour, separated by commas) at which ValheimServerGUI restarts this server while it runs. The server saves the world as it stops, as with Restart Server. Leave empty for no scheduled restart.
+
+Players are disconnected during the restart, which takes about a minute. A change applies the next time the server starts.</value>
+  </data>
+  <data name="AdvancedControls_RestartBackup_Label" xml:space="preserve">
+    <value>Back up the world at each scheduled restart</value>
+  </data>
+  <data name="AdvancedControls_RestartBackup_Help" xml:space="preserve">
+    <value>While the server is stopped for a scheduled restart, the world is zipped into a backup (shown as "Scheduled" on the Backups tab). The 10 most recent scheduled backups of each world are kept; your manual backups are never deleted.</value>
+  </data>
   <!-- Server Details tab -->
   <data name="ServerDetails_Connection_Header" xml:space="preserve">
     <value>Connection Details</value>
@@ -356,6 +376,9 @@ TIP: You can also connect to "localhost", which is a little easier than typing "
   <data name="ServerDetails_AvgWorldSave_Help" xml:space="preserve">
     <value>The average amount of time it has taken to save your game world, over the past 10 saves.</value>
   </data>
+  <data name="ServerDetails_NextRestart_Label" xml:space="preserve">
+    <value>Next Restart:</value>
+  </data>
   <data name="ServerDetails_Uptime_OneDay" xml:space="preserve">
     <value>1 day + {0}</value>
   </data>
@@ -367,6 +390,9 @@ TIP: You can also connect to "localhost", which is a little easier than typing "
   </data>
   <data name="ServerDetails_AvgWorldSave_Value" xml:space="preserve">
     <value>{0:F0}ms</value>
+  </data>
+  <data name="ServerDetails_NextRestart_Value" xml:space="preserve">
+    <value>{0:t} ({1})</value>
   </data>
   <!-- Players tab -->
   <data name="Players_ManagePlayers" xml:space="preserve">
@@ -513,6 +539,9 @@ TIP: You can also connect to "localhost", which is a little easier than typing "
   </data>
   <data name="Backups_Kind_Automatic" xml:space="preserve">
     <value>Automatic</value>
+  </data>
+  <data name="Backups_Kind_Scheduled" xml:space="preserve">
+    <value>Scheduled</value>
   </data>
   <data name="Backups_WorldInUse" xml:space="preserve">
     <value>Stop the server running this world before restoring a backup.</value>
@@ -1696,6 +1725,9 @@ Please shut down any UDP applications using these ports, or choose a different p
   </data>
   <data name="Validation_BackupIntervalOrder" xml:space="preserve">
     <value>Short backup interval must be less than or equal to the long backup interval.</value>
+  </data>
+  <data name="Validation_RestartTimeInvalid" xml:space="preserve">
+    <value>"{0}" is not a valid restart time. Use 24-hour times such as 06:00 or 18:30, separated by commas.</value>
   </data>
   <data name="Validation_WorldModifierKeyInvalid" xml:space="preserve">
     <value>World modifier key '{0}' is not allowed. Supported values are: {1}</value>

@@ -31,6 +31,19 @@
                                          IsEnabled="{Binding AllowServerChanges}" />
                     </StackPanel>
                 </c:GroupBox>
+
+                <c:GroupBox Header="{x:Static loc:Strings.AdvancedControls_ScheduledRestart_Header}">
+                    <StackPanel Spacing="4">
+                        <c:TextFormField LabelText="{x:Static loc:Strings.AdvancedControls_RestartTimes_Label}"
+                                         HelpText="{x:Static loc:Strings.AdvancedControls_RestartTimes_Help}"
+                                         Watermark="{x:Static loc:Strings.AdvancedControls_RestartTimes_Watermark}"
+                                         Value="{Binding Form.ScheduledRestartTimes}" MaxLength="200"
+                                         IsEnabled="{Binding AllowServerChanges}" />
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_RestartBackup_Label}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_RestartBackup_Help}"
+                                             Value="{Binding Form.BackupOnScheduledRestart}" IsEnabled="{Binding AllowServerChanges}" />
+                    </StackPanel>
+                </c:GroupBox>
             </StackPanel>
 
             <c:GroupBox Grid.Row="1" Grid.Column="2" Header="{x:Static loc:Strings.AdvancedControls_SavingBackups_Header}" VerticalAlignment="Top">
