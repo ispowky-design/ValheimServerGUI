@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ValheimServerGUI.Tools.Models
@@ -11,6 +12,9 @@ namespace ValheimServerGUI.Tools.Models
         [JsonProperty("html_url")]
         public string? HtmlUrl { get; set; }
 
-        public LatestReleaseResponse ToLatestRelease() => new() { Version = TagName, Url = HtmlUrl };
+        [JsonProperty("assets")]
+        public List<ReleaseAsset>? Assets { get; set; }
+
+        public LatestReleaseResponse ToLatestRelease() => new() { Version = TagName, Url = HtmlUrl, Assets = Assets };
     }
 }

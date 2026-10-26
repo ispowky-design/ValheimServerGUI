@@ -1708,6 +1708,37 @@ Would you like to go to the download page?</value>
   <data name="Update_ManualUnparsable" xml:space="preserve">
     <value>Update check failed: Unable to parse version ({0}).</value>
   </data>
+  <data name="Update_StatusReady" xml:space="preserve">
+    <value>Update {0} ready to install</value>
+  </data>
+  <data name="Update_InstallPrompt" xml:space="preserve">
+    <value>{0}
+Download and install it now? ValheimServerGUI will restart.</value>
+  </data>
+  <data name="Update_InstallReadyPrompt" xml:space="preserve">
+    <value>ValheimServerGUI {0} is ready. Install it now? ValheimServerGUI will restart.</value>
+  </data>
+  <data name="Update_StopServersFirst" xml:space="preserve">
+    <value>Stop your servers before updating. ValheimServerGUI restarts to install the update, and closing it stops the servers it runs.</value>
+  </data>
+  <data name="Update_ServersStartedDuringDownload" xml:space="preserve">
+    <value>A server started while the update was downloading. Stop your servers, then click the update in the status bar to install it.</value>
+  </data>
+  <data name="Update_Download_Title" xml:space="preserve">
+    <value>Updating ValheimServerGUI</value>
+  </data>
+  <data name="Update_Download_Running" xml:space="preserve">
+    <value>Downloading ValheimServerGUI {0}…</value>
+  </data>
+  <data name="Update_Download_Failed" xml:space="preserve">
+    <value>The update could not be downloaded</value>
+  </data>
+  <data name="Update_InstallFailed" xml:space="preserve">
+    <value>The update could not be installed: {0}</value>
+  </data>
+  <data name="Update_ChecksumMismatch" xml:space="preserve">
+    <value>the downloaded file is damaged (its checksum does not match the release)</value>
+  </data>
   <!-- Start server validation -->
   <data name="Validation_OpenSaveFolderFailed" xml:space="preserve">
     <value>Unable to open the save folder: {0}</value>

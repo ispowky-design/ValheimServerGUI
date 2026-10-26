@@ -51,6 +51,7 @@ namespace ValheimServerGUI
                 .AddSingleton<IRestClientContext, RestClientContext>()
                 .AddSingleton<IIpAddressProvider, IpAddressProvider>()
                 .AddSingleton<ISoftwareUpdateProvider, SoftwareUpdateProvider>()
+                .AddSingleton<IAppUpdater, AppUpdater>()
                 .AddSingleton<IExceptionHandler, ExceptionHandler>()
                 .AddSingleton<IRuneberryApiClient, RuneberryApiClient>();
 

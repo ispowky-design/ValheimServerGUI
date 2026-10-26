@@ -78,6 +78,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IValheimPathResolver _pathResolver;
     private readonly IApplicationLogger _logger;
     private readonly IPlayerListImportService _import;
+    private readonly IAppUpdater? _appUpdater;
+
+    /// <summary>The newer release this copy can install itself, or null (none, or only a release page to open).</summary>
+    private SoftwareUpdateEventArgs? _installableUpdate;
 
     private string? _startedNewWorld;
 
@@ -94,7 +98,8 @@ public partial class MainWindowViewModel : ViewModelBase
         IShellLauncher shell,
         IValheimPathResolver pathResolver,
         IPlayerListImportService import,
-        IWorldBackupService? worldBackups = null)
+        IWorldBackupService? worldBackups = null,
+        IAppUpdater? appUpdater = null)
     {
         _serverManager = serverManager;
         _userPrefs = userPrefs;
@@ -107,6 +112,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _pathResolver = pathResolver;
         _logger = appLogger;
         _import = import;
+        _appUpdater = appUpdater;
 
         // No server is bound until the first LoadProfile → RetargetTo (the window is always loaded with a
         // profile immediately after construction). ServerStatus defaults to Stopped, which the gates expect.
@@ -175,6 +181,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     /// <summary>After a MANUAL update check, asks "…go to the download page?" (returns true for yes). Wired by the window.</summary>
     public Func<string, Task<bool>>? UpdateResultPrompt { get; set; }
+
+    /// <summary>Shows the update download dialog; returns the downloaded file, or null when it failed. Wired by the window.</summary>
+    public Func<UpdateDownloadViewModel, Task<string?>>? UpdateDownloadPrompt { get; set; }
+
+    /// <summary>Installs a downloaded update and exits the app. Wired by the window (the app owns shutdown).</summary>
+    public Action<string>? InstallUpdateAndExit { get; set; }
 
     /// <summary>Shows the Save Changes / Discard Changes / Cancel unsaved-changes prompt. Wired by the window.</summary>
     public Func<Task<UnsavedChangesChoice>>? UnsavedChangesPrompt { get; set; }
@@ -502,9 +514,11 @@ public partial class MainWindowViewModel : ViewModelBase
     private void About() => MenuActionRequested?.Invoke(MenuAction.About);
 
     [RelayCommand(CanExecute = nameof(UpdateIsLink))]
-    private void UpdateLink()
+    private async Task UpdateLink()
     {
-        if (UpdateLinkTarget is { } url)
+        if (_installableUpdate is { } update)
+            await InstallUpdateAsync(update, confirmed: false);
+        else if (UpdateLinkTarget is { } url)
             _shell.OpenWebAddress(url);
     }
 
@@ -1179,8 +1193,81 @@ public partial class MainWindowViewModel : ViewModelBase
             return;
         }
 
+        // An update this copy can install itself is offered as a download-and-install, anything else as the page.
+        if (_installableUpdate is { } update && update.LatestVersion == e.LatestVersion)
+        {
+            if (UpdateResultPrompt is not null && await UpdateResultPrompt(string.Format(Strings.Update_InstallPrompt, message)))
+                await InstallUpdateAsync(update, confirmed: true);
+            return;
+        }
+
         if (UpdateResultPrompt is not null && await UpdateResultPrompt(string.Format(Strings.Update_ManualPrompt, message)))
             _shell.OpenWebAddress(url);
+    }
+
+    private bool AnyServerRunning() => _serverManager.All.Any(s => s.Status != ServerStatus.Stopped);
+
+    // Installing restarts the app, and closing the app stops the servers it runs, so an update never installs while
+    // one is up: the user stops them first. The download dialog joins a background download already under way.
+    internal async Task InstallUpdateAsync(SoftwareUpdateEventArgs update, bool confirmed)
+    {
+        if (_appUpdater is null) return;
+
+        if (AnyServerRunning())
+        {
+            await ShowMessageAsync(Strings.Prompt_CheckForUpdates_Title, Strings.Update_StopServersFirst);
+            return;
+        }
+
+        if (!confirmed)
+        {
+            var question = _appUpdater.DownloadedVersion == update.LatestVersion
+                ? string.Format(Strings.Update_InstallReadyPrompt, update.LatestVersion)
+                : string.Format(Strings.Update_InstallPrompt, Strings.Update_ManualAvailable);
+            if (UpdateResultPrompt is null || !await UpdateResultPrompt(question)) return;
+        }
+
+        if (UpdateDownloadPrompt is null) return;
+        var file = await UpdateDownloadPrompt(new UpdateDownloadViewModel(_appUpdater, update));
+        if (file is null) return;
+
+        // A scheduled restart or another window may have started a server while the download ran.
+        if (AnyServerRunning())
+        {
+            await ShowMessageAsync(Strings.Prompt_CheckForUpdates_Title, Strings.Update_ServersStartedDuringDownload);
+            return;
+        }
+
+        try
+        {
+            InstallUpdateAndExit?.Invoke(file);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Could not install the update {version}", update.LatestVersion);
+            await ShowMessageAsync(Strings.Prompt_CheckForUpdates_Title,
+                string.Format(Strings.Update_InstallFailed, ex.GetPrimaryException().Message));
+        }
+    }
+
+    // A newer release this copy can install is fetched in the background as soon as a check finds it, so installing
+    // it later is one click. Every window asks; the updater runs one download per version.
+    private async Task DownloadUpdateInBackgroundAsync(SoftwareUpdateEventArgs update)
+    {
+        try
+        {
+            await _appUpdater!.DownloadAsync(update);
+            RunOnUi(() =>
+            {
+                if (_installableUpdate?.LatestVersion == update.LatestVersion && UpdateStatus == UpdateCheckStatus.Available)
+                    UpdateStatusText = string.Format(Strings.Update_StatusReady, update.LatestVersion);
+            });
+        }
+        catch (Exception ex)
+        {
+            // The status bar still offers the update; clicking it downloads again and reports any error.
+            _logger.Warning("Background download of update {version} failed: {message}", update.LatestVersion, ex.Message);
+        }
     }
 
     private static string BuildManualUpdateMessage(SoftwareUpdateEventArgs e)
@@ -1220,15 +1307,22 @@ public partial class MainWindowViewModel : ViewModelBase
             UpdateStatusText = Strings.Update_StatusFailed;
             UpdateStatus = UpdateCheckStatus.Error;
             UpdateLinkTarget = null;
+            _installableUpdate = null;
             return;
         }
 
+        _installableUpdate = null;
         switch (AssemblyHelper.CompareVersion(e.LatestVersion!))
         {
             case > 0:
                 UpdateStatusText = string.Format(Strings.Update_StatusAvailable, e.LatestVersion);
                 UpdateStatus = UpdateCheckStatus.Available;
                 UpdateLinkTarget = e.ReleaseUrl;
+                if (_appUpdater?.FindInstallableAsset(e) is not null)
+                {
+                    _installableUpdate = e;
+                    _ = DownloadUpdateInBackgroundAsync(e);
+                }
                 break;
             case 0:
                 UpdateStatusText = string.Format(Strings.Update_StatusUpToDate, e.LatestVersion);

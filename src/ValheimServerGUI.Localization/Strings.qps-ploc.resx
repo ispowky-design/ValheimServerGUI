@@ -1656,6 +1656,36 @@
   <data name="Update_ManualUnparsable" xml:space="preserve">
     <value>⟦Update_ManualUnparsable {0}⟧</value>
   </data>
+  <data name="Update_StatusReady" xml:space="preserve">
+    <value>⟦Update_StatusReady {0}⟧</value>
+  </data>
+  <data name="Update_InstallPrompt" xml:space="preserve">
+    <value>⟦Update_InstallPrompt {0}⟧</value>
+  </data>
+  <data name="Update_InstallReadyPrompt" xml:space="preserve">
+    <value>⟦Update_InstallReadyPrompt {0}⟧</value>
+  </data>
+  <data name="Update_StopServersFirst" xml:space="preserve">
+    <value>⟦Update_StopServersFirst⟧</value>
+  </data>
+  <data name="Update_ServersStartedDuringDownload" xml:space="preserve">
+    <value>⟦Update_ServersStartedDuringDownload⟧</value>
+  </data>
+  <data name="Update_Download_Title" xml:space="preserve">
+    <value>⟦Update_Download_Title⟧</value>
+  </data>
+  <data name="Update_Download_Running" xml:space="preserve">
+    <value>⟦Update_Download_Running {0}⟧</value>
+  </data>
+  <data name="Update_Download_Failed" xml:space="preserve">
+    <value>⟦Update_Download_Failed⟧</value>
+  </data>
+  <data name="Update_InstallFailed" xml:space="preserve">
+    <value>⟦Update_InstallFailed {0}⟧</value>
+  </data>
+  <data name="Update_ChecksumMismatch" xml:space="preserve">
+    <value>⟦Update_ChecksumMismatch⟧</value>
+  </data>
   <!-- Start server validation -->
   <data name="Validation_OpenSaveFolderFailed" xml:space="preserve">
     <value>⟦Validation_OpenSaveFolderFailed {0}⟧</value>

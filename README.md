@@ -27,7 +27,7 @@ On all platforms, you must have **Valheim Dedicated Server** installed. This com
 
 **Requirements:** Windows 10 or later. The .NET runtime is bundled, nothing else to install.
 
-**Setup:** Download `ValheimServerGUI-<version>-win-x64-setup.exe` from the [Releases page](https://github.com/ispowky-design/ValheimServerGUI/releases/latest) and run it. It installs for your account (no admin prompt), adds a Start menu entry and, if you tick it, a desktop shortcut. To update, run the newer installer over it; your profiles and settings are kept. Prefer no install? Download `ValheimServerGUI-<version>-win-x64-portable.exe` and run it from anywhere.
+**Setup:** Download `ValheimServerGUI-<version>-win-x64-setup.exe` from the [Releases page](https://github.com/ispowky-design/ValheimServerGUI/releases/latest) and run it. It installs for your account (no admin prompt), adds a Start menu entry and, if you tick it, a desktop shortcut. The app updates itself from then on (or run the newer installer over it); your profiles and settings are kept. Prefer no install? Download `ValheimServerGUI-<version>-win-x64-portable.exe` and run it from anywhere.
 
 The files are not code-signed, so SmartScreen may say "Windows protected your PC": choose **More info**, then **Run anyway**.
 
@@ -55,6 +55,7 @@ Every push and pull request is built by GitHub Actions (`.github/workflows/build
 * **Minimize to tray** - Minimize this app and control your server entirely from the system tray
 * **Multi-server support** - Run multiple servers at once by creating separate server profiles (see [FAQs](https://runeberry.com/valheim-server-gui/docs/frequently-asked-questions/) for details)
 * **Scheduled restarts** - Restart each server at set times of day, backing up the world while it is stopped
+* **Updates itself** - Downloads a new version in the background and installs it in one click from the status bar (Windows installer and portable exe), never while a server is running
 * **English or French** - The interface follows your system language, or pick one under File > Preferences
 * **Works with mods!** - Tested and working with server-side mods such as [Valheim Plus](https://www.nexusmods.com/valheim/mods/2323)"
 
