@@ -48,5 +48,17 @@ namespace ValheimServerGUI
         /// <c>/update-check</c>, <c>/ip-check</c>).
         /// </summary>
         public const string UrlRuneberryApi = "https://api.runeberry.com/vsg";
+
+        /// <summary>
+        /// This fork's newest published, non-pre-release GitHub release (the GitHub REST API answers 404 when
+        /// there is none). Builds without a Runeberry API key (see <see cref="Tools.RuneberryApiKey.IsEmpty"/>)
+        /// check for updates here instead of <see cref="UrlRuneberryApi"/>, which refuses them.
+        /// </summary>
+        public const string UrlGitHubLatestRelease = "https://api.github.com/repos/ispowky-design/ValheimServerGUI/releases/latest";
+
+        /// <summary>
+        /// Public IPv4-only lookup (<c>{"ip":…}</c>) used for the external IP by builds without a Runeberry API key.
+        /// </summary>
+        public const string UrlPublicIpCheck = "https://api.ipify.org/?format=json";
     }
 }
