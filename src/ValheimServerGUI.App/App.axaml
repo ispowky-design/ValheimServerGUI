@@ -19,6 +19,7 @@
                 <ResourceInclude Source="avares://ValheimServerGUI.App/Controls/GroupBox.axaml" />
                 <ResourceInclude Source="avares://ValheimServerGUI.App/Controls/DataListView.axaml" />
                 <ResourceInclude Source="avares://ValheimServerGUI.App/Controls/HelpLabel.axaml" />
+                <ResourceInclude Source="avares://ValheimServerGUI.App/Controls/DashboardCard.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

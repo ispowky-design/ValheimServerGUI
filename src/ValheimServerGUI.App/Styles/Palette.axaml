@@ -43,6 +43,15 @@
             <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#A7A7A8" />
 
             <SolidColorBrush x:Key="HelpGlyphBrush" Color="{DynamicResource SystemAccentColor}" />
+
+            <!-- Dashboard cards and the server-status pill. -->
+            <SolidColorBrush x:Key="CardBackground" Color="#2A2A2E" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#3F3F46" />
+            <SolidColorBrush x:Key="StatusRunningBrush" Color="#6CCB5F" />
+            <SolidColorBrush x:Key="StatusBusyBrush" Color="#E8B339" />
+            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#9A9A9A" />
+            <SolidColorBrush x:Key="ChartCpuBrush" Color="#4FA3E0" />
+            <SolidColorBrush x:Key="ChartMemoryBrush" Color="#B48EE0" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush x:Key="LayerDarkest" Color="#D4D4D4" />
@@ -66,6 +75,15 @@
             <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#808081" />
 
             <SolidColorBrush x:Key="HelpGlyphBrush" Color="{DynamicResource SystemAccentColor}" />
+
+            <!-- Dashboard cards and the server-status pill. -->
+            <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#D4D4D4" />
+            <SolidColorBrush x:Key="StatusRunningBrush" Color="#2E8B3A" />
+            <SolidColorBrush x:Key="StatusBusyBrush" Color="#B7791F" />
+            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#7A7A7A" />
+            <SolidColorBrush x:Key="ChartCpuBrush" Color="#1F78C1" />
+            <SolidColorBrush x:Key="ChartMemoryBrush" Color="#7B4FC0" />
         </ResourceDictionary>
         <!-- Valheim (wood and gold): inherits Dark; these override its layers and inputs with oak browns and a
              gold focus/hover edge. Fluent's own colors come from AppThemeVariants.CreateValheimPalette. -->
@@ -89,6 +107,15 @@
             <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#5C4630" />
 
             <SolidColorBrush x:Key="HelpGlyphBrush" Color="#D4A63A" />
+
+            <!-- Dashboard cards and the server-status pill. -->
+            <SolidColorBrush x:Key="CardBackground" Color="#42301F" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#6B5236" />
+            <SolidColorBrush x:Key="StatusRunningBrush" Color="#8FBF5A" />
+            <SolidColorBrush x:Key="StatusBusyBrush" Color="#D4A63A" />
+            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#9C8B70" />
+            <SolidColorBrush x:Key="ChartCpuBrush" Color="#D4A63A" />
+            <SolidColorBrush x:Key="ChartMemoryBrush" Color="#C9734A" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

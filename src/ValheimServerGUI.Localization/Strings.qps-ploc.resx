@@ -140,6 +140,97 @@
   <data name="MainWindow_Tab_Logs" xml:space="preserve">
     <value>⟦MainWindow_Tab_Logs⟧</value>
   </data>
+  <!-- Dashboard tab -->
+  <data name="MainWindow_Tab_Dashboard" xml:space="preserve">
+    <value>⟦MainWindow_Tab_Dashboard⟧</value>
+  </data>
+  <data name="Dashboard_Subtitle" xml:space="preserve">
+    <value>⟦Dashboard_Subtitle {0} {1}⟧</value>
+  </data>
+  <data name="Dashboard_Status_Title" xml:space="preserve">
+    <value>⟦Dashboard_Status_Title⟧</value>
+  </data>
+  <data name="Dashboard_Uptime_Caption" xml:space="preserve">
+    <value>⟦Dashboard_Uptime_Caption {0}⟧</value>
+  </data>
+  <data name="Dashboard_Players_Title" xml:space="preserve">
+    <value>⟦Dashboard_Players_Title⟧</value>
+  </data>
+  <data name="Dashboard_Players_Caption" xml:space="preserve">
+    <value>⟦Dashboard_Players_Caption {0} {1}⟧</value>
+  </data>
+  <data name="Dashboard_Cpu_Title" xml:space="preserve">
+    <value>⟦Dashboard_Cpu_Title⟧</value>
+  </data>
+  <data name="Dashboard_Cpu_Value" xml:space="preserve">
+    <value>⟦Dashboard_Cpu_Value {0:F0}⟧</value>
+  </data>
+  <data name="Dashboard_Cpu_Caption" xml:space="preserve">
+    <value>⟦Dashboard_Cpu_Caption {0}⟧</value>
+  </data>
+  <data name="Dashboard_Memory_Title" xml:space="preserve">
+    <value>⟦Dashboard_Memory_Title⟧</value>
+  </data>
+  <data name="Dashboard_Memory_Gigabytes" xml:space="preserve">
+    <value>⟦Dashboard_Memory_Gigabytes {0:F2}⟧</value>
+  </data>
+  <data name="Dashboard_Memory_Megabytes" xml:space="preserve">
+    <value>⟦Dashboard_Memory_Megabytes {0:F0}⟧</value>
+  </data>
+  <data name="Dashboard_Memory_Caption" xml:space="preserve">
+    <value>⟦Dashboard_Memory_Caption {0:F0}⟧</value>
+  </data>
+  <data name="Dashboard_Backup_Title" xml:space="preserve">
+    <value>⟦Dashboard_Backup_Title⟧</value>
+  </data>
+  <data name="Dashboard_Backup_None" xml:space="preserve">
+    <value>⟦Dashboard_Backup_None⟧</value>
+  </data>
+  <data name="Dashboard_Backup_Caption" xml:space="preserve">
+    <value>⟦Dashboard_Backup_Caption {0} {1}⟧</value>
+  </data>
+  <data name="Dashboard_OnlinePlayers_Title" xml:space="preserve">
+    <value>⟦Dashboard_OnlinePlayers_Title⟧</value>
+  </data>
+  <data name="Dashboard_OnlinePlayers_Empty" xml:space="preserve">
+    <value>⟦Dashboard_OnlinePlayers_Empty⟧</value>
+  </data>
+  <data name="Dashboard_Connection_Title" xml:space="preserve">
+    <value>⟦Dashboard_Connection_Title⟧</value>
+  </data>
+  <data name="Dashboard_Actions_Title" xml:space="preserve">
+    <value>⟦Dashboard_Actions_Title⟧</value>
+  </data>
+  <data name="Dashboard_Action_OpenWorldFolder" xml:space="preserve">
+    <value>⟦Dashboard_Action_OpenWorldFolder⟧</value>
+  </data>
+  <data name="Dashboard_Action_WorldMap" xml:space="preserve">
+    <value>⟦Dashboard_Action_WorldMap⟧</value>
+  </data>
+  <data name="Dashboard_Action_Settings" xml:space="preserve">
+    <value>⟦Dashboard_Action_Settings⟧</value>
+  </data>
+  <data name="Dashboard_Action_Players" xml:space="preserve">
+    <value>⟦Dashboard_Action_Players⟧</value>
+  </data>
+  <data name="Dashboard_Console_Title" xml:space="preserve">
+    <value>⟦Dashboard_Console_Title⟧</value>
+  </data>
+  <data name="Dashboard_Console_ViewAll" xml:space="preserve">
+    <value>⟦Dashboard_Console_ViewAll⟧</value>
+  </data>
+  <data name="Dashboard_Console_Help" xml:space="preserve">
+    <value>⟦Dashboard_Console_Help⟧</value>
+  </data>
+  <data name="Dashboard_Start" xml:space="preserve">
+    <value>⟦Dashboard_Start⟧</value>
+  </data>
+  <data name="Dashboard_Restart" xml:space="preserve">
+    <value>⟦Dashboard_Restart⟧</value>
+  </data>
+  <data name="Dashboard_Stop" xml:space="preserve">
+    <value>⟦Dashboard_Stop⟧</value>
+  </data>
   <!-- Server Controls tab -->
   <data name="ServerControls_Name_Label" xml:space="preserve">
     <value>⟦ServerControls_Name_Label⟧</value>

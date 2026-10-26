@@ -133,8 +133,12 @@ public partial class MainWindowViewModel : ViewModelBase
         WorldMap = new WorldMapViewModel(appLogger, ResolveSaveDataDirectory,
             () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
             WorldMapWebServer.Shared, userPrefs, () => _ipProvider.ExternalIpAddress, shell.OpenWebAddress);
+        Dashboard = new DashboardViewModel(Players, Backups);
         Form.PropertyChanged += (_, e) =>
         {
+            if (e.PropertyName is nameof(ServerFormViewModel.ExistingWorld) or nameof(ServerFormViewModel.UseNewWorld)
+                or nameof(ServerFormViewModel.NewWorldName))
+                OnPropertyChanged(nameof(SelectedWorldText));
             if (e.PropertyName is nameof(ServerFormViewModel.ExistingWorld) or nameof(ServerFormViewModel.UseNewWorld))
             {
                 Backups.OnSelectionChanged();
@@ -228,6 +232,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     /// <summary>World Map tab.</summary>
     public WorldMapViewModel WorldMap { get; }
+
+    /// <summary>The Dashboard tab: the selected server's status, resources, players and shortcuts at a glance.</summary>
+    public DashboardViewModel Dashboard { get; }
+
+    /// <summary>The world the selected profile runs, as the dashboard header shows it.</summary>
+    public string SelectedWorldText => string.IsNullOrWhiteSpace(Form.SelectedWorldName)
+        ? Strings.Backups_World_None
+        : Form.SelectedWorldName;
 
     // --- profile identity (single CurrentProfile source) ---
     [ObservableProperty]
@@ -632,6 +644,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TrackForceStopOffer();
 
         Details.SetServer(_currentServer);
+        Dashboard.SetServer(_currentServer);
         Logs.SetServerLog(_serverManager.GetServerLog(profileName));
     }
 
@@ -1158,6 +1171,7 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnServerStatusChanged(ServerStatus value)
     {
         TrackForceStopOffer();
+        Dashboard.Status = value;
 
         if (value == ServerStatus.Running && _startedNewWorld is not null)
         {
