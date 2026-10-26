@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="using:ValheimServerGUI.Localization"
+        xmlns:vm="using:ValheimServerGUI.App.ViewModels.Dialogs"
+        x:Class="ValheimServerGUI.App.Views.Dialogs.UpdateDownloadWindow"
+        x:DataType="vm:UpdateDownloadViewModel"
+        Title="{x:Static loc:Strings.Update_Download_Title}"
+        SizeToContent="WidthAndHeight" MinWidth="380"
+        WindowStartupLocation="CenterOwner" CanResize="False" ShowInTaskbar="False">
+
+    <StackPanel Margin="24" Spacing="12" MinWidth="320">
+        <TextBlock Text="{Binding Message}" TextWrapping="Wrap" MaxWidth="420" />
+        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" ShowProgressText="True"
+                     IsVisible="{Binding IsRunning}" />
+        <Button Content="{x:Static loc:Strings.Common_Close}" MinWidth="80" HorizontalAlignment="Center"
+                IsVisible="{Binding Failed}" IsDefault="True" Click="OnClose" />
+    </StackPanel>
+</Window>

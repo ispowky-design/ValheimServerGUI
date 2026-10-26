@@ -103,6 +103,21 @@ namespace ValheimServerGUI.Core.Tests.Tools
         }
 
         [Fact]
+        public async Task Without_a_key_the_release_lists_its_files()
+        {
+            _http.RespondWith(HttpStatusCode.OK, "{\"tag_name\":\"v3.4.0\",\"html_url\":\"https://github.com/o/r/releases/tag/v3.4.0\","
+                + "\"assets\":[{\"name\":\"ValheimServerGUI-3.4.0-win-x64-setup.exe\",\"size\":123,"
+                + "\"browser_download_url\":\"https://github.com/o/r/releases/download/v3.4.0/ValheimServerGUI-3.4.0-win-x64-setup.exe\"}]}");
+
+            var release = await NewKeylessClient().GetLatestReleaseAsync();
+
+            var asset = Assert.Single(release!.Assets!);
+            Assert.Equal("ValheimServerGUI-3.4.0-win-x64-setup.exe", asset.Name);
+            Assert.Equal(123, asset.Size);
+            Assert.Equal("https://github.com/o/r/releases/download/v3.4.0/ValheimServerGUI-3.4.0-win-x64-setup.exe", asset.DownloadUrl);
+        }
+
+        [Fact]
         public async Task Without_a_key_a_404_means_no_release_yet()
         {
             _http.RespondWith(HttpStatusCode.NotFound, "{\"message\":\"Not Found\"}");
@@ -141,6 +156,19 @@ namespace ValheimServerGUI.Core.Tests.Tools
             Assert.True(result.IsSuccessful);
             Assert.Equal("v9.9.9", result.LatestVersion);
             Assert.Equal("https://forge.example/r", result.ReleaseUrl);
+            Assert.Empty(result.Assets);
+        }
+
+        [Fact]
+        public void A_release_passes_on_its_files()
+        {
+            var asset = new ReleaseAsset { Name = "a.exe", DownloadUrl = "https://forge.example/a.exe" };
+            var result = Check(new FakeRuneberryApiClient
+            {
+                LatestRelease = new() { Version = "v9.9.9", Url = "https://forge.example/r", Assets = new() { asset } },
+            });
+
+            Assert.Same(asset, Assert.Single(result.Assets));
         }
 
         [Fact]

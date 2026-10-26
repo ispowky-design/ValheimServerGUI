@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using Avalonia;
 using ValheimServerGUI.App.Infrastructure;
 using ValheimServerGUI.Game;
+using ValheimServerGUI.Tools;
 
 namespace ValheimServerGUI.App;
 
@@ -13,6 +15,7 @@ internal static class Program
     public static void Main(string[] args)
     {
         ConfigureCulture();
+        WaitForUpdatedProcess(ref args);
 
         // Single-instance, multi-window: a second launch forwards its args to the primary and exits.
         var singleInstance = new SingleInstanceManager();
@@ -25,6 +28,27 @@ internal static class Program
 
         var services = ServiceConfiguration.BuildServiceProvider(args, singleInstance);
         BuildAvaloniaApp(services).StartWithClassicDesktopLifetime(args);
+    }
+
+    // A portable update restarts the new exe while the old process is still exiting. Wait for it to be gone, or this
+    // launch would find it holding the single-instance lock and hand its arguments to a process about to exit.
+    private static void WaitForUpdatedProcess(ref string[] args)
+    {
+        if (AppUpdater.TakeAfterUpdateArgs(ref args) is not { } pid) return;
+
+        try
+        {
+            using var previous = Process.GetProcessById(pid);
+            previous.WaitForExit(TimeSpan.FromSeconds(30));
+        }
+        catch (ArgumentException)
+        {
+            // Already gone.
+        }
+        catch (InvalidOperationException)
+        {
+            // Already gone.
+        }
     }
 
     // Restart-to-switch localization: the UI culture is resolved ONCE here, before Avalonia builds any

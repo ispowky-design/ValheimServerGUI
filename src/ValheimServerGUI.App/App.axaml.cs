@@ -162,6 +162,22 @@ public partial class App : Application
         Dispatcher.UIThread.Post(() => desktop.Shutdown());
     }
 
+    /// <summary>
+    /// Starts installing a downloaded update and exits. The caller has checked that no server is running, so there is
+    /// nothing to flush; the installer (or the swapped portable exe) starts the new version once this process is gone.
+    /// Throws, leaving the app running, when the install cannot start.
+    /// </summary>
+    internal void InstallUpdateAndExit(string downloadedFile)
+    {
+        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+
+        Services.GetRequiredService<IAppUpdater>().LaunchInstall(downloadedFile);
+        Services.GetRequiredService<IApplicationLogger>().Information("Shutting down application to install an update");
+        Services.GetRequiredService<ScheduledRestartService>().Dispose();
+        _shutdownApproved = true;
+        desktop.Shutdown();
+    }
+
     // Splash → async startup tasks → main window(s) → hide splash → begin serving second-launch forwards.
     private async Task StartShellAsync()
     {
@@ -176,6 +192,9 @@ public partial class App : Application
             var coordinator = Services.GetRequiredService<ShellCoordinator>();
             await coordinator.RunStartupTasksAsync(splashViewModel);
             coordinator.CreateAndShowStartupWindows();
+
+            // The exe a portable update replaced, and the downloads, are no longer needed.
+            Services.GetRequiredService<IAppUpdater>().CleanUpPreviousUpdate();
 
             // Profiles' daily restart times apply to every running server, whichever window shows it.
             Services.GetRequiredService<ScheduledRestartService>().Start();

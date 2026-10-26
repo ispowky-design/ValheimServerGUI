@@ -40,6 +40,8 @@ public partial class MainWindow : Window
         viewModel.CloudImportPrompt = ShowCloudImportAsync;
         viewModel.ErrorReported = msg => _ = ShowMessageAsync(Strings.Prompt_ErrorStartingServer_Title, msg);
         viewModel.UpdateResultPrompt = msg => MessageBox.ConfirmAsync(this, Strings.Prompt_CheckForUpdates_Title, msg);
+        viewModel.UpdateDownloadPrompt = vm => new UpdateDownloadWindow(vm).ShowDialog<string?>(this);
+        viewModel.InstallUpdateAndExit = App.Instance.InstallUpdateAndExit;
         viewModel.MenuActionRequested += a => _ = HandleMenuActionAsync(a);
         viewModel.RemoveProfileRequested += name => _ = HandleRemoveProfileAsync(name);
         viewModel.Players.ViewDetailsRequested += player => _ = ShowManagePlayersAsync(player.Key);

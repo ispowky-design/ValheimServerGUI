@@ -1708,6 +1708,37 @@ Ouvrir la page de téléchargement ?</value>
   <data name="Update_ManualUnparsable" xml:space="preserve">
     <value>Échec de la recherche de mises à jour : version illisible ({0}).</value>
   </data>
+  <data name="Update_StatusReady" xml:space="preserve">
+    <value>Mise à jour {0} prête à installer</value>
+  </data>
+  <data name="Update_InstallPrompt" xml:space="preserve">
+    <value>{0}
+La télécharger et l'installer maintenant ? ValheimServerGUI va redémarrer.</value>
+  </data>
+  <data name="Update_InstallReadyPrompt" xml:space="preserve">
+    <value>ValheimServerGUI {0} est prêt. L'installer maintenant ? ValheimServerGUI va redémarrer.</value>
+  </data>
+  <data name="Update_StopServersFirst" xml:space="preserve">
+    <value>Arrête tes serveurs avant la mise à jour. ValheimServerGUI redémarre pour l'installer, et le fermer arrête les serveurs qu'il fait tourner.</value>
+  </data>
+  <data name="Update_ServersStartedDuringDownload" xml:space="preserve">
+    <value>Un serveur a démarré pendant le téléchargement. Arrête tes serveurs, puis clique sur la mise à jour dans la barre d'état pour l'installer.</value>
+  </data>
+  <data name="Update_Download_Title" xml:space="preserve">
+    <value>Mise à jour de ValheimServerGUI</value>
+  </data>
+  <data name="Update_Download_Running" xml:space="preserve">
+    <value>Téléchargement de ValheimServerGUI {0}…</value>
+  </data>
+  <data name="Update_Download_Failed" xml:space="preserve">
+    <value>La mise à jour n'a pas pu être téléchargée</value>
+  </data>
+  <data name="Update_InstallFailed" xml:space="preserve">
+    <value>La mise à jour n'a pas pu être installée : {0}</value>
+  </data>
+  <data name="Update_ChecksumMismatch" xml:space="preserve">
+    <value>le fichier téléchargé est abîmé (sa somme de contrôle ne correspond pas à la release)</value>
+  </data>
   <!-- Start server validation -->
   <data name="Validation_OpenSaveFolderFailed" xml:space="preserve">
     <value>Impossible d'ouvrir le dossier des sauvegardes : {0}</value>

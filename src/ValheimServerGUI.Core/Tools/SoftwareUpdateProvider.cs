@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ValheimServerGUI.Game;
+using ValheimServerGUI.Tools.Models;
 
 namespace ValheimServerGUI.Tools
 {
@@ -25,6 +27,9 @@ namespace ValheimServerGUI.Tools
         /// the check failed).</summary>
         public string? ReleaseUrl { get; }
 
+        /// <summary>The latest release's files; empty when the answer did not list them or the check failed.</summary>
+        public IReadOnlyList<ReleaseAsset> Assets { get; } = Array.Empty<ReleaseAsset>();
+
         public bool IsManualCheck { get; }
 
         public bool IsSuccessful { get; }
@@ -34,10 +39,12 @@ namespace ValheimServerGUI.Tools
         public SoftwareUpdateEventArgs(
             string latestVersion,
             string? releaseUrl,
-            bool isManualCheck)
+            bool isManualCheck,
+            IReadOnlyList<ReleaseAsset>? assets = null)
         {
             LatestVersion = latestVersion;
             ReleaseUrl = releaseUrl;
+            Assets = assets ?? Array.Empty<ReleaseAsset>();
             IsManualCheck = isManualCheck;
             IsSuccessful = true;
         }
@@ -97,7 +104,7 @@ namespace ValheimServerGUI.Tools
                 // No qualifying release: treat the running version as the latest (nothing newer to offer).
                 eventArgs = release == null
                     ? new SoftwareUpdateEventArgs(AssemblyHelper.GetApplicationVersion(), null, isManualCheck)
-                    : new SoftwareUpdateEventArgs(release.Version!, release.Url, isManualCheck);
+                    : new SoftwareUpdateEventArgs(release.Version!, release.Url, isManualCheck, release.Assets);
             }
             catch (Exception e)
             {
