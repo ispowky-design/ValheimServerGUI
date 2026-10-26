@@ -62,6 +62,11 @@ public sealed class SteamCmdService : ISteamCmdService
     private static readonly Regex ProgressLine = new(@"progress:\s*(?<pct>\d+(?:\.\d+)?)", RegexOptions.IgnoreCase);
     private static readonly Regex SuccessLine = new(@"Success! App '" + DedicatedServerAppId + "'", RegexOptions.IgnoreCase);
     private static readonly Regex ErrorLine = new(@"^\s*(ERROR!|FAILED)", RegexOptions.IgnoreCase);
+    // SteamCMD that has just downloaded or updated itself often fails its first app_update this way; a rerun works.
+    private static readonly Regex NotReadyLine = new(@"Missing configuration", RegexOptions.IgnoreCase);
+
+    /// <summary>How many times an install is run while SteamCMD answers "Missing configuration".</summary>
+    internal const int InstallAttempts = 3;
     private static readonly Regex ManifestBuildId = new(@"""buildid""\s+""(?<id>\d+)""", RegexOptions.IgnoreCase);
     private static readonly Regex PublicBranchBuildId = new(@"""public""\s*\{[^{}]*?""buildid""\s+""(?<id>\d+)""", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
@@ -140,7 +145,7 @@ public sealed class SteamCmdService : ISteamCmdService
         if (string.IsNullOrWhiteSpace(installFolder))
             throw new ArgumentException(Strings.SteamCmd_Error_NoFolder);
 
-        var steamCmd = FindSteamCmd() ?? await DownloadSteamCmdAsync(progress, cancellationToken);
+        var steamCmd = await EnsureSteamCmdAsync(progress, cancellationToken);
         Directory.CreateDirectory(installFolder);
 
         var args = new List<string> { "+force_install_dir", Path.GetFullPath(installFolder), "+login", "anonymous", "+app_update", DedicatedServerAppId };
@@ -148,13 +153,34 @@ public sealed class SteamCmdService : ISteamCmdService
         args.Add("+quit");
 
         _logger.Information("Installing/updating the dedicated server into {folder} (validate: {validate})", installFolder, validate);
-        var lines = await RunAsync(steamCmd, args, progress, cancellationToken);
-
-        if (!lines.Exists(l => SuccessLine.IsMatch(l)))
+        for (var attempt = 1; ; attempt++)
         {
+            var lines = await RunAsync(steamCmd, args, progress, cancellationToken);
+            if (lines.Exists(l => SuccessLine.IsMatch(l))) return;
+
+            if (attempt < InstallAttempts && lines.Exists(l => NotReadyLine.IsMatch(l)))
+            {
+                _logger.Information("SteamCMD reported missing configuration; retrying ({attempt}/{max})", attempt + 1, InstallAttempts);
+                progress?.Report(new SteamCmdProgress(string.Format(Strings.SteamCmd_Log_Retrying, attempt + 1, InstallAttempts), null));
+                continue;
+            }
+
             var error = lines.FindLast(l => ErrorLine.IsMatch(l)) ?? Strings.SteamCmd_Error_NoSuccess;
             throw new InvalidOperationException(string.Format(Strings.SteamCmd_Error_Failed, error.Trim()));
         }
+    }
+
+    // A freshly downloaded SteamCMD updates itself on its first run and then restarts; installing an app in that same
+    // run tends to fail. So the first run after a download only lets it finish updating.
+    private async Task<string> EnsureSteamCmdAsync(IProgress<SteamCmdProgress>? progress, CancellationToken cancellationToken)
+    {
+        if (FindSteamCmd() is { } existing) return existing;
+
+        var steamCmd = await DownloadSteamCmdAsync(progress, cancellationToken);
+        progress?.Report(new SteamCmdProgress(Strings.SteamCmd_Log_FirstRun, null));
+        _logger.Information("Running SteamCMD once so it can update itself");
+        await RunAsync(steamCmd, new[] { "+quit" }, progress, cancellationToken);
+        return steamCmd;
     }
 
     public string? GetInstalledBuildId(string installFolder)
@@ -168,7 +194,7 @@ public sealed class SteamCmdService : ISteamCmdService
 
     public async Task<string?> GetLatestBuildIdAsync(IProgress<SteamCmdProgress>? progress, CancellationToken cancellationToken)
     {
-        var steamCmd = FindSteamCmd() ?? await DownloadSteamCmdAsync(progress, cancellationToken);
+        var steamCmd = await EnsureSteamCmdAsync(progress, cancellationToken);
         var args = new List<string> { "+login", "anonymous", "+app_info_update", "1", "+app_info_print", DedicatedServerAppId, "+quit" };
         var lines = await RunAsync(steamCmd, args, progress, cancellationToken);
         return ParseLatestBuildId(string.Join("\n", lines));

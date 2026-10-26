@@ -989,6 +989,12 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
   <data name="SteamCmd_Log_Downloaded" xml:space="preserve">
     <value>SteamCMD téléchargé.</value>
   </data>
+  <data name="SteamCmd_Log_FirstRun" xml:space="preserve">
+    <value>SteamCMD se met à jour (premier lancement)…</value>
+  </data>
+  <data name="SteamCmd_Log_Retrying" xml:space="preserve">
+    <value>SteamCMD n'était pas encore prêt, nouvel essai ({0}/{1})…</value>
+  </data>
   <data name="SteamCmd_Error_NotInArchive" xml:space="preserve">
     <value>Le téléchargement de SteamCMD ne contenait pas {0}.</value>
   </data>
