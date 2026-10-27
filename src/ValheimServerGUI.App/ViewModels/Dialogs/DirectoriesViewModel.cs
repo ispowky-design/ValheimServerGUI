@@ -141,9 +141,12 @@ public partial class DirectoriesViewModel : ModalEditViewModel
         }
     }
 
-    private static bool IsMissingFile(string path) => !string.IsNullOrWhiteSpace(path) && !File.Exists(path);
+    // Paths may hold %VARIABLES% (the defaults do), which the server start expands too.
+    private static bool IsMissingFile(string path)
+        => !string.IsNullOrWhiteSpace(path) && !File.Exists(Environment.ExpandEnvironmentVariables(path));
 
-    private static bool IsMissingFolder(string path) => !string.IsNullOrWhiteSpace(path) && !Directory.Exists(path);
+    private static bool IsMissingFolder(string path)
+        => !string.IsNullOrWhiteSpace(path) && !Directory.Exists(Environment.ExpandEnvironmentVariables(path));
 
     public override void ApplyDefaults()
     {

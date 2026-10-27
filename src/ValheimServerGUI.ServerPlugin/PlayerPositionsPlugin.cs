@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using BepInEx;
-using UnityEngine;
 
 namespace ValheimServerGUI.ServerPlugin
 {
@@ -21,9 +18,9 @@ namespace ValheimServerGUI.ServerPlugin
     /// reports to the server (<c>ZNetPeer.m_refPos</c>), which the server keeps whatever that choice is.
     ///
     /// <para>Read-only towards the game: it only reads <c>ZNet</c>'s peer list, by reflection, so it needs no
-    /// game assembly to build and does nothing when the game's names change except log once and write no players.</para>
+    /// game assembly to build. When a game change breaks a read, it logs the problem once and keeps writing what it can.</para>
     /// </summary>
-    [BepInPlugin(Guid, "ValheimServerGUI player positions", "1.0.0")]
+    [BepInPlugin(Guid, "ValheimServerGUI player positions", "1.0.1")]
     public sealed class PlayerPositionsPlugin : BaseUnityPlugin
     {
         public const string Guid = "ispowky.valheimservergui.playerpositions";
@@ -32,37 +29,20 @@ namespace ValheimServerGUI.ServerPlugin
         private const double IntervalSeconds = 2;
 
         private readonly Stopwatch _clock = Stopwatch.StartNew();
+        private readonly HashSet<string> _reported = new HashSet<string>();
         private double _nextWrite;
         private string _path;
-        private bool _warned;
-
-        private PropertyInfo _instance;
-        private MethodInfo _getPeers;
-        private FieldInfo _world;
-        private FieldInfo _worldName;
-        private FieldInfo _peerName;
-        private FieldInfo _peerRefPos;
-        private FieldInfo _peerPublic;
+        private GamePlayers _players;
 
         private void Awake()
         {
             _path = Path.Combine(Paths.ConfigPath, FileName);
-
-            var znet = Type.GetType("ZNet, assembly_valheim");
-            var peer = Type.GetType("ZNetPeer, assembly_valheim");
-            const BindingFlags any = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
-            _instance = znet?.GetProperty("instance", any);
-            _getPeers = znet?.GetMethod("GetPeers", any, null, Type.EmptyTypes, null);
-            _world = znet?.GetField("m_world", any);
-            _worldName = _world?.FieldType.GetField("m_name", any);
-            _peerName = peer?.GetField("m_playerName", any);
-            _peerRefPos = peer?.GetField("m_refPos", any);
-            _peerPublic = peer?.GetField("m_publicRefPos", any);
-
-            if (_instance == null || _getPeers == null || _peerName == null || _peerRefPos == null)
+            _players = new GamePlayers(Type.GetType("ZNet, assembly_valheim"), Type.GetType("ZNetPeer, assembly_valheim"));
+            if (!_players.CanReadPlayers)
             {
-                Logger.LogWarning("The game's player list was not found; player positions will not be written.");
+                Logger.LogWarning("The game's player list was not found; no player positions will be written.");
             }
+            Logger.LogInfo("Writing player positions to " + _path);
         }
 
         private void Update()
@@ -71,15 +51,16 @@ namespace ValheimServerGUI.ServerPlugin
             if (now < _nextWrite) return;
             _nextWrite = now + IntervalSeconds;
 
+            // Each different problem is logged once; writing goes on regardless, every tick.
             try
             {
-                Write(BuildJson());
+                Write(_players.BuildJson(DateTime.UtcNow));
+                if (_players.Problem != null && _reported.Add(_players.Problem)) Logger.LogWarning(_players.Problem);
             }
             catch (Exception e)
             {
-                if (_warned) return;
-                _warned = true;
-                Logger.LogWarning("Could not write player positions: " + e.Message);
+                var problem = "Could not write player positions: " + e.Message;
+                if (_reported.Add(problem)) Logger.LogWarning(problem);
             }
         }
 
@@ -95,40 +76,6 @@ namespace ValheimServerGUI.ServerPlugin
             }
         }
 
-        private string BuildJson()
-        {
-            var json = new StringBuilder(256);
-            json.Append("{\"version\":1,\"time\":\"").Append(DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture)).Append('"');
-
-            var znet = _instance?.GetValue(null);
-            var world = znet == null ? null : _worldName?.GetValue(_world.IsStatic ? null : znet) as string;
-            json.Append(",\"world\":");
-            AppendString(json, world);
-
-            json.Append(",\"players\":[");
-            if (znet != null && _getPeers?.Invoke(znet, null) is IEnumerable peers)
-            {
-                var first = true;
-                foreach (var peer in peers)
-                {
-                    var name = _peerName.GetValue(peer) as string;
-                    if (string.IsNullOrEmpty(name)) continue; // still connecting
-                    var position = (Vector3)_peerRefPos.GetValue(peer);
-                    var isPublic = _peerPublic?.GetValue(peer) is bool b && b;
-
-                    if (!first) json.Append(',');
-                    first = false;
-                    json.Append("{\"name\":");
-                    AppendString(json, name);
-                    json.Append(",\"x\":").Append(position.x.ToString("R", CultureInfo.InvariantCulture))
-                        .Append(",\"z\":").Append(position.z.ToString("R", CultureInfo.InvariantCulture))
-                        .Append(",\"public\":").Append(isPublic ? "true" : "false").Append('}');
-                }
-            }
-            json.Append("]}");
-            return json.ToString();
-        }
-
         /// <summary>Writes beside the file and swaps it in, so the app never reads half a file.</summary>
         private void Write(string json)
         {
@@ -136,30 +83,6 @@ namespace ValheimServerGUI.ServerPlugin
             File.WriteAllText(temp, json, new UTF8Encoding(false));
             if (File.Exists(_path)) File.Replace(temp, _path, null);
             else File.Move(temp, _path);
-        }
-
-        private static void AppendString(StringBuilder json, string text)
-        {
-            if (text == null)
-            {
-                json.Append("null");
-                return;
-            }
-
-            json.Append('"');
-            foreach (var c in text)
-            {
-                switch (c)
-                {
-                    case '"': json.Append("\\\""); break;
-                    case '\\': json.Append("\\\\"); break;
-                    default:
-                        if (c < 0x20) json.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
-                        else json.Append(c);
-                        break;
-                }
-            }
-            json.Append('"');
         }
     }
 }
