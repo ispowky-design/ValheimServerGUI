@@ -26,7 +26,7 @@
             </Border>
         </DockPanel>
 
-        <ScrollViewer Grid.Column="1" Width="260" Margin="8,0,0,0" IsVisible="{Binding !WorldMap.IsExpanded}">
+        <ScrollViewer Grid.Column="1" Width="290" Margin="10,0,0,0" IsVisible="{Binding !WorldMap.IsExpanded}">
             <StackPanel Spacing="2">
                 <c:GroupBox Header="{x:Static loc:Strings.Map_World_Label}">
                     <StackPanel Spacing="4">

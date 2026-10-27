@@ -141,6 +141,13 @@
     <value>⟦MainWindow_Tab_Logs⟧</value>
   </data>
   <!-- Dashboard tab -->
+  <!-- Shell -->
+  <data name="Shell_Brand_Tagline" xml:space="preserve">
+    <value>⟦Shell_Brand_Tagline⟧</value>
+  </data>
+  <data name="Shell_Nav_Section" xml:space="preserve">
+    <value>⟦Shell_Nav_Section⟧</value>
+  </data>
   <data name="MainWindow_Tab_Dashboard" xml:space="preserve">
     <value>⟦MainWindow_Tab_Dashboard⟧</value>
   </data>
@@ -232,6 +239,9 @@
     <value>⟦Dashboard_Stop⟧</value>
   </data>
   <!-- Server Controls tab -->
+  <data name="ServerControls_Identity_Header" xml:space="preserve">
+    <value>⟦ServerControls_Identity_Header⟧</value>
+  </data>
   <data name="ServerControls_Name_Label" xml:space="preserve">
     <value>⟦ServerControls_Name_Label⟧</value>
   </data>

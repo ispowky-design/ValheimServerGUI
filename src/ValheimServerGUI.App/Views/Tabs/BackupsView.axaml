@@ -10,7 +10,7 @@
         <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,0,0,6">
             <c:LabelField Grid.Column="0" LabelText="{x:Static loc:Strings.Backups_World_Label}" Value="{Binding Backups.WorldText}"
                           HelpText="{x:Static loc:Strings.Backups_Help}" VerticalAlignment="Center" />
-            <Button Grid.Column="2" Content="{x:Static loc:Strings.Backups_BackUpNow}" Command="{Binding Backups.BackUpNowCommand}"
+            <Button Grid.Column="2" Classes="primary" Content="{x:Static loc:Strings.Backups_BackUpNow}" Command="{Binding Backups.BackUpNowCommand}"
                     ToolTip.Tip="{x:Static loc:Strings.Backups_BackUpNow_Tip}" Margin="4,0,0,0" />
             <Button Grid.Column="3" Content="{x:Static loc:Strings.Backups_Restore}" Command="{Binding Backups.RestoreCommand}"
                     ToolTip.Tip="{x:Static loc:Strings.Backups_Restore_Tip}" Margin="4,0,0,0" />

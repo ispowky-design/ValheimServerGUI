@@ -141,6 +141,13 @@
     <value>Journaux</value>
   </data>
   <!-- Dashboard tab -->
+  <!-- Shell -->
+  <data name="Shell_Brand_Tagline" xml:space="preserve">
+    <value>Gestion du serveur dédié</value>
+  </data>
+  <data name="Shell_Nav_Section" xml:space="preserve">
+    <value>GESTION</value>
+  </data>
   <data name="MainWindow_Tab_Dashboard" xml:space="preserve">
     <value>Tableau de bord</value>
   </data>
@@ -232,6 +239,9 @@
     <value>Arrêter</value>
   </data>
   <!-- Server Controls tab -->
+  <data name="ServerControls_Identity_Header" xml:space="preserve">
+    <value>Identité du serveur</value>
+  </data>
   <data name="ServerControls_Name_Label" xml:space="preserve">
     <value>Nom du serveur</value>
   </data>

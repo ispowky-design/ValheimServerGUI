@@ -15,7 +15,7 @@
         <Setter Property="Padding" Value="8,2,0,2" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="MaxDropDownHeight" Value="504" />
-        <Setter Property="MinHeight" Value="23" />
+        <Setter Property="MinHeight" Value="26" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="PlaceholderForeground" Value="{DynamicResource ComboBoxPlaceHolderForeground}" />

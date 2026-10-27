@@ -3,13 +3,14 @@
                     xmlns:c="using:ValheimServerGUI.App.Controls">
 
     <!-- The shared data table: an inner DataGrid (PART_Grid) with an optional compact footer bar below it,
-         wrapped in a 1px frame that matches the other controls' borders. The footer hosts action icon
+         wrapped in a rounded card frame that matches the section cards. The footer hosts action icon
          buttons anchored left and/or right and only appears when a slot is filled (HasFooter); its
          horizontal inset (6px) and density match the (halved) dark column header. -->
     <ControlTheme x:Key="{x:Type c:DataListView}" TargetType="c:DataListView">
         <Setter Property="Template">
             <ControlTemplate>
-                <Border BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="1">
+                <Border BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="8"
+                        Background="{DynamicResource CardBackground}" ClipToBounds="True">
                     <DockPanel>
                         <!-- Footer: same dark bar and height as the header (HeaderFooterHeight), content centred. -->
                         <Border DockPanel.Dock="Bottom" IsVisible="{TemplateBinding HasFooter}"

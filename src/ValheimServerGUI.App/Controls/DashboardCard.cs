@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
 
 namespace ValheimServerGUI.App.Controls;
 
@@ -24,8 +25,19 @@ public class DashboardCard : ContentControl
     public static readonly StyledProperty<string?> IconNameProperty =
         AvaloniaProperty.Register<DashboardCard, string?>(nameof(IconName));
 
+    /// <summary>A vector glyph (Styles/NavIcons.axaml) drawn in the accent before the title, in place of
+    /// <see cref="IconName"/>'s bitmap.</summary>
+    public static readonly StyledProperty<Geometry?> GlyphProperty =
+        AvaloniaProperty.Register<DashboardCard, Geometry?>(nameof(Glyph));
+
     public static readonly StyledProperty<object?> HeaderContentProperty =
         AvaloniaProperty.Register<DashboardCard, object?>(nameof(HeaderContent));
+
+    public Geometry? Glyph
+    {
+        get => GetValue(GlyphProperty);
+        set => SetValue(GlyphProperty, value);
+    }
 
     public string? Title
     {

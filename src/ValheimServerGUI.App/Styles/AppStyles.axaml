@@ -18,4 +18,55 @@
     <Style Selector="c|IconHyperlinkLabel:pointerover c|HyperlinkLabel">
         <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorLight1}" />
     </Style>
+
+    <!-- ===== Shell pieces shared by the main window and the dashboard ===== -->
+
+    <!-- Server state dot (Status* tokens in Palette.axaml): grey when stopped, amber while busy, green running. -->
+    <Style Selector="Ellipse.statusDot">
+        <Setter Property="Fill" Value="{DynamicResource StatusStoppedBrush}" />
+    </Style>
+    <Style Selector="Ellipse.statusDot.running">
+        <Setter Property="Fill" Value="{DynamicResource StatusRunningBrush}" />
+    </Style>
+    <Style Selector="Ellipse.statusDot.busy">
+        <Setter Property="Fill" Value="{DynamicResource StatusBusyBrush}" />
+    </Style>
+
+    <!-- Rounded capsule on the card surface (the top bar's server state). -->
+    <Style Selector="Border.pill">
+        <Setter Property="Background" Value="{DynamicResource CardBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="13" />
+        <Setter Property="Padding" Value="11,4" />
+    </Style>
+
+    <!-- ===== Buttons ===== -->
+
+    <!-- Primary action: filled with the accent. Used for the one main verb of a page, and for every dialog's
+         default button. -->
+    <Style Selector="Button.primary, Button[IsDefault=True]">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter, Button[IsDefault=True]:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight1}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorLight1}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentForeground}" />
+    </Style>
+    <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter, Button[IsDefault=True]:pressed /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentForeground}" />
+    </Style>
+
+    <!-- ===== Scroll bars: slim, rounded thumbs that sit quietly on the dark surfaces. ===== -->
+    <Style Selector="ScrollBar:vertical /template/ Thumb#thumb">
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+    <Style Selector="ScrollBar:horizontal /template/ Thumb#thumb">
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
 </Styles>

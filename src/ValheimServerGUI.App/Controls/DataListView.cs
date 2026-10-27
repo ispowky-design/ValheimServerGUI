@@ -61,7 +61,7 @@ public class DataListView : TemplatedControl
 
     /// <summary>The height of every data row (px). Sized so a 16px icon sits centred with a little
     /// breathing room.</summary>
-    public const double RowUnitHeight = 20;
+    public const double RowUnitHeight = 24;
 
     /// <summary>The height of the header and footer bars (px) — taller than a data row for extra padding,
     /// with their content still vertically centred. The template binds the footer to this via x:Static, and

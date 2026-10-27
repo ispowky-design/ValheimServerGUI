@@ -3,7 +3,7 @@
              xmlns:loc="using:ValheimServerGUI.Localization"
              x:Class="ValheimServerGUI.App.Controls.LogViewer"
              x:Name="Root" x:CompileBindings="False">
-    <Border BorderThickness="1" BorderBrush="{DynamicResource AppBorderBrush}">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource CardBorderBrush}" CornerRadius="8" ClipToBounds="True">
         <ScrollViewer x:Name="Scroll" Background="{DynamicResource LayerBase}"
                       HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <!-- A single contiguous, read-only text surface so logs copy-paste in bulk (select, Ctrl+C,
@@ -11,7 +11,7 @@
                  bounded rather than growing forever. Word-wrapped so long lines never need horizontal
                  scrolling; the mono stack lists a concrete family per platform (Windows/mac/Linux) since
                  Avalonia does not resolve the generic "monospace" keyword. -->
-            <SelectableTextBlock x:Name="TextView" Padding="6,4"
+            <SelectableTextBlock x:Name="TextView" Padding="10,8"
                                  FontFamily="Cascadia Mono,Consolas,Menlo,DejaVu Sans Mono,Liberation Mono,monospace"
                                  FontSize="12" TextWrapping="Wrap"
                                  Foreground="{DynamicResource TextControlForeground}">

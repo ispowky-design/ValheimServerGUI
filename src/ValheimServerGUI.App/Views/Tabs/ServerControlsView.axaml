@@ -9,37 +9,42 @@
 
     <ScrollViewer>
         <StackPanel Margin="8" Spacing="2">
-            <!-- Name (wide) + Port (narrow) on one row. -->
-            <Grid ColumnDefinitions="*,12,Auto">
-                <c:TextFormField Grid.Column="0" LabelText="{x:Static loc:Strings.ServerControls_Name_Label}"
-                                 HelpText="{x:Static loc:Strings.ServerControls_Name_Help}"
-                                 Value="{Binding Form.Name}" MaxLength="64" IsEnabled="{Binding AllowServerChanges}" />
-                <c:NumericFormField Grid.Column="2" Width="110" LabelText="{x:Static loc:Strings.ServerControls_Port_Label}"
-                                    HelpText="{x:Static loc:Strings.ServerControls_Port_Help}"
-                                    Value="{Binding Form.Port}" Minimum="1" Maximum="65535"
-                                    IsEnabled="{Binding AllowServerChanges}" />
-            </Grid>
+            <!-- Identity: name, port and password in one card, like the sections below. -->
+            <c:GroupBox Header="{x:Static loc:Strings.ServerControls_Identity_Header}">
+                <StackPanel Spacing="2">
+                    <!-- Name (wide) + Port (narrow) on one row. -->
+                    <Grid ColumnDefinitions="*,12,Auto">
+                        <c:TextFormField Grid.Column="0" LabelText="{x:Static loc:Strings.ServerControls_Name_Label}"
+                                         HelpText="{x:Static loc:Strings.ServerControls_Name_Help}"
+                                         Value="{Binding Form.Name}" MaxLength="64" IsEnabled="{Binding AllowServerChanges}" />
+                        <c:NumericFormField Grid.Column="2" Width="110" LabelText="{x:Static loc:Strings.ServerControls_Port_Label}"
+                                            HelpText="{x:Static loc:Strings.ServerControls_Port_Help}"
+                                            Value="{Binding Form.Port}" Minimum="1" Maximum="65535"
+                                            IsEnabled="{Binding AllowServerChanges}" />
+                    </Grid>
 
-            <c:TextFormField LabelText="{x:Static loc:Strings.ServerControls_Password_Label}"
-                             HelpText="{x:Static loc:Strings.ServerControls_Password_Help}"
-                             Value="{Binding Form.Password}" ShowValue="{Binding Form.ShowPassword}"
-                             IsInputEnabled="{Binding AllowServerChanges}">
-                <c:TextFormField.Affix>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
-                        <!-- Eye toggle (left of copy): open eye when shown, struck-through when hidden. -->
-                        <Button Classes="affix" Command="{Binding Form.ToggleShowPasswordCommand}"
-                                ToolTip.Tip="{x:Static loc:Strings.ServerControls_ShowPassword_Tip}">
-                            <Image Width="16" Height="16"
-                                   Source="{Binding Form.ShowPassword, Converter={x:Static conv:ShowPasswordToIconConverter.Instance}}" />
-                        </Button>
-                        <c:CopyButton Classes="affix" Text="{Binding Form.Password}"
-                                      ToolTip.Tip="{x:Static loc:Strings.ServerControls_CopyPassword_Tip}" />
-                    </StackPanel>
-                </c:TextFormField.Affix>
-            </c:TextFormField>
+                    <c:TextFormField LabelText="{x:Static loc:Strings.ServerControls_Password_Label}"
+                                     HelpText="{x:Static loc:Strings.ServerControls_Password_Help}"
+                                     Value="{Binding Form.Password}" ShowValue="{Binding Form.ShowPassword}"
+                                     IsInputEnabled="{Binding AllowServerChanges}">
+                        <c:TextFormField.Affix>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+                                <!-- Eye toggle (left of copy): open eye when shown, struck-through when hidden. -->
+                                <Button Classes="affix" Command="{Binding Form.ToggleShowPasswordCommand}"
+                                        ToolTip.Tip="{x:Static loc:Strings.ServerControls_ShowPassword_Tip}">
+                                    <Image Width="16" Height="16"
+                                           Source="{Binding Form.ShowPassword, Converter={x:Static conv:ShowPasswordToIconConverter.Instance}}" />
+                                </Button>
+                                <c:CopyButton Classes="affix" Text="{Binding Form.Password}"
+                                              ToolTip.Tip="{x:Static loc:Strings.ServerControls_CopyPassword_Tip}" />
+                            </StackPanel>
+                        </c:TextFormField.Affix>
+                    </c:TextFormField>
+                </StackPanel>
+            </c:GroupBox>
 
             <!-- World | Join Options -->
-            <Grid ColumnDefinitions="*,8,*" Margin="0,4,0,0">
+            <Grid ColumnDefinitions="*,12,*" Margin="0,4,0,0">
                 <c:GroupBox Grid.Column="0" Header="{x:Static loc:Strings.ServerControls_World_Header}">
                     <StackPanel Spacing="4">
                         <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto,Auto">
@@ -81,35 +86,63 @@
                 </c:GroupBox>
             </Grid>
 
-            <!-- Start / Restart / Stop -->
-            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10,0,0" HorizontalAlignment="Left">
-                <Button x:Name="StartButton" Command="{Binding StartCommand}">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <c:IconImage IconName="Run_16x" VerticalAlignment="Center" />
-                        <TextBlock Text="{x:Static loc:Strings.ServerAction_Start}" VerticalAlignment="Center" />
+            <!-- Advanced: process options, scheduled restarts, and saving/backups (formerly their own tab). -->
+            <TextBlock Text="{x:Static loc:Strings.MainWindow_Tab_AdvancedControls}" FontSize="14" FontWeight="SemiBold"
+                       Margin="2,12,0,2" Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+            <Grid ColumnDefinitions="*,12,Auto">
+                <StackPanel Grid.Column="0" Spacing="2">
+                    <c:GroupBox Header="{x:Static loc:Strings.AdvancedControls_OtherSettings_Header}">
+                        <StackPanel Spacing="4">
+                            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_AutoStart_Label}"
+                                                 HelpText="{x:Static loc:Strings.AdvancedControls_AutoStart_Help}"
+                                                 Value="{Binding Form.AutoStart}" IsEnabled="{Binding AllowServerChanges}" />
+                            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_WriteLogs_Label}"
+                                                 HelpText="{x:Static loc:Strings.AdvancedControls_WriteLogs_Help}"
+                                                 Value="{Binding Form.WriteServerLogsToFile}" IsEnabled="{Binding AllowServerChanges}" />
+                            <c:TextFormField LabelText="{x:Static loc:Strings.AdvancedControls_AdditionalArgs_Label}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_AdditionalArgs_Help}"
+                                             Value="{Binding Form.AdditionalArgs}" MaxLength="32767"
+                                             IsEnabled="{Binding AllowServerChanges}" />
+                            <c:TextFormField LabelText="{x:Static loc:Strings.AdvancedControls_EnvironmentVariables_Label}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_EnvironmentVariables_Help}"
+                                             Value="{Binding Form.EnvironmentVariables}" MaxLength="32767"
+                                             IsEnabled="{Binding AllowServerChanges}" />
+                            <Button Content="{x:Static loc:Strings.AdvancedControls_SetDirectories}" HorizontalAlignment="Left" Margin="0,4,0,0"
+                                    Command="{Binding SetProfileDirectoriesCommand}" />
+                        </StackPanel>
+                    </c:GroupBox>
+
+                    <c:GroupBox Header="{x:Static loc:Strings.AdvancedControls_ScheduledRestart_Header}">
+                        <StackPanel Spacing="4">
+                            <c:TextFormField LabelText="{x:Static loc:Strings.AdvancedControls_RestartTimes_Label}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_RestartTimes_Help}"
+                                             Watermark="{x:Static loc:Strings.AdvancedControls_RestartTimes_Watermark}"
+                                             Value="{Binding Form.ScheduledRestartTimes}" MaxLength="200"
+                                             IsEnabled="{Binding AllowServerChanges}" />
+                            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_RestartBackup_Label}"
+                                                 HelpText="{x:Static loc:Strings.AdvancedControls_RestartBackup_Help}"
+                                                 Value="{Binding Form.BackupOnScheduledRestart}" IsEnabled="{Binding AllowServerChanges}" />
+                        </StackPanel>
+                    </c:GroupBox>
+                </StackPanel>
+
+                <c:GroupBox Grid.Column="2" Header="{x:Static loc:Strings.AdvancedControls_SavingBackups_Header}" VerticalAlignment="Top">
+                    <StackPanel Spacing="2" Width="190">
+                        <c:NumericFormField LabelText="{x:Static loc:Strings.AdvancedControls_Backups_Label}" Value="{Binding Form.BackupCount}"
+                                            Minimum="1" Maximum="1000" IsEnabled="{Binding AllowServerChanges}"
+                                            HelpText="{x:Static loc:Strings.AdvancedControls_Backups_Help}" />
+                        <c:DurationFormField LabelText="{x:Static loc:Strings.AdvancedControls_SaveInterval_Label}" Value="{Binding Form.SaveInterval}"
+                                             Minimum="60" Maximum="86400" IsEnabled="{Binding AllowServerChanges}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_SaveInterval_Help}" />
+                        <c:DurationFormField LabelText="{x:Static loc:Strings.AdvancedControls_ShortBackup_Label}" Value="{Binding Form.BackupIntervalShort}"
+                                             Minimum="300" Maximum="2592000" IsEnabled="{Binding AllowServerChanges}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_ShortBackup_Help}" />
+                        <c:DurationFormField LabelText="{x:Static loc:Strings.AdvancedControls_LongBackup_Label}" Value="{Binding Form.BackupIntervalLong}"
+                                             Minimum="300" Maximum="2592000" IsEnabled="{Binding AllowServerChanges}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_LongBackup_Help}" />
                     </StackPanel>
-                </Button>
-                <Button x:Name="RestartButton" Command="{Binding RestartCommand}">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <c:IconImage IconName="Restart_16x" VerticalAlignment="Center" />
-                        <TextBlock Text="{x:Static loc:Strings.ServerAction_Restart}" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
-                <Button x:Name="StopButton" Command="{Binding StopCommand}">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <c:IconImage IconName="Stop_16x" VerticalAlignment="Center" />
-                        <TextBlock Text="{x:Static loc:Strings.ServerAction_Stop}" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
-                <!-- Offered only once a stop has run past the Preferences delay; never automatic. -->
-                <Button x:Name="ForceStopButton" Command="{Binding ForceStopCommand}" IsVisible="{Binding ForceStopAvailable}"
-                        ToolTip.Tip="{x:Static loc:Strings.ServerAction_ForceStop_Tip}">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <c:IconImage IconName="StatusCriticalError_16x" VerticalAlignment="Center" />
-                        <TextBlock Text="{x:Static loc:Strings.ServerAction_ForceStop}" VerticalAlignment="Center" />
-                    </StackPanel>
-                </Button>
-            </StackPanel>
+                </c:GroupBox>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

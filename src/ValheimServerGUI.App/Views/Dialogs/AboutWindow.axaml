@@ -11,9 +11,12 @@
         WindowStartupLocation="CenterOwner" CanResize="False" ShowInTaskbar="False">
 
     <StackPanel Margin="24" Spacing="6" HorizontalAlignment="Center">
-        <Image Source="avares://ValheimServerGUI.App/Assets/vsg_logo_256.png" Width="72" Height="72"
-               HorizontalAlignment="Center" Margin="0,0,0,4"
-               RenderOptions.BitmapInterpolationMode="HighQuality" />
+        <!-- The app's rune mark, as on the main window's sidebar. -->
+        <Border Width="64" Height="64" CornerRadius="16" HorizontalAlignment="Center" Margin="0,0,0,6"
+                Background="{DynamicResource SystemAccentColor}">
+            <PathIcon Width="36" Height="36" Data="{StaticResource NavIcon.Brand}"
+                      Foreground="{DynamicResource AccentForeground}" />
+        </Border>
 
         <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="SemiBold"
                    HorizontalAlignment="Center" TextAlignment="Center" />

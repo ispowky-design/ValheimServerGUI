@@ -19,32 +19,19 @@
         <Style Selector="Border.statusBar.busy">
             <Setter Property="Background" Value="{DynamicResource StatusBusyBrush}" />
         </Style>
-        <Style Selector="Ellipse.statusDot">
-            <Setter Property="Fill" Value="{DynamicResource StatusStoppedBrush}" />
-        </Style>
-        <Style Selector="Ellipse.statusDot.running">
-            <Setter Property="Fill" Value="{DynamicResource StatusRunningBrush}" />
-        </Style>
-        <Style Selector="Ellipse.statusDot.busy">
-            <Setter Property="Fill" Value="{DynamicResource StatusBusyBrush}" />
-        </Style>
-        <Style Selector="c|IconTextButton.primary">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
-            <Setter Property="Foreground" Value="{DynamicResource LayerDarkest}" />
-        </Style>
     </UserControl.Styles>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="12" Spacing="10">
+        <StackPanel Margin="12,8,12,12" Spacing="12">
 
-            <!-- ===== Header: server identity, state, lifecycle controls ===== -->
-            <c:DashboardCard Classes="untitled" Padding="14,12">
+            <!-- ===== Header: server identity and state, with the world shortcuts. Start/Restart/Stop live in the top bar. ===== -->
+            <c:DashboardCard Classes="untitled" Padding="18,16" Background="{DynamicResource HeroBackground}">
                 <Grid ColumnDefinitions="Auto,*,Auto">
                     <Ellipse Grid.Column="0" Width="12" Height="12" Margin="2,0,12,0" VerticalAlignment="Center"
                              Classes="statusDot"
                              Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
                     <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Form.Name}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                        <TextBlock Text="{Binding Form.Name}" FontSize="22" FontWeight="Bold" TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
                         <TextBlock FontSize="12" TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}">
@@ -57,22 +44,17 @@
                         </TextBlock>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                        <c:IconTextButton Classes="primary" IconName="Run_16x" Text="{x:Static loc:Strings.Dashboard_Start}"
-                                          ToolTip.Tip="{x:Static loc:Strings.ServerAction_Start}" Command="{Binding StartCommand}" />
-                        <c:IconTextButton IconName="Restart_16x" Text="{x:Static loc:Strings.Dashboard_Restart}"
-                                          ToolTip.Tip="{x:Static loc:Strings.ServerAction_Restart}" Command="{Binding RestartCommand}" />
-                        <c:IconTextButton IconName="Stop_16x" Text="{x:Static loc:Strings.Dashboard_Stop}"
-                                          ToolTip.Tip="{x:Static loc:Strings.ServerAction_Stop}" Command="{Binding StopCommand}" />
-                        <c:IconTextButton IconName="Cancel_16x" Text="{x:Static loc:Strings.ServerAction_ForceStop}"
-                                          ToolTip.Tip="{x:Static loc:Strings.ServerAction_ForceStop_Tip}"
-                                          Command="{Binding ForceStopCommand}" IsVisible="{Binding ForceStopAvailable}" />
+                        <c:IconTextButton Glyph="{StaticResource Glyph.Folder}" Text="{x:Static loc:Strings.Dashboard_Action_OpenWorldFolder}"
+                                          Command="{Binding OpenSaveFolderCommand}" />
+                        <c:IconTextButton Glyph="{StaticResource Glyph.Download}" Text="{x:Static loc:Strings.MainWindow_Menu_InstallServer}"
+                                          Command="{Binding InstallServerCommand}" />
                     </StackPanel>
                 </Grid>
             </c:DashboardCard>
 
             <!-- ===== Key figures ===== -->
             <Grid ColumnDefinitions="*,10,*,10,*,10,*">
-                <c:DashboardCard Grid.Column="0" Title="{x:Static loc:Strings.Dashboard_Status_Title}" IconName="StatusInformation_16x"
+                <c:DashboardCard Grid.Column="0" Title="{x:Static loc:Strings.Dashboard_Status_Title}" Glyph="{StaticResource NavIcon.Details}"
                                  Value="{Binding StatusText}"
                                  Caption="{Binding Details.Uptime, StringFormat={x:Static loc:Strings.Dashboard_Uptime_Caption}}">
                     <!-- State colour bar, level with the trend lines of the neighbouring cards. -->
@@ -80,25 +62,25 @@
                             Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
                 </c:DashboardCard>
 
-                <c:DashboardCard Grid.Column="2" Title="{x:Static loc:Strings.Dashboard_Players_Title}" IconName="User_16x"
+                <c:DashboardCard Grid.Column="2" Title="{x:Static loc:Strings.Dashboard_Players_Title}" Glyph="{StaticResource NavIcon.Players}"
                                  Value="{Binding Dashboard.PlayersOnlineText}" Caption="{Binding Dashboard.PlayersCaption}" />
 
-                <c:DashboardCard Grid.Column="4" Title="{x:Static loc:Strings.Dashboard_Cpu_Title}" IconName="StatusRun_16x"
+                <c:DashboardCard Grid.Column="4" Title="{x:Static loc:Strings.Dashboard_Cpu_Title}" Glyph="{StaticResource Glyph.Cpu}"
                                  Value="{Binding Dashboard.CpuText}" Caption="{Binding Dashboard.CpuCaption}">
-                    <c:Sparkline Height="34" Maximum="100" Capacity="{x:Static vm:DashboardViewModel.HistoryLength}"
+                    <c:Sparkline Height="28" Maximum="100" Capacity="{x:Static vm:DashboardViewModel.HistoryLength}"
                                  Values="{Binding Dashboard.CpuHistory}" Stroke="{DynamicResource ChartCpuBrush}" />
                 </c:DashboardCard>
 
-                <c:DashboardCard Grid.Column="6" Title="{x:Static loc:Strings.Dashboard_Memory_Title}" IconName="Save_16x"
+                <c:DashboardCard Grid.Column="6" Title="{x:Static loc:Strings.Dashboard_Memory_Title}" Glyph="{StaticResource Glyph.Memory}"
                                  Value="{Binding Dashboard.MemoryText}" Caption="{Binding Dashboard.MemoryCaption}">
-                    <c:Sparkline Height="34" Capacity="{x:Static vm:DashboardViewModel.HistoryLength}"
+                    <c:Sparkline Height="28" Capacity="{x:Static vm:DashboardViewModel.HistoryLength}"
                                  Values="{Binding Dashboard.MemoryHistory}" Stroke="{DynamicResource ChartMemoryBrush}" />
                 </c:DashboardCard>
             </Grid>
 
             <!-- ===== Players | Connection + backups ===== -->
             <Grid ColumnDefinitions="*,10,*">
-                <c:DashboardCard Grid.Column="0" Title="{x:Static loc:Strings.Dashboard_OnlinePlayers_Title}" IconName="AddFriend_16x">
+                <c:DashboardCard Grid.Column="0" Title="{x:Static loc:Strings.Dashboard_OnlinePlayers_Title}" Glyph="{StaticResource NavIcon.Players}">
                     <c:DashboardCard.HeaderContent>
                         <c:HyperlinkLabel Text="{x:Static loc:Strings.Players_ManagePlayers}" FontSize="11"
                                           Command="{Binding Players.ManagePlayersCommand}" />
@@ -124,14 +106,28 @@
                     </Panel>
                 </c:DashboardCard>
 
-                <c:DashboardCard Grid.Column="2" Title="{x:Static loc:Strings.Dashboard_Connection_Title}" IconName="OpenWeb_16x">
+                <c:DashboardCard Grid.Column="2" Title="{x:Static loc:Strings.Dashboard_Connection_Title}" Glyph="{StaticResource Glyph.Web}">
                     <StackPanel Spacing="2">
-                        <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_ExternalIp_Label}" Value="{Binding Details.ExternalIp}">
+                        <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_ExternalIp_Label}" Value="{Binding Details.ExternalIp}"
+                                      HelpText="{x:Static loc:Strings.ServerDetails_ExternalIp_Help}">
                             <c:LabelField.TrailingContent>
                                 <c:CopyButton Text="{Binding Details.ExternalIp}" ToolTip.Tip="{x:Static loc:Strings.ServerDetails_ExternalIp_CopyTip}" />
                             </c:LabelField.TrailingContent>
                         </c:LabelField>
-                        <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_InviteCode_Label}" Value="{Binding Details.InviteCode}">
+                        <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_InternalIp_Label}" Value="{Binding Details.InternalIp}"
+                                      HelpText="{x:Static loc:Strings.ServerDetails_InternalIp_Help}">
+                            <c:LabelField.TrailingContent>
+                                <c:CopyButton Text="{Binding Details.InternalIp}" ToolTip.Tip="{x:Static loc:Strings.ServerDetails_InternalIp_CopyTip}" />
+                            </c:LabelField.TrailingContent>
+                        </c:LabelField>
+                        <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_LocalIp_Label}" Value="{Binding Details.LocalIp}"
+                                      HelpText="{x:Static loc:Strings.ServerDetails_LocalIp_Help}">
+                            <c:LabelField.TrailingContent>
+                                <c:CopyButton Text="{Binding Details.LocalIp}" ToolTip.Tip="{x:Static loc:Strings.ServerDetails_LocalIp_CopyTip}" />
+                            </c:LabelField.TrailingContent>
+                        </c:LabelField>
+                        <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_InviteCode_Label}" Value="{Binding Details.InviteCode}"
+                                      HelpText="{x:Static loc:Strings.ServerDetails_InviteCode_Help}">
                             <c:LabelField.TrailingContent>
                                 <c:CopyButton Text="{Binding Details.InviteCode}" ToolTip.Tip="{x:Static loc:Strings.ServerDetails_InviteCode_CopyTip}"
                                               Opacity="{Binding Details.InviteCodeCopyable, Converter={x:Static conv:BooleanToOpacityConverter.Instance}}"
@@ -140,6 +136,16 @@
                         </c:LabelField>
                         <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_LastWorldSave_Label}" Value="{Binding Details.LastWorldSave}" />
                         <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_NextRestart_Label}" Value="{Binding Details.NextRestart}" />
+                        <c:LabelField LabelWidth="160" LabelText="{x:Static loc:Strings.ServerDetails_AvgWorldSave_Label}" Value="{Binding Details.AverageWorldSave}"
+                                      HelpText="{x:Static loc:Strings.ServerDetails_AvgWorldSave_Help}">
+                            <c:LabelField.TrailingContent>
+                                <!-- Empty, invisible icon slot so this help glyph lines up with the ones above it. -->
+                                <c:IconButton Opacity="0" IsHitTestVisible="False" Focusable="False" />
+                            </c:LabelField.TrailingContent>
+                        </c:LabelField>
+                        <TextBlock FontStyle="Italic" TextWrapping="Wrap" FontSize="11" Margin="0,2,0,0"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                   Text="{x:Static loc:Strings.ServerDetails_TroubleConnecting}" />
                         <Separator Margin="0,4" />
                         <Grid ColumnDefinitions="*,Auto">
                             <StackPanel Grid.Column="0" Spacing="1">
@@ -149,7 +155,7 @@
                                 <TextBlock Text="{Binding Dashboard.BackupsCaption}" FontSize="11" TextTrimming="CharacterEllipsis"
                                            Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
                             </StackPanel>
-                            <c:IconTextButton Grid.Column="1" VerticalAlignment="Center" IconName="Save_16x"
+                            <c:IconTextButton Grid.Column="1" VerticalAlignment="Center" Glyph="{StaticResource Glyph.Save}"
                                               Text="{x:Static loc:Strings.Backups_BackUpNow}" ToolTip.Tip="{x:Static loc:Strings.Backups_BackUpNow_Tip}"
                                               Command="{Binding Backups.BackUpNowCommand}" />
                         </Grid>
@@ -157,26 +163,8 @@
                 </c:DashboardCard>
             </Grid>
 
-            <!-- ===== Shortcuts ===== -->
-            <c:DashboardCard Title="{x:Static loc:Strings.Dashboard_Actions_Title}" IconName="StartWithoutDebug_16x">
-                <WrapPanel ItemSpacing="6" LineSpacing="6">
-                    <c:IconTextButton IconName="Settings_16x" Text="{x:Static loc:Strings.Dashboard_Action_Settings}"
-                                      Command="{Binding Dashboard.NavigateCommand}" CommandParameter="{x:Static vm:DashboardTarget.ServerControls}" />
-                    <c:IconTextButton IconName="User_16x" Text="{x:Static loc:Strings.Dashboard_Action_Players}"
-                                      Command="{Binding Dashboard.NavigateCommand}" CommandParameter="{x:Static vm:DashboardTarget.Players}" />
-                    <c:IconTextButton IconName="OpenWeb_16x" Text="{x:Static loc:Strings.Dashboard_Action_WorldMap}"
-                                      Command="{Binding Dashboard.NavigateCommand}" CommandParameter="{x:Static vm:DashboardTarget.WorldMap}" />
-                    <c:IconTextButton IconName="Save_16x" Text="{x:Static loc:Strings.MainWindow_Tab_Backups}"
-                                      Command="{Binding Dashboard.NavigateCommand}" CommandParameter="{x:Static vm:DashboardTarget.Backups}" />
-                    <c:IconTextButton IconName="OpenFolder_16x" Text="{x:Static loc:Strings.Dashboard_Action_OpenWorldFolder}"
-                                      Command="{Binding OpenSaveFolderCommand}" />
-                    <c:IconTextButton IconName="UnsyncedCommits_16x_Horiz" Text="{x:Static loc:Strings.MainWindow_Menu_InstallServer}"
-                                      Command="{Binding InstallServerCommand}" />
-                </WrapPanel>
-            </c:DashboardCard>
-
             <!-- ===== Live server output ===== -->
-            <c:DashboardCard Title="{x:Static loc:Strings.Dashboard_Console_Title}" IconName="AddImmediateWindow_16x">
+            <c:DashboardCard Title="{x:Static loc:Strings.Dashboard_Console_Title}" Glyph="{StaticResource NavIcon.Logs}">
                 <c:DashboardCard.HeaderContent>
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <c:HelpLabel HelpText="{x:Static loc:Strings.Dashboard_Console_Help}" />
@@ -184,7 +172,7 @@
                                           Command="{Binding Dashboard.NavigateCommand}" CommandParameter="{x:Static vm:DashboardTarget.Logs}" />
                     </StackPanel>
                 </c:DashboardCard.HeaderContent>
-                <c:LogViewer Height="200" ItemsSource="{Binding Logs.ServerLines}" />
+                <c:LogViewer Height="180" ItemsSource="{Binding Logs.ServerLines}" />
             </c:DashboardCard>
         </StackPanel>
     </ScrollViewer>
