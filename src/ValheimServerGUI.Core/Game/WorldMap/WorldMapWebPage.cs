@@ -28,6 +28,7 @@ namespace ValheimServerGUI.Game.WorldMap
             (WorldLocationKind.Trader, "trader", "#e8b93c"),
             (WorldLocationKind.Dungeon, "dungeon", "#9b7bd0"),
             (WorldLocationKind.Camp, "camp", "#e0842e"),
+            (WorldLocationKind.Pin, "pin", "#f4e6c3"),
         };
 
         /// <summary>Builds the page for <paramref name="picture"/>, with the given places (those outside the picture are left out).</summary>
@@ -40,14 +41,18 @@ namespace ValheimServerGUI.Game.WorldMap
                 var (fx, fy) = picture.ToFraction(marker.X, marker.Z);
                 if (fx is < 0 or > 1 || fy is < 0 or > 1) continue;
                 var css = Kinds.First(k => k.Kind == marker.Kind).Css;
-                places.Add(new { n = marker.Name, k = css, x = Math.Round(fx * 100, 3), y = Math.Round(fy * 100, 3) });
+                var x = Math.Round(fx * 100, 3);
+                var y = Math.Round(fy * 100, 3);
+                places.Add(marker.Kind == WorldLocationKind.Pin
+                    ? new { n = marker.Name, k = css, x, y, i = PinKey(marker.PinIcon), c = marker.IsChecked }
+                    : new { n = marker.Name, k = css, x, y });
             }
 
             var shown = Kinds.Where(k => markers.Any(m => m.Kind == k.Kind)).ToList();
             var legend = string.Concat(shown.Select(k =>
                 $"<span class=\"key\"><i class=\"dot {k.Css}\"></i>{Html(KindName(k.Kind))}</span>")) +
                 $"<span class=\"key\" id=\"playerkey\" hidden><i class=\"dot player\"></i>{Html(Strings.MapWeb_Players)}</span>";
-            var colors = string.Concat(Kinds.Select(k => $".{k.Css}{{background:{k.Color}}}")) + ".player{background:#3ddc84}";
+            var colors = string.Concat(Kinds.Select(k => $".dot.{k.Css}{{background:{k.Color}}}")) + ".dot.player{background:#3ddc84}";
 
             var title = string.Format(CultureInfo.CurrentCulture, Strings.MapWeb_Title, worldName);
             var updated = string.Format(CultureInfo.CurrentCulture, Strings.MapWeb_Updated, updatedAt);
@@ -58,6 +63,8 @@ namespace ValheimServerGUI.Game.WorldMap
             {
                 w = picture.Width, h = picture.Height, v = version, places,
                 left = r.Left, top = r.Top, mpp = r.MetersPerPixel,
+                pins = Enum.GetValues<WorldMapPinIcon>().ToDictionary(PinKey, i => new { d = WorldMapPinShapes.Path(i), f = WorldMapPinShapes.Fill(i) }),
+                ink = WorldMapPinShapes.Ink, cross = WorldMapPinShapes.CheckedPath, crossColor = WorldMapPinShapes.CheckedColor,
             });
 
             var page = new StringBuilder();
@@ -87,8 +94,11 @@ namespace ValheimServerGUI.Game.WorldMap
             WorldLocationKind.Boss => Strings.Map_Layer_Bosses,
             WorldLocationKind.Trader => Strings.Map_Layer_Traders,
             WorldLocationKind.Dungeon => Strings.Map_Layer_Dungeons,
+            WorldLocationKind.Pin => Strings.Map_Layer_Pins,
             _ => Strings.Map_Layer_Camps,
         };
+
+        private static string PinKey(WorldMapPinIcon icon) => icon.ToString().ToLowerInvariant();
 
         private static string Html(string text) => WebUtility.HtmlEncode(text);
 
@@ -102,7 +112,7 @@ namespace ValheimServerGUI.Game.WorldMap
             "#map{display:block;image-rendering:auto;user-select:none;-webkit-user-drag:none}" +
             ".place{position:absolute;transform:translate(-50%,-50%) scale(var(--inv,1));transform-origin:center;white-space:nowrap}" +
             ".dot{display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid #1f160f;vertical-align:middle}" +
-            ".place .dot{display:block}" +
+            ".place .dot{display:block}.place svg{display:block;overflow:visible}.place.pin .label{left:50%;top:21px;transform:translateX(-50%)}" +
             ".label{position:absolute;left:16px;top:-3px;padding:1px 5px;border-radius:3px;background:rgba(31,22,15,.85);color:#f0d9a0;font-size:12px;pointer-events:none}" +
             ".legend{display:flex;flex-wrap:wrap;gap:4px 14px}.key .dot{margin-right:6px}" +
             "#reset{position:absolute;right:10px;top:10px;padding:6px 10px;border:1px solid #d4a63a;border-radius:4px;background:rgba(31,22,15,.85);color:#d4a63a;font:inherit;cursor:pointer}";
@@ -110,9 +120,11 @@ namespace ValheimServerGUI.Game.WorldMap
         private const string Script =
             "const view=document.getElementById('view'),world=document.getElementById('world'),img=document.getElementById('map');" +
             "img.width=MAP.w;img.height=MAP.h;world.style.width=MAP.w+'px';world.style.height=MAP.h+'px';" +
-            "for(const p of MAP.places){const e=document.createElement('div');e.className='place';e.style.left=p.x+'%';e.style.top=p.y+'%';e.title=p.n;" +
-            "const d=document.createElement('i');d.className='dot '+p.k;e.appendChild(d);" +
-            "if(p.k==='spawn'||p.k==='boss'||p.k==='trader'){const l=document.createElement('span');l.className='label';l.textContent=p.n;e.appendChild(l);}" +
+            "function pinSvg(i,c){const s=MAP.pins[i]||MAP.pins.dot;return '<svg viewBox=\"-8 -8 16 16\" width=\"18\" height=\"18\"><path d=\"'+s.d+'\" fill=\"'+s.f+'\" stroke=\"'+MAP.ink+'\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/>'" +
+            "+(c?'<path d=\"'+MAP.cross+'\" stroke=\"'+MAP.crossColor+'\" stroke-width=\"2.4\" stroke-linecap=\"round\"/>':'')+'</svg>';}" +
+            "for(const p of MAP.places){const e=document.createElement('div');e.className=p.k==='pin'?'place pin':'place';e.style.left=p.x+'%';e.style.top=p.y+'%';e.title=p.n;" +
+            "if(p.k==='pin')e.innerHTML=pinSvg(p.i,p.c);else{const d=document.createElement('i');d.className='dot '+p.k;e.appendChild(d);}" +
+            "if(p.n&&(p.k==='spawn'||p.k==='boss'||p.k==='trader'||p.k==='pin')){const l=document.createElement('span');l.className='label';l.textContent=p.n;e.appendChild(l);}" +
             "world.appendChild(e);}" +
             "let s=1,x=0,y=0,min=.1;" +
             "function apply(){world.style.transform='translate('+x+'px,'+y+'px) scale('+s+')';world.style.setProperty('--inv',1/s);}" +

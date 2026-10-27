@@ -21,8 +21,9 @@ namespace ValheimServerGUI.Game.WorldMap
 
     /// <summary>
     /// Draws a Valheim world from its seed: biome colours like the in-game map, a hill-shade from the terrain heights,
-    /// rivers and lakes, and ocean darkening with depth. The terrain comes from SeedLab's exact port of the game's
-    /// world generator (vendored under <c>src/ThirdParty</c>), so the map matches the game for Valheim 1.0 worlds.
+    /// forests where the game grows them (with tree crowns when zoomed in), the Ashlands' lava, rivers and lakes, and
+    /// ocean darkening with depth. The terrain comes from SeedLab's exact port of the game's world generator (vendored
+    /// under <c>src/ThirdParty</c>), so the map matches the game for Valheim 1.0 worlds.
     ///
     /// <para>Building a renderer runs the world's pregeneration (lakes, rivers, streams), which takes a moment; do it
     /// off the UI thread. After that, <see cref="Render"/> may be called from several threads at once.</para>
@@ -63,6 +64,7 @@ namespace ValheimServerGUI.Game.WorldMap
             var stride = width + 1;
             var heights = new float[stride * (height + 1)];
             var biomes = new Biome[width * height];
+            var cover = new float[width * height]; // forest canopy, or the Ashlands' lava
             var mpp = region.MetersPerPixel;
 
             var options = new ParallelOptions { CancellationToken = cancellationToken };
@@ -80,8 +82,12 @@ namespace ValheimServerGUI.Game.WorldMap
                     }
 
                     var biome = generator.GetBiome(x, z);
-                    heights[row * stride + col] = generator.GetBiomeHeight(biome, x, z, out _);
-                    if (row < height && col < width) biomes[row * width + col] = biome;
+                    heights[row * stride + col] = generator.GetBiomeHeight(biome, x, z, out var mask);
+                    if (row < height && col < width)
+                    {
+                        biomes[row * width + col] = biome;
+                        cover[row * width + col] = biome == Biome.AshLands ? mask.a : WorldMapPalette.Forest(biome, x, z);
+                    }
                 }
                 return generator;
             }, _ => { });
@@ -96,7 +102,8 @@ namespace ValheimServerGUI.Game.WorldMap
                     var east = heights[row * stride + col + 1];
                     var south = heights[(row + 1) * stride + col];
                     var distance = Math.Sqrt(x * x + z * z);
-                    pixels[row * width + col] = WorldMapPalette.Shade(biomes[row * width + col], h, east, south, mpp, distance);
+                    pixels[row * width + col] = WorldMapPalette.Shade(
+                        biomes[row * width + col], h, east, south, mpp, x, z, distance, cover[row * width + col]);
                 }
             });
         }
@@ -108,7 +115,9 @@ namespace ValheimServerGUI.Game.WorldMap
         }
     }
 
-    /// <summary>The map's colours: the in-game map's biome colours, lit by a hill-shade, with water by depth.</summary>
+    /// <summary>
+    /// The map's colours: the in-game map's biome colours, lit by a hill-shade, with forests, lava and water by depth.
+    /// </summary>
     internal static class WorldMapPalette
     {
         private static readonly (double R, double G, double B) Meadows = (146, 167, 92);
@@ -119,6 +128,11 @@ namespace ValheimServerGUI.Game.WorldMap
         private static readonly (double R, double G, double B) Mistlands = (78, 76, 86);
         private static readonly (double R, double G, double B) AshLands = (132, 42, 34);
         private static readonly (double R, double G, double B) DeepNorth = (226, 236, 246);
+        private static readonly (double R, double G, double B) MeadowsCanopy = (70, 104, 46);
+        private static readonly (double R, double G, double B) BlackForestCanopy = (52, 68, 34);
+        private static readonly (double R, double G, double B) PlainsCanopy = (132, 132, 66);
+        private static readonly (double R, double G, double B) MistlandsCanopy = (48, 44, 58);
+        private static readonly (double R, double G, double B) Lava = (255, 112, 28);
         private static readonly (double R, double G, double B) ShallowWater = (78, 128, 158);
         private static readonly (double R, double G, double B) DeepWater = (22, 46, 78);
 
@@ -138,7 +152,27 @@ namespace ValheimServerGUI.Game.WorldMap
             _ => DeepWater,
         };
 
-        public static uint Shade(Biome biome, float height, float east, float south, double metersPerPixel, double distance)
+        /// <summary>The colour the legend shows for a biome: a forest biome's trees included.</summary>
+        public static (double R, double G, double B) ForLegend(Biome biome)
+            => biome == Biome.BlackForest ? Mix(BlackForest, BlackForestCanopy, 0.7) : ForBiome(biome);
+
+        /// <summary>
+        /// How wooded a point is, from 0 to 1, where the in-game map draws forest (<c>Minimap.GetMaskColor</c>): the
+        /// Meadows' woods (<c>WorldGenerator.InForest</c>), the Plains' scattered trees, all of the Black Forest, and the
+        /// Mistlands' giant trees. The forest pattern is the same in every world.
+        /// </summary>
+        public static float Forest(Biome biome, float x, float z) => biome switch
+        {
+            Biome.BlackForest => 1f,
+            Biome.Meadows => 1f - SmoothStep(1.1, 1.2, WorldGeneratorPort.GetForestFactor(x, 0, z)),
+            Biome.Plains => 1f - SmoothStep(0.75, 0.85, WorldGeneratorPort.GetForestFactor(x, 0, z)),
+            Biome.Mistlands => 1f - SmoothStep(1.1, 1.3, WorldGeneratorPort.GetForestFactor(x, 0, z)),
+            _ => 0f,
+        };
+
+        /// <param name="cover">How wooded the point is (<see cref="Forest"/>), or in the Ashlands how much lava it holds.</param>
+        public static uint Shade(Biome biome, float height, float east, float south, double metersPerPixel, double x, double z,
+            double distance, float cover = 0)
         {
             if (biome == Biome.None || distance > WorldMapRenderer.MapRadius) return 0u;
 
@@ -164,9 +198,18 @@ namespace ValheimServerGUI.Game.WorldMap
                     land = Mix(land, (250, 250, 252), Math.Clamp((height - 120) / 120.0, 0, 1));
                 }
 
-                // Lambert hill-shade, light from the north-west. A flat pixel gets 1.
-                var dx = (east - height) / metersPerPixel;
-                var dz = (south - height) / metersPerPixel;
+                if (cover > 0 && biome != Biome.AshLands)
+                {
+                    // Trees: darker ground under crowns a few metres across, which blur into a texture zoomed out.
+                    var crowns = 0.65 * DUtils.PerlinNoise(x / 4.2, z / 4.2) + 0.35 * DUtils.PerlinNoise(x / 1.9 + 31.7, z / 1.9 + 11.3);
+                    land = Mix(land, Canopy(biome), cover * (0.35 + 0.65 * SmoothStep(0.38, 0.62, crowns)));
+                }
+
+                // Lambert hill-shade, light from the north-west. A flat pixel gets 1. Zoomed out, the slopes between
+                // pixels flatten, so they are steepened a little to keep the relief readable.
+                var relief = Math.Clamp(1 + 0.15 * metersPerPixel, 1, 2.5);
+                var dx = (east - height) / metersPerPixel * relief;
+                var dz = (south - height) / metersPerPixel * relief;
                 var nx = -dx;
                 var ny = dz;
                 var length = Math.Sqrt(nx * nx + ny * ny + 1);
@@ -178,6 +221,12 @@ namespace ValheimServerGUI.Game.WorldMap
                 if (east < WorldMapRenderer.WaterLevel || south < WorldMapRenderer.WaterLevel) shade *= 0.8;
 
                 (r, g, b) = (land.R * shade, land.G * shade, land.B * shade);
+
+                if (biome == Biome.AshLands && cover > 0)
+                {
+                    // Lava glows: it is not shaded by the relief.
+                    (r, g, b) = Mix((r, g, b), Lava, Math.Clamp(cover * 1.5, 0, 1));
+                }
             }
 
             // Fade the outer edge of the world ocean into the background.
@@ -185,16 +234,62 @@ namespace ValheimServerGUI.Game.WorldMap
             return Pack(r, g, b, alpha);
         }
 
-        private static (double R, double G, double B) Mix((double R, double G, double B) a, (double R, double G, double B) b, double t)
+        private static (double R, double G, double B) Canopy(Biome biome) => biome switch
+        {
+            Biome.Meadows => MeadowsCanopy,
+            Biome.Plains => PlainsCanopy,
+            Biome.Mistlands => MistlandsCanopy,
+            _ => BlackForestCanopy,
+        };
+
+        public static (double R, double G, double B) Mix((double R, double G, double B) a, (double R, double G, double B) b, double t)
             => (a.R + (b.R - a.R) * t, a.G + (b.G - a.G) * t, a.B + (b.B - a.B) * t);
+
+        public static float SmoothStep(double from, double to, double value)
+        {
+            var t = Math.Clamp((value - from) / (to - from), 0, 1);
+            return (float)(t * t * (3 - 2 * t));
+        }
 
         private static byte ToByte(double v) => (byte)Math.Clamp(Math.Round(v), 0, 255);
 
         /// <summary>Premultiplied BGRA, as Avalonia's <c>Bgra8888</c> premultiplied bitmaps store it.</summary>
-        private static uint Pack(double r, double g, double b, double alpha)
+        public static uint Pack(double r, double g, double b, double alpha)
         {
             var a = ToByte(alpha * 255);
             return (uint)(a << 24 | ToByte(r * alpha) << 16 | ToByte(g * alpha) << 8 | ToByte(b * alpha));
+        }
+    }
+
+    /// <summary>Smooth value noise for the parchment's texture: the same everywhere, in every world.</summary>
+    internal static class WorldMapNoise
+    {
+        /// <summary>Noise from 0 to 1 whose features are about one unit apart.</summary>
+        public static double Value(double x, double z)
+        {
+            var x0 = Math.Floor(x);
+            var z0 = Math.Floor(z);
+            var tx = x - x0;
+            var tz = z - z0;
+            tx = tx * tx * (3 - 2 * tx);
+            tz = tz * tz * (3 - 2 * tz);
+
+            var ix = (int)x0;
+            var iz = (int)z0;
+            var north = Hash(ix, iz) + (Hash(ix + 1, iz) - Hash(ix, iz)) * tx;
+            var south = Hash(ix, iz + 1) + (Hash(ix + 1, iz + 1) - Hash(ix, iz + 1)) * tx;
+            return north + (south - north) * tz;
+        }
+
+        private static double Hash(int x, int z)
+        {
+            unchecked
+            {
+                var h = (uint)(x * 374761393 + z * 668265263);
+                h = (h ^ (h >> 13)) * 1274126177u;
+                h ^= h >> 16;
+                return (h & 0xFFFFFF) / (double)0xFFFFFF;
+            }
         }
     }
 }

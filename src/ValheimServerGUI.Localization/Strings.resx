@@ -824,6 +824,12 @@ The world as it is now is backed up first, so you can undo this.</value>
   <data name="Map_Layer_Camps" xml:space="preserve">
     <value>Camps</value>
   </data>
+  <data name="Map_Layer_Pins" xml:space="preserve">
+    <value>Table pins</value>
+  </data>
+  <data name="Map_Layer_Pins_Help" xml:space="preserve">
+    <value>The pins players shared on the cartography tables, with their names. A pin crossed out in game is crossed out here too.</value>
+  </data>
   <data name="Map_Layer_Fog" xml:space="preserve">
     <value>Show only the discovered map</value>
   </data>

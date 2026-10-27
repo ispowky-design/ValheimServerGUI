@@ -19,10 +19,11 @@ using ValheimServerGUI.Localization;
 namespace ValheimServerGUI.App.Controls;
 
 /// <summary>
-/// An interactive Valheim world map: draws a <see cref="WorldMapRenderer"/>'s terrain with markers and an optional
-/// fog over unexplored zones. Wheel or the +/− buttons zoom around the pointer, dragging pans, double-click zooms in.
-/// The whole world is drawn once in the background; when zoomed in past its resolution the visible area is redrawn
-/// sharp, also in the background, so the UI thread only ever composes bitmaps.
+/// An interactive Valheim world map: draws a <see cref="WorldMapRenderer"/>'s terrain with markers (the players' pins
+/// among them, drawn like the in-game map's) and an optional parchment fog over unexplored zones. Wheel or the +/−
+/// buttons zoom around the pointer, dragging pans, double-click zooms in. The whole world is drawn once in the
+/// background; when zoomed in past its resolution the visible area is redrawn sharp, also in the background, so the UI
+/// thread only ever composes bitmaps.
 /// </summary>
 public class WorldMapCanvas : Control
 {
@@ -88,6 +89,13 @@ public class WorldMapCanvas : Control
     private static readonly IBrush DungeonBrush = new SolidColorBrush(Color.FromRgb(0x9B, 0x7B, 0xD0));
     private static readonly IBrush CampBrush = new SolidColorBrush(Color.FromRgb(0xE0, 0x84, 0x2E));
     private static readonly IBrush PlayerBrush = new SolidColorBrush(Color.FromRgb(0x3D, 0xDC, 0x84));
+    private static readonly IPen PinPen = new Pen(Brush.Parse(WorldMapPinShapes.Ink), 1.3, lineJoin: PenLineJoin.Round);
+    private static readonly IPen PinCrossPen = new Pen(Brush.Parse(WorldMapPinShapes.CheckedColor), 2.4, lineCap: PenLineCap.Round);
+    private const double PinScale = 1.15; // the pin shapes are 16 units across
+
+    // Parsed on first use: geometry needs the platform's renderer.
+    private static readonly Dictionary<WorldMapPinIcon, (Geometry Shape, IBrush Fill)> PinShapes = new();
+    private static Geometry? _pinCross;
 
     private enum MapButton { None, ZoomIn, ZoomOut, Reset, Expand }
 
@@ -103,8 +111,11 @@ public class WorldMapCanvas : Control
     private WorldMapRegion _detailRegion;
     private int _detailWidth;
     private int _detailHeight;
+    private WorldMapFog? _detailFog; // the fog drawn into the detail bitmap, if any
     private WriteableBitmap? _fogBitmap;
+    private WorldMapFog? _fog;
     private WorldMapExploration? _fogExploration;
+    private int _fogVersion;
 
     private CancellationTokenSource? _baseCts;
     private CancellationTokenSource? _detailCts;
@@ -311,6 +322,7 @@ public class WorldMapCanvas : Control
         }
 
         // The visible part of the world, in device pixels, capped so a huge window cannot ask for a huge render.
+        // With the fog on, it is drawn into the picture pixel by pixel, so its edge stays smooth this close.
         var (left, top) = ToWorld(new Point(0, 0));
         var width = (int)Math.Ceiling(Bounds.Width * renderScaling);
         var height = (int)Math.Ceiling(Bounds.Height * renderScaling);
@@ -321,10 +333,11 @@ public class WorldMapCanvas : Control
 
         var cts = new CancellationTokenSource();
         _detailCts = cts;
-        _ = RenderDetailAsync(renderer, region, width, height, cts.Token);
+        _ = RenderDetailAsync(renderer, region, width, height, ShowFog ? _fog : null, cts.Token);
     }
 
-    private async Task RenderDetailAsync(WorldMapRenderer renderer, WorldMapRegion region, int width, int height, CancellationToken token)
+    private async Task RenderDetailAsync(WorldMapRenderer renderer, WorldMapRegion region, int width, int height, WorldMapFog? fog,
+        CancellationToken token)
     {
         try
         {
@@ -332,6 +345,7 @@ public class WorldMapCanvas : Control
             {
                 var buffer = new uint[width * height];
                 renderer.Render(region, width, height, buffer, token);
+                fog?.Cover(region, width, height, buffer, opaque: false);
                 return buffer;
             }, token);
 
@@ -340,6 +354,7 @@ public class WorldMapCanvas : Control
             _detailRegion = region;
             _detailWidth = width;
             _detailHeight = height;
+            _detailFog = fog;
             InvalidateVisual();
         }
         catch (OperationCanceledException)
@@ -361,23 +376,31 @@ public class WorldMapCanvas : Control
     }
 
     /// <summary>
-    /// One pixel per exploration cell: clear where explored, opaque parchment elsewhere, like the in-game map. Drawn
-    /// scaled up with smoothing, so the edge of the discovered area is soft rather than blocky.
+    /// One pixel per exploration cell: clear where explored, parchment elsewhere, like the in-game map (see
+    /// <see cref="WorldMapFog"/>). Drawn scaled up with smoothing, so the edge of the discovered area is soft rather
+    /// than blocky. The parchment is worked out off the UI thread.
     /// </summary>
     private void BuildFog()
     {
+        var version = ++_fogVersion;
         _fogBitmap = null;
+        _fog = null;
         _fogExploration = Exploration;
-        if (_fogExploration is not { } exploration) return;
+        if (_fogExploration is { } exploration) _ = BuildFogAsync(version, exploration);
+    }
 
-        const uint fog = 0xFFD8C49A; // parchment
-        var size = exploration.Size;
-        var pixels = new uint[size * size];
-        for (var i = 0; i < pixels.Length; i++)
+    private async Task BuildFogAsync(int version, WorldMapExploration exploration)
+    {
+        var (fog, pixels) = await Task.Run(() =>
         {
-            if (exploration.Explored[i] == 0) pixels[i] = fog;
-        }
-        _fogBitmap = ToBitmap(pixels, size, size);
+            var model = new WorldMapFog(exploration);
+            return (model, model.CellPixels());
+        });
+        if (version != _fogVersion) return;
+        _fog = fog;
+        _fogBitmap = ToBitmap(pixels, exploration.Size, exploration.Size);
+        InvalidateVisual();
+        if (ShowFog) StartDetailRender();
     }
 
     // ===== Drawing =====
@@ -395,10 +418,10 @@ public class WorldMapCanvas : Control
                 context.DrawImage(baseBitmap, new Rect(0, 0, size.Width, size.Height), ToScreen(_baseRegion, size.Width, size.Height));
             }
 
-            if (_detailBitmap is { } detail)
-            {
-                context.DrawImage(detail, new Rect(0, 0, _detailWidth, _detailHeight), ToScreen(_detailRegion, _detailWidth, _detailHeight));
-            }
+            // A detail drawn with the current fog goes over the coarse fog, and one drawn without fog under it. One drawn
+            // with a fog no longer shown waits for its redraw.
+            var detailHasFog = ShowFog && _detailFog is not null && ReferenceEquals(_detailFog, _fog);
+            if (_detailFog is null) DrawDetail(context);
 
             if (ShowFog && _fogBitmap is { } fog && _fogExploration is { } exploration && _baseBitmap is not null)
             {
@@ -412,6 +435,8 @@ public class WorldMapCanvas : Control
                     context.DrawImage(fog, new Rect(0, 0, fogSize.Width, fogSize.Height), new Rect(topLeft.X, topLeft.Y, side, side));
                 }
             }
+
+            if (detailHasFog) DrawDetail(context);
         }
 
         if (_baseBitmap is not null) DrawMarkers(context);
@@ -430,18 +455,25 @@ public class WorldMapCanvas : Control
         }
     }
 
+    private void DrawDetail(DrawingContext context)
+    {
+        if (_detailBitmap is { } detail)
+        {
+            context.DrawImage(detail, new Rect(0, 0, _detailWidth, _detailHeight), ToScreen(_detailRegion, _detailWidth, _detailHeight));
+        }
+    }
+
     private void DrawMarkers(DrawingContext context)
     {
         var markers = Markers;
         if (markers is not null)
         {
-            // Lesser markers first, so bosses and traders sit on top.
-            for (var pass = 0; pass < 2; pass++)
+            // Lesser markers first, then the players' pins, so bosses and traders sit on top.
+            for (var pass = 0; pass < 3; pass++)
             {
                 foreach (var marker in markers)
                 {
-                    var important = marker.Kind is WorldLocationKind.Spawn or WorldLocationKind.Boss or WorldLocationKind.Trader;
-                    if (important != (pass == 1)) continue;
+                    if (DrawPass(marker.Kind) != pass) continue;
 
                     var p = ToScreen(marker.X, marker.Z);
                     if (p.X < -20 || p.Y < -20 || p.X > Bounds.Width + 20 || p.Y > Bounds.Height + 20) continue;
@@ -453,9 +485,9 @@ public class WorldMapCanvas : Control
             {
                 foreach (var marker in markers)
                 {
-                    if (marker.Kind is not (WorldLocationKind.Spawn or WorldLocationKind.Boss or WorldLocationKind.Trader)) continue;
+                    if (DrawPass(marker.Kind) == 0) continue;
                     if (ReferenceEquals(marker, _hovered)) continue;
-                    DrawLabel(context, marker.Name, ToScreen(marker.X, marker.Z));
+                    DrawLabel(context, marker.Name, ToScreen(marker.X, marker.Z), below: marker.Kind == WorldLocationKind.Pin);
                 }
             }
         }
@@ -466,7 +498,7 @@ public class WorldMapCanvas : Control
             context.DrawEllipse(null, FocusPen, p, 13, 13);
         }
 
-        if (_hovered is { } hovered) DrawLabel(context, hovered.Name, ToScreen(hovered.X, hovered.Z));
+        if (_hovered is { } hovered) DrawLabel(context, hovered.Name, ToScreen(hovered.X, hovered.Z), below: hovered.Kind == WorldLocationKind.Pin);
 
         if (Players is { } players)
         {
@@ -481,10 +513,21 @@ public class WorldMapCanvas : Control
         }
     }
 
+    /// <summary>0: dungeons and camps (never labelled); 1: the players' pins; 2: spawn, bosses and traders.</summary>
+    private static int DrawPass(WorldLocationKind kind) => kind switch
+    {
+        WorldLocationKind.Spawn or WorldLocationKind.Boss or WorldLocationKind.Trader => 2,
+        WorldLocationKind.Pin => 1,
+        _ => 0,
+    };
+
     private static void DrawMarker(DrawingContext context, WorldMapMarker marker, Point p)
     {
         switch (marker.Kind)
         {
+            case WorldLocationKind.Pin:
+                DrawPin(context, marker, p);
+                break;
             case WorldLocationKind.Spawn:
                 context.DrawGeometry(SpawnBrush, GoldPen, Polygon(p, 8, 4, Math.PI / 2));
                 break;
@@ -504,6 +547,21 @@ public class WorldMapCanvas : Control
         }
     }
 
+    private static void DrawPin(DrawingContext context, WorldMapMarker pin, Point p)
+    {
+        if (!PinShapes.TryGetValue(pin.PinIcon, out var shape))
+        {
+            shape = (Geometry.Parse(WorldMapPinShapes.Path(pin.PinIcon)), Brush.Parse(WorldMapPinShapes.Fill(pin.PinIcon)));
+            PinShapes[pin.PinIcon] = shape;
+        }
+
+        using (context.PushTransform(Matrix.CreateScale(PinScale, PinScale) * Matrix.CreateTranslation(p.X, p.Y)))
+        {
+            context.DrawGeometry(shape.Fill, PinPen, shape.Shape);
+            if (pin.IsChecked) context.DrawGeometry(null, PinCrossPen, _pinCross ??= Geometry.Parse(WorldMapPinShapes.CheckedPath));
+        }
+    }
+
     private static StreamGeometry Polygon(Point centre, double radius, int sides, double startAngle)
     {
         var geometry = new StreamGeometry();
@@ -519,10 +577,13 @@ public class WorldMapCanvas : Control
         return geometry;
     }
 
-    private static void DrawLabel(DrawingContext context, string name, Point anchor)
+    /// <summary>A name above its marker, or below it for a pin, as the in-game map writes pin names.</summary>
+    private static void DrawLabel(DrawingContext context, string name, Point anchor, bool below = false)
     {
+        if (string.IsNullOrEmpty(name)) return;
         var text = MakeText(name, 12, Parchment);
-        var box = new Rect(anchor.X - text.Width / 2 - 4, anchor.Y - 12 - text.Height - 2, text.Width + 8, text.Height + 2);
+        var top = below ? anchor.Y + 11 : anchor.Y - 12 - text.Height - 2;
+        var box = new Rect(anchor.X - text.Width / 2 - 4, top, text.Width + 8, text.Height + 2);
         context.DrawRectangle(PanelBrush, null, box, 3, 3);
         context.DrawText(text, new Point(box.X + 4, box.Y + 1));
     }

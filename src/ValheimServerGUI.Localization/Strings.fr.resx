@@ -824,6 +824,12 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
   <data name="Map_Layer_Camps" xml:space="preserve">
     <value>Camps</value>
   </data>
+  <data name="Map_Layer_Pins" xml:space="preserve">
+    <value>Repères des tables</value>
+  </data>
+  <data name="Map_Layer_Pins_Help" xml:space="preserve">
+    <value>Les repères partagés par les joueurs sur les tables de cartographie, avec leur nom. Un repère barré en jeu l'est aussi ici.</value>
+  </data>
   <data name="Map_Layer_Fog" xml:space="preserve">
     <value>Afficher seulement la carte découverte</value>
   </data>
