@@ -107,6 +107,8 @@
                         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Traders}" Value="{Binding WorldMap.ShowTraders}" />
                         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Dungeons}" Value="{Binding WorldMap.ShowDungeons}" />
                         <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Camps}" Value="{Binding WorldMap.ShowCamps}" />
+                        <c:CheckBoxFormField LabelText="{x:Static loc:Strings.Map_Layer_Pins}" HelpText="{x:Static loc:Strings.Map_Layer_Pins_Help}"
+                                             Value="{Binding WorldMap.ShowPins}" />
                     </StackPanel>
                 </c:GroupBox>
 

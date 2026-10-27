@@ -47,8 +47,8 @@ namespace ValheimServerGUI.Core.Tests.Game.WorldMap
             Assert.InRange(fx, 0.45, 0.55);
             Assert.InRange(fy, 0.45, 0.55);
 
-            Assert.NotEqual(WorldMapImage.Parchment, Pixel(picture, 1000, 500));
-            Assert.Equal(WorldMapImage.Parchment, picture.Pixels[0]); // the corner, outside the discovered square
+            Assert.False(IsParchment(Pixel(picture, 1000, 500)));
+            Assert.True(IsParchment(picture.Pixels[0])); // the corner, outside the discovered square
             Assert.All(picture.Pixels, p => Assert.Equal(0xFFu, p >> 24));
         }
 
@@ -59,8 +59,16 @@ namespace ValheimServerGUI.Core.Tests.Game.WorldMap
 
             Assert.Equal(64, picture.Width);
             Assert.Equal(WorldMapRenderer.MapRadius * 2, picture.Width * picture.Region.MetersPerPixel, 3);
-            Assert.Equal(WorldMapImage.Parchment, picture.Pixels[0]); // outside the world disc
-            Assert.NotEqual(WorldMapImage.Parchment, Pixel(picture, 0, 0));
+            Assert.True(IsParchment(picture.Pixels[0])); // outside the world disc
+            Assert.False(IsParchment(Pixel(picture, 0, 0)));
+        }
+
+        /// <summary>Close to the paper's colour: it is mottled, so not exactly <see cref="WorldMapImage.Parchment"/>.</summary>
+        private static bool IsParchment(uint pixel)
+        {
+            const uint paper = WorldMapImage.Parchment;
+            return pixel >> 24 == 0xFF && Enumerable.Range(0, 3).All(i =>
+                Math.Abs((int)((pixel >> (8 * i)) & 0xFF) - (int)((paper >> (8 * i)) & 0xFF)) <= 24);
         }
 
         private static uint Pixel(WorldMapPicture picture, double x, double z)
@@ -107,6 +115,24 @@ namespace ValheimServerGUI.Core.Tests.Game.WorldMap
             Assert.Contains("\"n\":\"Eikthyr\",\"k\":\"boss\",\"x\":50,\"y\":50", page);
             Assert.DoesNotContain("Far", page);
             Assert.Contains("map.png?v=abc", page);
+        }
+
+        [Fact]
+        public void Page_DrawsThePinsWithTheirIconAndCross()
+        {
+            var picture = new WorldMapPicture(100, 100, new WorldMapRegion(0, 100, 1), new uint[100 * 100]);
+            var markers = new[]
+            {
+                new WorldMapMarker("Maison", WorldLocationKind.Pin, 25, 75) { PinIcon = WorldMapPinIcon.Home },
+                new WorldMapMarker("Troll", WorldLocationKind.Pin, 10, 90) { PinIcon = WorldMapPinIcon.Dot, IsChecked = true },
+            };
+
+            var page = WorldMapWebPage.Build("Midgard", picture, markers, new DateTime(2026, 10, 27, 15, 0, 0), "abc");
+
+            Assert.Contains("\"n\":\"Maison\",\"k\":\"pin\",\"x\":25,\"y\":25,\"i\":\"home\",\"c\":false", page);
+            Assert.Contains("\"n\":\"Troll\",\"k\":\"pin\",\"x\":10,\"y\":10,\"i\":\"dot\",\"c\":true", page);
+            Assert.Contains(WorldMapPinShapes.Path(WorldMapPinIcon.Home), page);
+            Assert.Contains(WebUtility.HtmlEncode(Strings.Map_Layer_Pins), page);
         }
 
         [Fact]

@@ -65,6 +65,7 @@ public sealed record WorldMapLegendRow(string Name, IBrush Brush);
 public partial class WorldMapViewModel : ViewModelBase
 {
     private const int MaxSearchRows = 200;
+    private const float SamePlaceMeters = 64;
 
     // While the map is published, how often the world is re-read so the page follows the server's saves.
     private static readonly TimeSpan PublishRefreshInterval = TimeSpan.FromMinutes(5);
@@ -87,6 +88,7 @@ public partial class WorldMapViewModel : ViewModelBase
     private bool _pluginJustInstalled;
 
     private IReadOnlyList<WorldMapMarker> _allMarkers = Array.Empty<WorldMapMarker>();
+    private IReadOnlyList<WorldMapMarker> _pins = Array.Empty<WorldMapMarker>();
     private bool _isActive;
     private bool _isStale = true;
     private int _loadVersion;
@@ -178,6 +180,8 @@ public partial class WorldMapViewModel : ViewModelBase
     [ObservableProperty] private bool _showTraders = true;
     [ObservableProperty] private bool _showDungeons;
     [ObservableProperty] private bool _showCamps;
+    /// <summary>Show the pins players shared on the cartography tables.</summary>
+    [ObservableProperty] private bool _showPins = true;
     /// <summary>Show only the discovered area (on by default): the rest of the world is covered and its markers hidden.</summary>
     [ObservableProperty] private bool _showFog = true;
 
@@ -187,7 +191,7 @@ public partial class WorldMapViewModel : ViewModelBase
 
     public ObservableCollection<WorldMapSearchRow> SearchResults { get; } = new();
 
-    public string? SearchEmptyText => SearchResults.Count > 0 || _allMarkers.Count == 0 ? null : Strings.Map_Search_EmptyText;
+    public string? SearchEmptyText => SearchResults.Count > 0 || _allMarkers.Count + _pins.Count == 0 ? null : Strings.Map_Search_EmptyText;
 
     /// <summary>Whether the map, as shown here, is served on a web page for players who are not in game.</summary>
     [ObservableProperty] private bool _isPublishing;
@@ -236,6 +240,7 @@ public partial class WorldMapViewModel : ViewModelBase
     partial void OnShowTradersChanged(bool value) => ApplyFilters();
     partial void OnShowDungeonsChanged(bool value) => ApplyFilters();
     partial void OnShowCampsChanged(bool value) => ApplyFilters();
+    partial void OnShowPinsChanged(bool value) => ApplyFilters();
 
     partial void OnShowFogChanged(bool value)
     {
@@ -447,11 +452,13 @@ public partial class WorldMapViewModel : ViewModelBase
 
     /// <summary>
     /// Lists the sources (the cartography tables, then the server's zones as a fallback) and selects the tables, or
-    /// the zones when there are no tables yet. A reload keeps the zones selected if they were.
+    /// the zones when there are no tables yet. A reload keeps the zones selected if they were. The tables' pins show
+    /// whichever source is selected.
     /// </summary>
     private void SetExploration(SharedWorldMap? sharedMap, WorldMapExploration? generatedZones)
     {
         var keepZones = SelectedExplorationSource?.IsGeneratedZones == true;
+        _pins = sharedMap?.Pins ?? Array.Empty<WorldMapMarker>();
 
         var sources = new List<WorldMapExplorationSource>();
         if (sharedMap is { } shared)
@@ -469,6 +476,8 @@ public partial class WorldMapViewModel : ViewModelBase
         ExplorationSources.Clear();
         foreach (var source in sources) ExplorationSources.Add(source);
         SelectedExplorationSource = (keepZones ? sources.FirstOrDefault(s => s.IsGeneratedZones) : null) ?? sources.FirstOrDefault();
+        ApplyFilters();
+        RefreshSearch();
     }
 
     /// <summary>Reads, off the UI thread, what the world's cartography tables hold; null when there are none.</summary>
@@ -487,9 +496,24 @@ public partial class WorldMapViewModel : ViewModelBase
 
     private void ApplyFilters()
     {
-        Markers = _allMarkers.Where(m => IsShown(m.Kind) && IsDiscovered(m)).ToList();
+        var shown = _allMarkers.Where(m => IsShown(m.Kind) && IsDiscovered(m)).ToList();
+        if (ShowPins) shown.AddRange(PinsBesides(shown));
+        Markers = shown;
         SchedulePublish();
     }
+
+    /// <summary>
+    /// The tables' pins, less those a Vegvisir placed on a boss altar that is among <paramref name="places"/>: the
+    /// altar shows anyway, and the pin would only hide it.
+    /// </summary>
+    private IEnumerable<WorldMapMarker> PinsBesides(IEnumerable<WorldMapMarker> places)
+    {
+        var bosses = places.Where(m => m.Kind == WorldLocationKind.Boss).ToList();
+        return _pins.Where(p => p.PinIcon != WorldMapPinIcon.Boss || !bosses.Any(b => IsSamePlace(b, p)));
+    }
+
+    private static bool IsSamePlace(WorldMapMarker a, WorldMapMarker b)
+        => (a.X - b.X) * (a.X - b.X) + (a.Z - b.Z) * (a.Z - b.Z) < SamePlaceMeters * SamePlaceMeters;
 
     /// <summary>With the fog on, a place nobody has discovered stays hidden, on the map and in the list.</summary>
     private bool IsDiscovered(WorldMapMarker marker)
@@ -506,8 +530,8 @@ public partial class WorldMapViewModel : ViewModelBase
     };
 
     /// <summary>
-    /// Lists the locations matching the search text, nearest the spawn first. With no text, lists the spawn, bosses
-    /// and traders: the places people look for.
+    /// Lists the locations matching the search text, nearest the spawn first. With no text, lists the spawn, bosses,
+    /// traders and the players' named pins: the places people look for.
     /// </summary>
     private void RefreshSearch()
     {
@@ -515,10 +539,11 @@ public partial class WorldMapViewModel : ViewModelBase
         var (originX, originZ) = spawn is null ? (0f, 0f) : (spawn.X, spawn.Z);
         var text = SearchText?.Trim();
 
+        var discovered = _allMarkers.Where(IsDiscovered).ToList();
+        var pins = PinsBesides(discovered).Where(p => p.Name.Length > 0);
         IEnumerable<WorldMapMarker> matches = string.IsNullOrEmpty(text)
-            ? _allMarkers.Where(m => m.Kind is WorldLocationKind.Spawn or WorldLocationKind.Boss or WorldLocationKind.Trader)
-            : _allMarkers.Where(m => m.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase));
-        matches = matches.Where(IsDiscovered);
+            ? discovered.Where(m => m.Kind is WorldLocationKind.Spawn or WorldLocationKind.Boss or WorldLocationKind.Trader).Concat(pins)
+            : discovered.Concat(pins).Where(m => m.Name.Contains(text, StringComparison.CurrentCultureIgnoreCase));
 
         SearchResults.Clear();
         foreach (var row in matches
@@ -629,7 +654,7 @@ public partial class WorldMapViewModel : ViewModelBase
             _publishedPicture = (renderer, exploration, picture, png);
         }
 
-        var signature = string.Join('\n', markers.Select(m => string.Create(CultureInfo.InvariantCulture, $"{m.Kind}:{m.X}:{m.Z}")));
+        var signature = string.Join('\n', markers.Select(m => string.Create(CultureInfo.InvariantCulture, $"{m.Kind}:{m.X}:{m.Z}:{m.Name}:{m.IsChecked}")));
         var version = Convert.ToHexString(SHA256.HashData(png.Concat(Encoding.UTF8.GetBytes(world + signature)).ToArray()))[..16];
         var html = WorldMapWebPage.Build(world, picture, markers, _savedAt ?? DateTime.Now, version);
         _webServer!.Publish(new WorldMapWebContent(html, png, version));

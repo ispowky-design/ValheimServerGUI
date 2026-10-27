@@ -12,6 +12,9 @@ namespace ValheimServerGUI.Game.WorldMap
         Trader,
         Dungeon,
         Camp,
+
+        /// <summary>A pin players placed on their map and shared on a cartography table.</summary>
+        Pin,
     }
 
     /// <summary>A location type the map knows: its game prefab name, category and display name.</summary>

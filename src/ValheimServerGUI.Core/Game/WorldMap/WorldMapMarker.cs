@@ -8,7 +8,31 @@ namespace ValheimServerGUI.Game.WorldMap
     /// <summary>One point of interest on the world map.</summary>
     /// <param name="X">World X (east).</param>
     /// <param name="Z">World Z (north).</param>
-    public sealed record WorldMapMarker(string Name, WorldLocationKind Kind, float X, float Z);
+    public sealed record WorldMapMarker(string Name, WorldLocationKind Kind, float X, float Z)
+    {
+        /// <summary>For a <see cref="WorldLocationKind.Pin"/>: the icon the player picked.</summary>
+        public WorldMapPinIcon PinIcon { get; init; }
+
+        /// <summary>For a <see cref="WorldLocationKind.Pin"/>: crossed out on the in-game map.</summary>
+        public bool IsChecked { get; init; }
+    }
+
+    /// <summary>The icon of a pin on the in-game map.</summary>
+    public enum WorldMapPinIcon
+    {
+        /// <summary>The plain round pin, also used for any pin type this app does not know.</summary>
+        Dot,
+        Fire,
+        Home,
+        Hammer,
+        Rune,
+
+        /// <summary>A boss altar found with a Vegvisir.</summary>
+        Boss,
+
+        /// <summary>A place Hildir asked players to look for.</summary>
+        Quest,
+    }
 
     /// <summary>A biome swatch for the map legend.</summary>
     public sealed record WorldMapLegendEntry(string Name, byte R, byte G, byte B);
@@ -50,7 +74,7 @@ namespace ValheimServerGUI.Game.WorldMap
 
             return biomes.Select(b =>
             {
-                var (r, g, bl) = b.Biome == Biome.Ocean ? WorldMapPalette.Water : WorldMapPalette.ForBiome(b.Biome);
+                var (r, g, bl) = b.Biome == Biome.Ocean ? WorldMapPalette.Water : WorldMapPalette.ForLegend(b.Biome);
                 return new WorldMapLegendEntry(b.Name, (byte)r, (byte)g, (byte)bl);
             }).ToList();
         }

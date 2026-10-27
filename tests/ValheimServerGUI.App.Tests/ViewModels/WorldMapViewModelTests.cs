@@ -42,9 +42,11 @@ public sealed class WorldMapViewModelTests : IDisposable
     private WorldMapViewModel Build()
         => new(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world);
 
-    private void WriteTable(params (float X, float Z)[] shared)
+    private void WriteTable(params (float X, float Z)[] shared) => WriteTable(Array.Empty<TablePin>(), shared);
+
+    private void WriteTable(TablePin[] pins, params (float X, float Z)[] shared)
         => File.WriteAllBytes(Path.Join(_saveFolder.GetLocalWorldFolder("Viking").FullName, "20_20__0_1.chunk"),
-            SharedMapFixtures.BuildChunk(new[] { shared.Select(p => SharedMapFixtures.Pixel(p.X, p.Z)) }));
+            SharedMapFixtures.BuildChunkOf(new[] { SharedMapFixtures.SharedMap(shared.Select(p => SharedMapFixtures.Pixel(p.X, p.Z)), pins) }));
 
     private void WriteWorld()
         => WorldMapSaves.Write(_saveFolder.GetLocalWorldFolder("Viking"), Seed,
@@ -188,6 +190,38 @@ public sealed class WorldMapViewModelTests : IDisposable
         // A reload keeps the server zones selected.
         await vm.LoadSelectedWorldAsync();
         Assert.True(vm.SelectedExplorationSource!.IsGeneratedZones);
+    }
+
+    [AvaloniaFact]
+    public async Task Load_ShowsTheTablesPins()
+    {
+        WriteWorld();
+        WriteTable(new[]
+        {
+            new TablePin("MAISON", 50, 60, Type: 1),
+            new TablePin("Troll", 700, -200, Checked: true),
+            new TablePin("$enemy_eikthyr", 300, 400, Type: 9), // its altar is on the map already
+            new TablePin("$enemy_gdking", -1200, 900, Type: 9), // its altar is not discovered
+        }, (300f, 400f), (5f, -3f));
+        var vm = Build();
+
+        await vm.LoadSelectedWorldAsync();
+
+        var pins = vm.Markers.Where(m => m.Kind == WorldLocationKind.Pin).ToList();
+        Assert.Equal(new[] { "MAISON", "Troll", Strings.MapLocation_TheElder }, pins.Select(p => p.Name));
+        Assert.Equal(new[] { WorldMapPinIcon.Home, WorldMapPinIcon.Dot, WorldMapPinIcon.Boss }, pins.Select(p => p.PinIcon));
+        Assert.True(pins[1].IsChecked);
+        // The list holds the named pins after the places, nearest the spawn first.
+        Assert.Equal(
+            new[] { Strings.MapLocation_StartTemple, Strings.MapLocation_Eikthyr, "MAISON", "Troll", Strings.MapLocation_TheElder },
+            vm.SearchResults.Select(r => r.Name));
+
+        // The pins show whatever the discovered area comes from (in the server's zones, Eikthyr's altar is not, so its
+        // pin shows), and can be hidden.
+        vm.SelectedExplorationSource = vm.ExplorationSources[1];
+        Assert.Equal(4, vm.Markers.Count(m => m.Kind == WorldLocationKind.Pin));
+        vm.ShowPins = false;
+        Assert.DoesNotContain(vm.Markers, m => m.Kind == WorldLocationKind.Pin);
     }
 
     [AvaloniaFact]

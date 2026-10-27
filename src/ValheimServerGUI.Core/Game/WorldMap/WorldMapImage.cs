@@ -13,11 +13,11 @@ namespace ValheimServerGUI.Game.WorldMap
 
     /// <summary>
     /// Draws the discovered part of a world as one picture, for sharing it outside the app: framed on what has been
-    /// discovered, with everything else covered in parchment as on the in-game map.
+    /// discovered, with everything else covered in parchment as on the in-game map (see <see cref="WorldMapFog"/>).
     /// </summary>
     public static class WorldMapImage
     {
-        /// <summary>The parchment that covers the undiscovered world, as premultiplied BGRA.</summary>
+        /// <summary>The parchment's base colour, as premultiplied BGRA; the paper itself is mottled around it.</summary>
         public const uint Parchment = 0xFFD8C49A;
 
         /// <summary>The finest detail drawn, in metres per pixel; a small discovered area is not blown up past it.</summary>
@@ -44,17 +44,9 @@ namespace ValheimServerGUI.Game.WorldMap
             var pixels = new uint[width * height];
             renderer.Render(region, width, height, pixels, cancellationToken);
 
-            for (var row = 0; row < height; row++)
-            {
-                var z = north - (row + 0.5) * mpp;
-                for (var col = 0; col < width; col++)
-                {
-                    var i = row * width + col;
-                    var hidden = exploration is not null && !exploration.IsExplored(west + (col + 0.5) * mpp, z);
-                    // Outside the world disc the renderer leaves pixels transparent; the picture is opaque.
-                    if (hidden || pixels[i] >> 24 != 0xFF) pixels[i] = Parchment;
-                }
-            }
+            // Outside the world disc the renderer leaves pixels transparent; the picture is opaque.
+            if (exploration is null) WorldMapFog.FillTransparent(region, width, height, pixels);
+            else new WorldMapFog(exploration).Cover(region, width, height, pixels);
 
             return new WorldMapPicture(width, height, region, pixels);
         }

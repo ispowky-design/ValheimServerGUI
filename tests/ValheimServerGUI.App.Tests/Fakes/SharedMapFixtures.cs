@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace ValheimServerGUI.App.Tests.Fakes
 {
+    /// <summary>A pin as <c>Minimap.GetSharedMapData</c> writes it; <paramref name="Type"/> is a <c>Minimap.PinType</c>.</summary>
+    public sealed record TablePin(string Name, float X, float Z, int Type = 3, bool Checked = false);
+
     /// <summary>
     /// Writes world chunk files (<c>*.chunk</c>) holding cartography tables, the way <c>ZDOMan.SaveChunk</c> and
     /// <c>ZDO.Save</c> lay out ZDOs, with the table's map stored as <c>MapTable.OnWrite</c> does.
@@ -21,8 +24,12 @@ namespace ValheimServerGUI.App.Tests.Fakes
         /// <param name="tables">Per cartography table: the minimap pixels shared on it.</param>
         /// <param name="otherBlobs">Byte arrays of other objects (for example a sign's gzip-compressed text).</param>
         public static byte[] BuildChunk(IEnumerable<IEnumerable<(int Col, int Row)>> tables, params byte[][] otherBlobs)
+            => BuildChunkOf(tables.Select(t => SharedMap(t)).Concat(otherBlobs));
+
+        /// <summary>A chunk whose ZDOs hold these byte arrays (table maps from <see cref="SharedMap"/>, or anything else).</summary>
+        public static byte[] BuildChunkOf(IEnumerable<byte[]> blobs)
         {
-            var zdos = tables.Select(BuildSharedMap).Concat(otherBlobs).ToList();
+            var zdos = blobs.ToList();
             using var file = new MemoryStream();
             using (var w = new BinaryWriter(file))
             {
@@ -50,24 +57,29 @@ namespace ValheimServerGUI.App.Tests.Fakes
             return compressed.ToArray();
         }
 
-        private static byte[] BuildSharedMap(IEnumerable<(int Col, int Row)> explored)
+        /// <summary>A table's map: these pixels discovered, and these pins (by default one plain pin named "Base").</summary>
+        public static byte[] SharedMap(IEnumerable<(int Col, int Row)> explored, IEnumerable<TablePin>? pins = null, int version = 3)
         {
             var pixels = new byte[MapSize * MapSize];
             foreach (var (col, row) in explored) pixels[row * MapSize + col] = 1;
+            var pinList = (pins ?? new[] { new TablePin("Base", 0, 0) }).ToList();
 
             using var package = new MemoryStream();
             using (var w = new BinaryWriter(package, System.Text.Encoding.UTF8, leaveOpen: true))
             {
-                w.Write(3);
+                w.Write(version);
                 w.Write(pixels.Length);
                 w.Write(pixels);
-                w.Write(1); // pins
-                w.Write(76561198000000000L);
-                w.Write("Base");
-                w.Write(0f); w.Write(0f); w.Write(0f);
-                w.Write(3);
-                w.Write(false);
-                w.Write("Steam_76561198000000000");
+                w.Write(pinList.Count);
+                foreach (var pin in pinList)
+                {
+                    w.Write(76561198000000000L);
+                    w.Write(pin.Name);
+                    w.Write(pin.X); w.Write(31.5f); w.Write(pin.Z);
+                    w.Write(pin.Type);
+                    w.Write(pin.Checked);
+                    if (version >= 3) w.Write("Steam_76561198000000000");
+                }
             }
             return Gzip(package.ToArray());
         }

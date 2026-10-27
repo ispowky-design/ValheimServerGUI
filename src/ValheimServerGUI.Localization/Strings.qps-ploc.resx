@@ -814,6 +814,12 @@
   <data name="Map_Layer_Camps" xml:space="preserve">
     <value>⟦Map_Layer_Camps⟧</value>
   </data>
+  <data name="Map_Layer_Pins" xml:space="preserve">
+    <value>⟦Map_Layer_Pins⟧</value>
+  </data>
+  <data name="Map_Layer_Pins_Help" xml:space="preserve">
+    <value>⟦Map_Layer_Pins_Help⟧</value>
+  </data>
   <data name="Map_Layer_Fog" xml:space="preserve">
     <value>⟦Map_Layer_Fog⟧</value>
   </data>
