@@ -263,6 +263,28 @@ public sealed class WorldMapViewModelTests : IDisposable
     }
 
     [AvaloniaFact]
+    public async Task Players_ExpandEnvironmentVariablesInTheServerPath()
+    {
+        WriteWorld();
+        var server = Directory.CreateDirectory(Path.Join(_saveFolder.FullName, "server"));
+        File.WriteAllText(Path.Join(server.FullName, "valheim_server.exe"), "");
+        Environment.SetEnvironmentVariable("VSG_TEST_SERVER_DIR", server.FullName);
+        try
+        {
+            using var web = new WorldMapWebServer();
+            var vm = new WorldMapViewModel(Core.GetRequiredService<IApplicationLogger>(), () => _saveFolder, () => _world,
+                web, serverExePath: () => Path.Join("%VSG_TEST_SERVER_DIR%", "valheim_server.exe"));
+
+            await vm.RefreshPlayersAsync();
+            Assert.Equal(ServerPluginState.NoBepInEx, vm.PluginState);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("VSG_TEST_SERVER_DIR", null);
+        }
+    }
+
+    [AvaloniaFact]
     public async Task Players_ShowOnceThePluginRunsOnTheServer()
     {
         WriteWorld();

@@ -103,7 +103,9 @@ public partial class WorldMapViewModel : ViewModelBase
         WorldMapWebServer? webServer = null, IUserPreferencesProvider? userPrefs = null, Func<string?>? externalIp = null,
         Action<string>? openWebAddress = null, Func<string?>? serverExePath = null)
     {
-        _serverExePath = serverExePath ?? (() => null);
+        // Settings may hold %VARIABLES% (the default path does), which the server start expands too.
+        _serverExePath = serverExePath is null ? () => null
+            : () => serverExePath() is { } path ? Environment.ExpandEnvironmentVariables(path) : null;
         _playersTimer = new DispatcherTimer { Interval = PlayersRefreshInterval };
         _playersTimer.Tick += (_, _) => _ = RefreshPlayersAsync();
         _logger = logger;
