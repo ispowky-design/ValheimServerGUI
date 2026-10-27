@@ -13,8 +13,11 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <AssemblyName>ValheimServerGUI.ServerPlugin</AssemblyName>
     <RootNamespace>ValheimServerGUI.ServerPlugin</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Deterministic>true</Deterministic>
+    <!-- No commit hash in the version: the app compares the installed DLL byte for byte with the one it carries,
+         so the plugin only reads as outdated when its code changed, not with every app release. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <!-- Unity's and BepInEx's assemblies bind other System.* versions than netstandard2.1; harmless for a plugin. -->
     <MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>

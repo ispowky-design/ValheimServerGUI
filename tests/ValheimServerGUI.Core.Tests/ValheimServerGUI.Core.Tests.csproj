@@ -22,6 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The server plugin's game reader needs neither BepInEx nor Unity, so it is tested here against stand-in types. -->
+    <Compile Include="..\..\src\ValheimServerGUI.ServerPlugin\GamePlayers.cs" Link="Game\WorldMap\GamePlayers.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\ValheimServerGUI.Core\ValheimServerGUI.Core.csproj" />
   </ItemGroup>
 
