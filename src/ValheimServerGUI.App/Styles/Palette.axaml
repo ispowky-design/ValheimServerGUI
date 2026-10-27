@@ -1,12 +1,13 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:styles="using:ValheimServerGUI.App.Styles">
-    <!-- Layered surface palette (VS Code-inspired), theme-variant aware. No pure black anywhere.
-         Three depths, darkest to lightest:
-           LayerDarkest  — menu bar + footer
-           LayerBase     — app/window background + inactive tabs
-           LayerContent  — active tab + tab content (the "raised" surface)
-         AppBorderBrush is the hairline used for tab/frame borders. -->
+    <!-- Layered surface palette, theme-variant aware. No pure black anywhere.
+         Depths, darkest to lightest:
+           LayerDarkest  — top bar, sidebar and status bar (the app "frame")
+           LayerBase     — recessed surfaces inside pages (logs, list footers)
+           LayerContent  — the page surface each tab draws on
+           CardBackground — raised cards and group boxes sitting on the page
+         AppBorderBrush is the hairline used for frame and card borders. -->
     <!-- The "?" help glyph shares the controls' accent (checkbox/radio/focus) instead of a hardcoded
          blue. Reusable token, defined per theme below: Light/Dark track SystemAccentColor so it always matches
          the control highlight. (A top-level key would win over every theme dictionary.) -->
@@ -22,100 +23,139 @@
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Dark">
-            <SolidColorBrush x:Key="LayerDarkest" Color="#1E1E1E" />
-            <SolidColorBrush x:Key="LayerBase" Color="#252526" />
-            <SolidColorBrush x:Key="LayerContent" Color="#2D2D30" />
-            <SolidColorBrush x:Key="LayerBaseHover" Color="#323233" />
-            <SolidColorBrush x:Key="AppBorderBrush" Color="#3F3F46" />
+            <SolidColorBrush x:Key="LayerDarkest" Color="#16181C" />
+            <SolidColorBrush x:Key="LayerBase" Color="#1A1D22" />
+            <SolidColorBrush x:Key="LayerContent" Color="#1F2228" />
+            <SolidColorBrush x:Key="LayerBaseHover" Color="#2A2E36" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#30343C" />
 
             <!-- Input surface tokens (rest / hover / focused). -->
-            <SolidColorBrush x:Key="InputBackground" Color="#1B1B1D" />
-            <SolidColorBrush x:Key="InputBackgroundHover" Color="#121213" />
-            <SolidColorBrush x:Key="InputBackgroundFocused" Color="#121213" />
-            <SolidColorBrush x:Key="InputBorderBrush" Color="#A7A7A8" />
-            <SolidColorBrush x:Key="InputBorderBrushHover" Color="#D2D2D3" />
-            <SolidColorBrush x:Key="InputBorderBrushFocused" Color="#199CA8" />
+            <SolidColorBrush x:Key="InputBackground" Color="#17191E" />
+            <SolidColorBrush x:Key="InputBackgroundHover" Color="#131519" />
+            <SolidColorBrush x:Key="InputBackgroundFocused" Color="#131519" />
+            <SolidColorBrush x:Key="InputBorderBrush" Color="#41464F" />
+            <SolidColorBrush x:Key="InputBorderBrushHover" Color="#6A707B" />
+            <SolidColorBrush x:Key="InputBorderBrushFocused" Color="{DynamicResource SystemAccentColor}" />
 
             <!-- Buttons follow the same border colours as inputs (rest/hover); their fill is Fluent's own. -->
-            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#A7A7A8" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#D2D2D3" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#D2D2D3" />
-            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#A7A7A8" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#41464F" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#6A707B" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#6A707B" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#30343C" />
 
             <SolidColorBrush x:Key="HelpGlyphBrush" Color="{DynamicResource SystemAccentColor}" />
 
+            <!-- Sidebar navigation (main window) and the page title. -->
+            <SolidColorBrush x:Key="SidebarItemHover" Color="#23272E" />
+            <SolidColorBrush x:Key="SidebarItemSelected" Color="#2A2F38" />
+            <SolidColorBrush x:Key="SidebarForeground" Color="#A3A9B4" />
+            <SolidColorBrush x:Key="AccentForeground" Color="#FFFFFF" />
+            <LinearGradientBrush x:Key="HeroBackground" StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Offset="0" Color="#2A303A" />
+                <GradientStop Offset="1" Color="#1F2228" />
+            </LinearGradientBrush>
+
             <!-- Dashboard cards and the server-status pill. -->
-            <SolidColorBrush x:Key="CardBackground" Color="#2A2A2E" />
-            <SolidColorBrush x:Key="CardBorderBrush" Color="#3F3F46" />
-            <SolidColorBrush x:Key="StatusRunningBrush" Color="#6CCB5F" />
+            <SolidColorBrush x:Key="CardBackground" Color="#252931" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#323741" />
+            <SolidColorBrush x:Key="StatusRunningBrush" Color="#5CC97A" />
             <SolidColorBrush x:Key="StatusBusyBrush" Color="#E8B339" />
-            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#9A9A9A" />
+            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#8A8F98" />
             <SolidColorBrush x:Key="ChartCpuBrush" Color="#4FA3E0" />
             <SolidColorBrush x:Key="ChartMemoryBrush" Color="#B48EE0" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
-            <SolidColorBrush x:Key="LayerDarkest" Color="#D4D4D4" />
-            <SolidColorBrush x:Key="LayerBase" Color="#ECECEC" />
-            <SolidColorBrush x:Key="LayerContent" Color="#FBFBFB" />
-            <SolidColorBrush x:Key="LayerBaseHover" Color="#E0E0E0" />
-            <SolidColorBrush x:Key="AppBorderBrush" Color="#BFBFBF" />
+            <SolidColorBrush x:Key="LayerDarkest" Color="#E6E8EC" />
+            <SolidColorBrush x:Key="LayerBase" Color="#EEF0F3" />
+            <SolidColorBrush x:Key="LayerContent" Color="#F6F7F9" />
+            <SolidColorBrush x:Key="LayerBaseHover" Color="#DCDFE5" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#D2D6DD" />
 
             <!-- Light mirror of the input tokens: hover/focus brighten to white (inverse of dark, where they
                  deepen); rest is a hair off-white so there is room to brighten. Border darkens for contrast. -->
-            <SolidColorBrush x:Key="InputBackground" Color="#F2F2F3" />
+            <SolidColorBrush x:Key="InputBackground" Color="#FBFBFC" />
             <SolidColorBrush x:Key="InputBackgroundHover" Color="#FFFFFF" />
             <SolidColorBrush x:Key="InputBackgroundFocused" Color="#FFFFFF" />
-            <SolidColorBrush x:Key="InputBorderBrush" Color="#808081" />
-            <SolidColorBrush x:Key="InputBorderBrushHover" Color="#4D4D4E" />
-            <SolidColorBrush x:Key="InputBorderBrushFocused" Color="#199CA8" />
+            <SolidColorBrush x:Key="InputBorderBrush" Color="#B4BAC4" />
+            <SolidColorBrush x:Key="InputBorderBrushHover" Color="#7D8592" />
+            <SolidColorBrush x:Key="InputBorderBrushFocused" Color="{DynamicResource SystemAccentColor}" />
 
-            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#808081" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#4D4D4E" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#4D4D4E" />
-            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#808081" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#B4BAC4" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#7D8592" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#7D8592" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#D2D6DD" />
 
             <SolidColorBrush x:Key="HelpGlyphBrush" Color="{DynamicResource SystemAccentColor}" />
 
+            <SolidColorBrush x:Key="SidebarItemHover" Color="#DADDE3" />
+            <SolidColorBrush x:Key="SidebarItemSelected" Color="#FFFFFF" />
+            <SolidColorBrush x:Key="SidebarForeground" Color="#4A505B" />
+            <SolidColorBrush x:Key="AccentForeground" Color="#FFFFFF" />
+            <LinearGradientBrush x:Key="HeroBackground" StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Offset="0" Color="#FFFFFF" />
+                <GradientStop Offset="1" Color="#EEF1F6" />
+            </LinearGradientBrush>
+
             <!-- Dashboard cards and the server-status pill. -->
             <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF" />
-            <SolidColorBrush x:Key="CardBorderBrush" Color="#D4D4D4" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#DDE1E7" />
             <SolidColorBrush x:Key="StatusRunningBrush" Color="#2E8B3A" />
             <SolidColorBrush x:Key="StatusBusyBrush" Color="#B7791F" />
-            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#7A7A7A" />
+            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#7A7F88" />
             <SolidColorBrush x:Key="ChartCpuBrush" Color="#1F78C1" />
             <SolidColorBrush x:Key="ChartMemoryBrush" Color="#7B4FC0" />
         </ResourceDictionary>
-        <!-- Valheim (wood and gold): inherits Dark; these override its layers and inputs with oak browns and a
-             gold focus/hover edge. Fluent's own colors come from AppThemeVariants.CreateValheimPalette. -->
+        <!-- Valheim ("Nordic night"): inherits Dark; slate-blue stone surfaces under a rune-gold accent, with
+             ember and frost for the charts. Fluent's own colors come from AppThemeVariants.CreateValheimPalette. -->
         <ResourceDictionary x:Key="{x:Static styles:AppThemeVariants.Valheim}">
-            <SolidColorBrush x:Key="LayerDarkest" Color="#1F160F" />
-            <SolidColorBrush x:Key="LayerBase" Color="#2B1F15" />
-            <SolidColorBrush x:Key="LayerContent" Color="#36281B" />
-            <SolidColorBrush x:Key="LayerBaseHover" Color="#3F2E1F" />
-            <SolidColorBrush x:Key="AppBorderBrush" Color="#5C4630" />
+            <!-- The accent ramp, pinned here so it wins over the OS accent everywhere Fluent and the app read it
+                 (links, selection, focus, primary buttons), not only where the Fluent palette reaches. -->
+            <Color x:Key="SystemAccentColor">#E2A93B</Color>
+            <Color x:Key="SystemAccentColorLight1">#EBBC5C</Color>
+            <Color x:Key="SystemAccentColorLight2">#F1CC7E</Color>
+            <Color x:Key="SystemAccentColorLight3">#F6DDA4</Color>
+            <Color x:Key="SystemAccentColorDark1">#C8902A</Color>
+            <Color x:Key="SystemAccentColorDark2">#A3741F</Color>
+            <Color x:Key="SystemAccentColorDark3">#7D5816</Color>
 
-            <SolidColorBrush x:Key="InputBackground" Color="#1C140D" />
-            <SolidColorBrush x:Key="InputBackgroundHover" Color="#150F09" />
-            <SolidColorBrush x:Key="InputBackgroundFocused" Color="#150F09" />
-            <SolidColorBrush x:Key="InputBorderBrush" Color="#8C7656" />
-            <SolidColorBrush x:Key="InputBorderBrushHover" Color="#C9AE7E" />
-            <SolidColorBrush x:Key="InputBorderBrushFocused" Color="#D4A63A" />
+            <SolidColorBrush x:Key="LayerDarkest" Color="#0C0F13" />
+            <SolidColorBrush x:Key="LayerBase" Color="#0F1318" />
+            <SolidColorBrush x:Key="LayerContent" Color="#13181E" />
+            <SolidColorBrush x:Key="LayerBaseHover" Color="#1C232C" />
+            <SolidColorBrush x:Key="AppBorderBrush" Color="#232B35" />
 
-            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#8C7656" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#D4A63A" />
-            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#D4A63A" />
-            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#5C4630" />
+            <SolidColorBrush x:Key="InputBackground" Color="#0E1217" />
+            <SolidColorBrush x:Key="InputBackgroundHover" Color="#0B0E12" />
+            <SolidColorBrush x:Key="InputBackgroundFocused" Color="#0B0E12" />
+            <SolidColorBrush x:Key="InputBorderBrush" Color="#2E3946" />
+            <SolidColorBrush x:Key="InputBorderBrushHover" Color="#53647A" />
+            <SolidColorBrush x:Key="InputBorderBrushFocused" Color="#E2A93B" />
 
-            <SolidColorBrush x:Key="HelpGlyphBrush" Color="#D4A63A" />
+            <SolidColorBrush x:Key="ButtonBorderBrush" Color="#2E3946" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#E2A93B" />
+            <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#E2A93B" />
+            <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#1F2730" />
+
+            <SolidColorBrush x:Key="HelpGlyphBrush" Color="#E2A93B" />
+
+            <SolidColorBrush x:Key="SidebarItemHover" Color="#161C23" />
+            <SolidColorBrush x:Key="SidebarItemSelected" Color="#1B2129" />
+            <SolidColorBrush x:Key="SidebarForeground" Color="#8E9AA8" />
+            <SolidColorBrush x:Key="AccentForeground" Color="#14100A" />
+            <LinearGradientBrush x:Key="HeroBackground" StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Offset="0" Color="#2A2416" />
+                <GradientStop Offset="0.45" Color="#19202A" />
+                <GradientStop Offset="1" Color="#151B23" />
+            </LinearGradientBrush>
 
             <!-- Dashboard cards and the server-status pill. -->
-            <SolidColorBrush x:Key="CardBackground" Color="#42301F" />
-            <SolidColorBrush x:Key="CardBorderBrush" Color="#6B5236" />
-            <SolidColorBrush x:Key="StatusRunningBrush" Color="#8FBF5A" />
-            <SolidColorBrush x:Key="StatusBusyBrush" Color="#D4A63A" />
-            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#9C8B70" />
-            <SolidColorBrush x:Key="ChartCpuBrush" Color="#D4A63A" />
-            <SolidColorBrush x:Key="ChartMemoryBrush" Color="#C9734A" />
+            <SolidColorBrush x:Key="CardBackground" Color="#181E26" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#252E39" />
+            <SolidColorBrush x:Key="StatusRunningBrush" Color="#6CCB7E" />
+            <SolidColorBrush x:Key="StatusBusyBrush" Color="#E2A93B" />
+            <SolidColorBrush x:Key="StatusStoppedBrush" Color="#7D8896" />
+            <SolidColorBrush x:Key="ChartCpuBrush" Color="#E2A93B" />
+            <SolidColorBrush x:Key="ChartMemoryBrush" Color="#6FB7D6" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

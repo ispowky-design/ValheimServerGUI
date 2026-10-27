@@ -75,11 +75,11 @@ public class PaletteTests
         Assert.NotEqual(darkest, baseColor);
         Assert.NotEqual(baseColor, content);
 
-        // App background blends with the menu/footer (darkest layer).
-        Assert.Equal(darkest, (window.Background as ISolidColorBrush)!.Color);
+        // Windows draw on the page surface; the main window's frame paints the darkest layer itself.
+        Assert.Equal(content, (window.Background as ISolidColorBrush)!.Color);
     }
 
-    // The Valheim theme has its own oak layers (not Dark's greys), and every theme defines the help glyph.
+    // The Valheim theme has its own stone layers (not Dark's greys), and every theme defines the help glyph.
     [AvaloniaTheory]
     [InlineData("Light")]
     [InlineData("Dark")]

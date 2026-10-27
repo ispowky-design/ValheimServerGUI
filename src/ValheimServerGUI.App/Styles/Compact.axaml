@@ -7,7 +7,8 @@
 
     <Styles.Resources>
         <!-- Global Fluent knobs many control themes read from. -->
-        <CornerRadius x:Key="ControlCornerRadius">2</CornerRadius>
+        <CornerRadius x:Key="ControlCornerRadius">5</CornerRadius>
+        <CornerRadius x:Key="OverlayCornerRadius">8</CornerRadius>
         <x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
         <x:Double x:Key="TabItemHeaderFontSize">13</x:Double>
         <Thickness x:Key="TabItemHeaderMargin">10,4</Thickness>
@@ -20,13 +21,14 @@
     <Style Selector="Window">
         <Setter Property="FontFamily" Value="Segoe UI, Inter" />
         <Setter Property="FontSize" Value="12" />
-        <!-- App background blends with the menu/footer (darkest); only tabs + content stand out. -->
-        <Setter Property="Background" Value="{DynamicResource LayerDarkest}" />
+        <!-- Windows draw on the page surface; the main window's top bar, sidebar and status bar paint the darker
+             frame layer themselves. -->
+        <Setter Property="Background" Value="{DynamicResource LayerContent}" />
     </Style>
 
     <Style Selector="Button">
-        <Setter Property="MinHeight" Value="23" />
-        <Setter Property="Padding" Value="10,2" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Padding" Value="14,3" />
         <!-- Content (text, or an icon+text group) is always centred as one unit. -->
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -34,13 +36,13 @@
 
     <!-- Icon-only 16x16 button: no min width, fixed to the standard input height so a row of
          [text box | icon button] stays a uniform height and the two align. Reads as a slim floating icon —
-         no background or border at rest OR on hover/press, just a hand cursor. Fluent paints the button
-         chrome on PART_ContentPresenter per state, so each state is forced transparent here (app Style beats
+         no background or border at rest, a soft rounded tint on hover/press, and a hand cursor. Fluent paints
+         the button chrome on PART_ContentPresenter per state, so each state is forced here (app Style beats
          the ControlTheme's state styles). -->
     <Style Selector="Button.icon">
         <Setter Property="MinWidth" Value="0" />
-        <Setter Property="Height" Value="24" />
-        <Setter Property="Padding" Value="2" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="Padding" Value="4" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
@@ -53,11 +55,11 @@
         <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="Button.icon:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{DynamicResource LayerBaseHover}" />
         <Setter Property="BorderBrush" Value="Transparent" />
     </Style>
     <Style Selector="Button.icon:pressed /template/ ContentPresenter#PART_ContentPresenter">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{DynamicResource SidebarItemSelected}" />
         <Setter Property="BorderBrush" Value="Transparent" />
     </Style>
     <!-- Keep the disabled icon at full opacity: the glyph itself is greyed by IconImage (its universal
@@ -78,11 +80,12 @@
 
     <Style Selector="Menu">
         <Setter Property="MinHeight" Value="0" />
-        <!-- Menu bar is the darkest layer. -->
-        <Setter Property="Background" Value="{DynamicResource LayerDarkest}" />
+        <!-- The menu sits on the top bar, which paints the darkest layer. -->
+        <Setter Property="Background" Value="Transparent" />
     </Style>
     <Style Selector="Menu > MenuItem">
-        <Setter Property="Padding" Value="8,1.5" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="CornerRadius" Value="5" />
     </Style>
 
     <!-- Right-click context menus: same app font + compact density as the rest of the chrome. The popup is a

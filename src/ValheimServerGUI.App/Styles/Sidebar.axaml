@@ -1,0 +1,113 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:app="using:ValheimServerGUI.App"
+                    xmlns:loc="using:ValheimServerGUI.Localization">
+
+    <!-- The main window's navigation: a TabControl drawn as a left sidebar (brand mark, then one row per page with
+         its vector glyph from Styles/NavIcons.axaml, passed in the TabItem's Tag) and a page area that opens with
+         the selected page's title. Keyed, so only the main window uses it; dialogs keep the tab strip of
+         Styles/Tabs.axaml. Colours come from Palette.axaml. -->
+    <ControlTheme x:Key="SidebarTabItem" TargetType="TabItem">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource SidebarForeground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinHeight" Value="36" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="PART_LayoutRoot" Background="{TemplateBinding Background}" CornerRadius="6"
+                        Padding="0,0,10,0" MinHeight="{TemplateBinding MinHeight}">
+                    <Grid ColumnDefinitions="3,Auto,*">
+                        <Border Name="PART_Accent" Grid.Column="0" Width="3" Margin="0,8" CornerRadius="2"
+                                Background="{DynamicResource SystemAccentColor}" IsVisible="False" />
+                        <PathIcon Name="PART_Icon" Grid.Column="1" Width="16" Height="16" Margin="12,0,12,0"
+                                  VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}"
+                                  Data="{TemplateBinding Tag}" />
+                        <ContentPresenter Name="PART_ContentPresenter" Grid.Column="2"
+                                          Content="{TemplateBinding Header}"
+                                          ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                          VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SidebarItemHover}" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Background" Value="{DynamicResource SidebarItemSelected}" />
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="^:selected /template/ Border#PART_Accent">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:selected /template/ PathIcon#PART_Icon">
+            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="SidebarTabControl" TargetType="TabControl">
+        <Setter Property="Background" Value="{DynamicResource LayerContent}" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="ItemContainerTheme" Value="{StaticResource SidebarTabItem}" />
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+                <StackPanel Spacing="2" />
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <DockPanel>
+                    <Border DockPanel.Dock="Left" Width="212" Background="{DynamicResource LayerDarkest}"
+                            BorderBrush="{DynamicResource AppBorderBrush}" BorderThickness="0,0,1,0">
+                        <DockPanel>
+                            <!-- Brand: rune mark on an accent tile, product name and tagline. -->
+                            <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*" Margin="16,18,12,20">
+                                <Border Grid.Column="0" Width="36" Height="36" CornerRadius="9"
+                                        Background="{DynamicResource SystemAccentColor}" VerticalAlignment="Center">
+                                    <PathIcon Width="20" Height="20" Data="{DynamicResource NavIcon.Brand}"
+                                              Foreground="{DynamicResource AccentForeground}" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center" Spacing="1">
+                                    <TextBlock Text="{x:Static app:AppConstants.ProductName}" FontSize="14" FontWeight="Bold"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+                                    <TextBlock Text="{x:Static loc:Strings.Shell_Brand_Tagline}" FontSize="11"
+                                               TextTrimming="CharacterEllipsis"
+                                               Foreground="{DynamicResource SidebarForeground}" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Shell_Nav_Section}" Margin="20,0,0,8"
+                                       FontSize="10" FontWeight="SemiBold" LetterSpacing="1.2"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" />
+                            <ItemsPresenter Name="PART_ItemsPresenter" Margin="10,0"
+                                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </DockPanel>
+                    </Border>
+                    <Border Background="{TemplateBinding Background}">
+                        <DockPanel>
+                            <!-- Page title: the selected page's glyph and name. -->
+                            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="22,16,22,4">
+                                <PathIcon Width="18" Height="18" VerticalAlignment="Center"
+                                          Foreground="{DynamicResource SystemAccentColor}"
+                                          Data="{ReflectionBinding SelectedItem.Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                                <TextBlock FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}"
+                                           Text="{ReflectionBinding SelectedItem.Header, RelativeSource={RelativeSource TemplatedParent}}" />
+                            </StackPanel>
+                            <ContentPresenter Name="PART_SelectedContentHost" Margin="12,0,12,10"
+                                              Content="{TemplateBinding SelectedContent}"
+                                              ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+                        </DockPanel>
+                    </Border>
+                </DockPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+</ResourceDictionary>

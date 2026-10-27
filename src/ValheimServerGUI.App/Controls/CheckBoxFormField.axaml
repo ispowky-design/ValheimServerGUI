@@ -20,7 +20,8 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <!-- A small fixed radius: the shared control radius would round the 12px box into a circle. -->
+        <Setter Property="CornerRadius" Value="3" />
         <Setter Property="MinHeight" Value="{DynamicResource CheckBoxMinHeight}" />
         <Setter Property="Foreground" Value="{DynamicResource CheckBoxForegroundUnchecked}" />
         <Setter Property="Background" Value="{DynamicResource CheckBoxBackgroundUnchecked}" />

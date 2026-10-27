@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Vector glyphs (24x24 grid) for the main window's sidebar navigation and page headers. Filled shapes, so a
+         PathIcon tints them with its Foreground (accent when selected). The shapes follow Material Design Icons
+         (Apache 2.0). -->
+    <StreamGeometry x:Key="NavIcon.Dashboard">M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z</StreamGeometry>
+    <StreamGeometry x:Key="NavIcon.Server">M4,1H20A1,1 0 0,1 21,2V6A1,1 0 0,1 20,7H4A1,1 0 0,1 3,6V2A1,1 0 0,1 4,1M4,9H20A1,1 0 0,1 21,10V14A1,1 0 0,1 20,15H4A1,1 0 0,1 3,14V10A1,1 0 0,1 4,9M4,17H20A1,1 0 0,1 21,18V22A1,1 0 0,1 20,23H4A1,1 0 0,1 3,22V18A1,1 0 0,1 4,17M9,5H10V3H9V5M9,13H10V11H9V13M9,21H10V19H9V21M5,3V5H7V3H5M5,11V13H7V11H5M5,19V21H7V19H5Z</StreamGeometry>
+    <StreamGeometry x:Key="NavIcon.Advanced">M3,17V19H9V17H3M3,5V7H13V5H3M13,21V19H21V17H13V15H11V21H13M7,9V11H3V13H7V15H9V9H7M21,13V11H11V13H21M15,9H17V7H21V5H17V3H15V9Z</StreamGeometry>
+    <StreamGeometry x:Key="NavIcon.Details">M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z</StreamGeometry>
+    <StreamGeometry x:Key="NavIcon.Players">M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z</StreamGeometry>
+    <StreamGeometry x:Key="NavIcon.Backups">M3,3H21V7H3V3M4,8H20V21H4V8M9.5,11A0.5,0.5 0 0,0 9,11.5V13H15V11.5A0.5,0.5 0 0,0 14.5,11H9.5Z</StreamGeometry>
+    <StreamGeometry x:Key="NavIcon.Map">M15,19L9,16.89V5L15,7.11M20.5,3C20.44,3 20.39,3 20.34,3L15,5.1L9,3L3.36,4.9C3.15,4.97 3,5.15 3,5.38V20.5A0.5,0.5 0 0,0 3.5,21C3.55,21 3.61,21 3.66,20.97L9,18.9L15,21L20.64,19.1C20.85,19 21,18.85 21,18.62V3.5A0.5,0.5 0 0,0 20.5,3Z</StreamGeometry>
+    <StreamGeometry x:Key="NavIcon.Logs">M20,19V7H4V19H20M20,3A2,2 0 0,1 22,5V19A2,2 0 0,1 20,21H4A2,2 0 0,1 2,19V5C2,3.89 2.9,3 4,3H20M13,17V15H18V17H13M9.58,13L5.57,9H8.4L11.7,12.3C12.09,12.69 12.09,13.33 11.7,13.72L8.42,17H5.59L9.58,13Z</StreamGeometry>
+
+    <!-- Brand mark: the Othala rune (homeland) cut out of a rounded shield. -->
+    <StreamGeometry x:Key="NavIcon.Brand">M12,2.5L18.5,9L12,15.5L5.5,9Z M12,5.3L8.3,9L12,12.7L15.7,9Z M8.2,12.9L9.6,14.3L5.4,21.5L3.7,20.5Z M15.8,12.9L20.3,20.5L18.6,21.5L14.4,14.3Z</StreamGeometry>
+</ResourceDictionary>

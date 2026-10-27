@@ -13,44 +13,44 @@ public static class AppThemeVariants
 {
     public static readonly ThemeVariant Valheim = new("Valheim", ThemeVariant.Dark);
 
-    // Gold accent on dark oak, with parchment text.
-    public static readonly Color Gold = Color.Parse("#D4A63A");
-    public static readonly Color Parchment = Color.Parse("#F2E4C4");
+    // Rune gold on slate-blue stone, with a warm snow-white text.
+    public static readonly Color Gold = Color.Parse("#E2A93B");
+    public static readonly Color Snow = Color.Parse("#ECE7DC");
 
-    /// <summary>The Fluent palette (accent, text, chrome) for the wood-and-gold look.</summary>
+    /// <summary>The Fluent palette (accent, text, chrome) for the Nordic-night look.</summary>
     public static ColorPaletteResources CreateValheimPalette() => new()
     {
         Accent = Gold,
-        RegionColor = Color.Parse("#2B1F15"),
-        ErrorText = Color.Parse("#E5735C"),
+        RegionColor = Color.Parse("#0F1318"),
+        ErrorText = Color.Parse("#EE7A62"),
 
-        BaseHigh = Parchment,
-        BaseMediumHigh = Color.Parse("#E0CFA8"),
-        BaseMedium = Color.Parse("#B9A27C"),
-        BaseMediumLow = Color.Parse("#8C7656"),
-        BaseLow = Color.Parse("#5A4632"),
+        BaseHigh = Snow,
+        BaseMediumHigh = Color.Parse("#CDD3DA"),
+        BaseMedium = Color.Parse("#8E9AA8"),
+        BaseMediumLow = Color.Parse("#5C6878"),
+        BaseLow = Color.Parse("#2A3340"),
 
-        AltHigh = Color.Parse("#1C140D"),
-        AltMediumHigh = Color.Parse("#241A11"),
-        AltMedium = Color.Parse("#2B1F15"),
-        AltMediumLow = Color.Parse("#33251A"),
-        AltLow = Color.Parse("#3A2B1E"),
+        AltHigh = Color.Parse("#0B0E12"),
+        AltMediumHigh = Color.Parse("#0E1217"),
+        AltMedium = Color.Parse("#11161C"),
+        AltMediumLow = Color.Parse("#151B22"),
+        AltLow = Color.Parse("#19202A"),
 
-        ChromeAltLow = Color.Parse("#E0CFA8"),
-        ChromeBlackHigh = Color.Parse("#0E0A06"),
-        ChromeBlackLow = Color.Parse("#E0CFA8"),
-        ChromeBlackMedium = Color.Parse("#1C140D"),
-        ChromeBlackMediumLow = Color.Parse("#241A11"),
-        ChromeDisabledHigh = Color.Parse("#5A4632"),
-        ChromeDisabledLow = Color.Parse("#8C7656"),
-        ChromeGray = Color.Parse("#A38D6A"),
-        ChromeHigh = Color.Parse("#7A6146"),
-        ChromeLow = Color.Parse("#2F2217"),
-        ChromeMedium = Color.Parse("#3A2B1E"),
-        ChromeMediumLow = Color.Parse("#463424"),
-        ChromeWhite = Parchment,
+        ChromeAltLow = Color.Parse("#CDD3DA"),
+        ChromeBlackHigh = Color.Parse("#05070A"),
+        ChromeBlackLow = Color.Parse("#CDD3DA"),
+        ChromeBlackMedium = Color.Parse("#0B0E12"),
+        ChromeBlackMediumLow = Color.Parse("#0E1217"),
+        ChromeDisabledHigh = Color.Parse("#2A3340"),
+        ChromeDisabledLow = Color.Parse("#5C6878"),
+        ChromeGray = Color.Parse("#7D8896"),
+        ChromeHigh = Color.Parse("#3A4656"),
+        ChromeLow = Color.Parse("#141920"),
+        ChromeMedium = Color.Parse("#1A2129"),
+        ChromeMediumLow = Color.Parse("#202833"),
+        ChromeWhite = Snow,
 
-        ListLow = Color.Parse("#3F2E1F"),
-        ListMedium = Color.Parse("#5C4428"),
+        ListLow = Color.Parse("#1A2129"),
+        ListMedium = Color.Parse("#3A3220"),
     };
 }

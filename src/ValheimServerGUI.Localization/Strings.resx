@@ -141,6 +141,13 @@
     <value>Logs</value>
   </data>
   <!-- Dashboard tab -->
+  <!-- Shell -->
+  <data name="Shell_Brand_Tagline" xml:space="preserve">
+    <value>Dedicated server manager</value>
+  </data>
+  <data name="Shell_Nav_Section" xml:space="preserve">
+    <value>MANAGE</value>
+  </data>
   <data name="MainWindow_Tab_Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
@@ -232,6 +239,9 @@
     <value>Stop</value>
   </data>
   <!-- Server Controls tab -->
+  <data name="ServerControls_Identity_Header" xml:space="preserve">
+    <value>Server identity</value>
+  </data>
   <data name="ServerControls_Name_Label" xml:space="preserve">
     <value>Server Name</value>
   </data>

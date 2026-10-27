@@ -8,8 +8,9 @@
              x:DataType="vm:MainWindowViewModel">
 
     <ScrollViewer>
-        <StackPanel Margin="8" Spacing="4">
-            <c:GroupBox Header="{x:Static loc:Strings.ServerDetails_Connection_Header}" HorizontalAlignment="Left" Width="350">
+        <!-- The two section cards side by side, each taking half of the page up to a comfortable reading width. -->
+        <Grid Margin="8" ColumnDefinitions="*,12,*" MaxWidth="1000" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <c:GroupBox Grid.Column="0" Header="{x:Static loc:Strings.ServerDetails_Connection_Header}" MinWidth="380" VerticalAlignment="Top">
                 <StackPanel Spacing="2">
                     <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_ExternalIp_Label}" Value="{Binding Details.ExternalIp}"
                                   HelpText="{x:Static loc:Strings.ServerDetails_ExternalIp_Help}">
@@ -43,18 +44,18 @@
                         </c:LabelField.TrailingContent>
                     </c:LabelField>
 
-                    <TextBlock Margin="0,4,0,0" FontStyle="Italic"
+                    <TextBlock Margin="0,4,0,0" FontStyle="Italic" TextWrapping="Wrap"
                                Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                Text="{x:Static loc:Strings.ServerDetails_TroubleConnecting}" />
                 </StackPanel>
             </c:GroupBox>
 
-            <c:GroupBox Header="{x:Static loc:Strings.ServerDetails_Statistics_Header}" HorizontalAlignment="Left" Width="350">
+            <c:GroupBox Grid.Column="2" Header="{x:Static loc:Strings.ServerDetails_Statistics_Header}" MinWidth="380" VerticalAlignment="Top">
                 <StackPanel Spacing="2">
-                    <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_Uptime_Label}" Value="{Binding Details.Uptime}" />
-                    <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_LastWorldSave_Label}" Value="{Binding Details.LastWorldSave}" />
-                    <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_NextRestart_Label}" Value="{Binding Details.NextRestart}" />
-                    <c:LabelField LabelText="{x:Static loc:Strings.ServerDetails_AvgWorldSave_Label}" Value="{Binding Details.AverageWorldSave}"
+                    <c:LabelField LabelWidth="170" LabelText="{x:Static loc:Strings.ServerDetails_Uptime_Label}" Value="{Binding Details.Uptime}" />
+                    <c:LabelField LabelWidth="170" LabelText="{x:Static loc:Strings.ServerDetails_LastWorldSave_Label}" Value="{Binding Details.LastWorldSave}" />
+                    <c:LabelField LabelWidth="170" LabelText="{x:Static loc:Strings.ServerDetails_NextRestart_Label}" Value="{Binding Details.NextRestart}" />
+                    <c:LabelField LabelWidth="170" LabelText="{x:Static loc:Strings.ServerDetails_AvgWorldSave_Label}" Value="{Binding Details.AverageWorldSave}"
                                   HelpText="{x:Static loc:Strings.ServerDetails_AvgWorldSave_Help}">
                         <c:LabelField.TrailingContent>
                             <!-- Empty, invisible icon slot so this help glyph lines up with the ones above it. -->
@@ -63,6 +64,6 @@
                     </c:LabelField>
                 </StackPanel>
             </c:GroupBox>
-        </StackPanel>
+        </Grid>
     </ScrollViewer>
 </UserControl>

@@ -17,15 +17,15 @@ using Xunit;
 
 namespace ValheimServerGUI.App.Tests.Views;
 
-// The custom tab theme pins tab titles to the app font (Normal weight, 12px) instead of Fluent's SemiLight/13,
-// which looks visibly different from the app body.
+// The custom tab themes pin tab titles to the app font instead of Fluent's SemiLight: the main window's sidebar
+// rows read at 13px (Normal, SemiBold when selected), dialog tab strips at the 12px body size.
 public class TabFontConsistencyTests
 {
     private static readonly System.IServiceProvider Core =
         new ServiceCollection().AddValheimCore().BuildServiceProvider();
 
     [AvaloniaFact]
-    public void Tab_titles_use_the_app_body_font()
+    public void Sidebar_rows_use_the_app_font()
     {
         var shell = new ShellLauncher(new RecordingSystemShell(), TestLog.Silent);
         var vm = new MainWindowViewModel(
@@ -43,10 +43,13 @@ public class TabFontConsistencyTests
         window.Measure(new Size(700, 500));
         window.Arrange(new Rect(new Size(700, 500)));
 
-        foreach (var tab in window.GetVisualDescendants().OfType<TabItem>())
+        var tabs = window.GetVisualDescendants().OfType<TabItem>().ToList();
+        Assert.NotEmpty(tabs);
+        foreach (var tab in tabs)
         {
-            Assert.Equal(12, tab.FontSize);
-            Assert.Equal(FontWeight.Normal, tab.FontWeight);
+            Assert.Equal(13, tab.FontSize);
+            Assert.Equal(window.FontFamily, tab.FontFamily);
+            Assert.Equal(tab.IsSelected ? FontWeight.SemiBold : FontWeight.Normal, tab.FontWeight);
         }
     }
 

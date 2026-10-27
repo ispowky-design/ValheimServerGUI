@@ -19,32 +19,19 @@
         <Style Selector="Border.statusBar.busy">
             <Setter Property="Background" Value="{DynamicResource StatusBusyBrush}" />
         </Style>
-        <Style Selector="Ellipse.statusDot">
-            <Setter Property="Fill" Value="{DynamicResource StatusStoppedBrush}" />
-        </Style>
-        <Style Selector="Ellipse.statusDot.running">
-            <Setter Property="Fill" Value="{DynamicResource StatusRunningBrush}" />
-        </Style>
-        <Style Selector="Ellipse.statusDot.busy">
-            <Setter Property="Fill" Value="{DynamicResource StatusBusyBrush}" />
-        </Style>
-        <Style Selector="c|IconTextButton.primary">
-            <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
-            <Setter Property="Foreground" Value="{DynamicResource LayerDarkest}" />
-        </Style>
     </UserControl.Styles>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-        <StackPanel Margin="12" Spacing="10">
+        <StackPanel Margin="12,8,12,12" Spacing="12">
 
             <!-- ===== Header: server identity, state, lifecycle controls ===== -->
-            <c:DashboardCard Classes="untitled" Padding="14,12">
+            <c:DashboardCard Classes="untitled" Padding="18,16" Background="{DynamicResource HeroBackground}">
                 <Grid ColumnDefinitions="Auto,*,Auto">
                     <Ellipse Grid.Column="0" Width="12" Height="12" Margin="2,0,12,0" VerticalAlignment="Center"
                              Classes="statusDot"
                              Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
                     <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Form.Name}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                        <TextBlock Text="{Binding Form.Name}" FontSize="22" FontWeight="Bold" TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
                         <TextBlock FontSize="12" TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}">

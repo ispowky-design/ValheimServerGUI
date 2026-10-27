@@ -11,7 +11,7 @@
 
     <!-- Text box: rest / hover / focus fill + border from the shared tokens. -->
     <Style Selector="TextBox">
-        <Setter Property="MinHeight" Value="23" />
+        <Setter Property="MinHeight" Value="26" />
         <Setter Property="Padding" Value="6,2" />
         <Setter Property="Background" Value="{DynamicResource InputBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
@@ -27,12 +27,12 @@
 
     <!-- Sizing for the number/dropdown inputs (their colours come from their ControlThemes). -->
     <Style Selector="NumericUpDown">
-        <Setter Property="MinHeight" Value="23" />
+        <Setter Property="MinHeight" Value="26" />
         <!-- The spinner theme binds the inner box's padding to NumericUpDown.Padding; match the text inset. -->
         <Setter Property="Padding" Value="6,2" />
     </Style>
     <Style Selector="ComboBox">
-        <Setter Property="MinHeight" Value="23" />
+        <Setter Property="MinHeight" Value="26" />
     </Style>
 
     <!-- ============================================================================================
@@ -46,7 +46,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
         <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
-        <Setter Property="MinHeight" Value="23" />
+        <Setter Property="MinHeight" Value="26" />
         <Setter Property="ClipToBounds" Value="True" />
     </Style>
     <Style Selector="Border.fieldShell:pointerover">

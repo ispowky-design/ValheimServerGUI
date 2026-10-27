@@ -6,7 +6,12 @@
          per-cell vertical padding. Horizontal inset is a single 6px cell/header padding. A dark header bar
          matches the footer; there are no inter-row gridlines. -->
 
-    <!-- Header: dark bar (matches the footer), app body font, 6px inset, content centred. -->
+    <!-- Rows sit on the card surface of the DataListView frame. -->
+    <Style Selector="DataGrid">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- Header: dark bar (matches the footer), app body font in a muted semibold, 6px inset, content centred. -->
     <Style Selector="DataGridColumnHeadersPresenter">
         <Setter Property="Background" Value="{DynamicResource LayerDarkest}" />
     </Style>
@@ -15,6 +20,8 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Padding" Value="6,0" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
         <!-- Fluent's 32px min blocks the fixed ColumnHeaderHeight; drop it. -->
         <Setter Property="MinHeight" Value="0" />
     </Style>
