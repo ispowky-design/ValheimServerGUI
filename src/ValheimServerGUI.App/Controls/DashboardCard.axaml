@@ -19,8 +19,13 @@
                         Padding="{TemplateBinding Padding}">
                     <Grid RowDefinitions="Auto,Auto,Auto,*">
                         <Grid Grid.Row="0" Name="PART_Header" ColumnDefinitions="Auto,*,Auto" MinHeight="18">
-                            <c:IconImage Grid.Column="0" IconName="{TemplateBinding IconName}" VerticalAlignment="Center" Margin="0,0,6,0"
-                                         IsVisible="{TemplateBinding IconName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            <Panel Grid.Column="0">
+                                <c:IconImage IconName="{TemplateBinding IconName}" VerticalAlignment="Center" Margin="0,0,6,0"
+                                             IsVisible="{TemplateBinding IconName, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                <PathIcon Data="{TemplateBinding Glyph}" Width="14" Height="14" VerticalAlignment="Center" Margin="0,0,8,0"
+                                          Foreground="{DynamicResource SystemAccentColor}"
+                                          IsVisible="{TemplateBinding Glyph, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                            </Panel>
                             <TextBlock Grid.Column="1" Text="{TemplateBinding Title}" FontSize="11" FontWeight="SemiBold" LetterSpacing="0.6"
                                        VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />

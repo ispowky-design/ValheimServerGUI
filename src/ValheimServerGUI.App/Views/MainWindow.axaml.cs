@@ -247,7 +247,7 @@ public partial class MainWindow : Window
     {
         if (ViewModel is null) return;
         var dashboard = DashboardTab.IsSelected;
-        ViewModel.Details.SetActive(DetailsTab.IsSelected || dashboard);
+        ViewModel.Details.SetActive(dashboard);
         ViewModel.Players.SetActive(PlayersTab.IsSelected || dashboard);
         ViewModel.Backups.SetActive(BackupsTab.IsSelected);
         ViewModel.WorldMap.SetActive(WorldMapTab.IsSelected);

@@ -41,15 +41,6 @@
         <Setter Property="Padding" Value="11,4" />
     </Style>
 
-    <!-- A row of icon buttons framed as one control (the top bar's Start/Restart/Stop). -->
-    <Style Selector="Border.buttonGroup">
-        <Setter Property="Background" Value="{DynamicResource CardBackground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="6" />
-        <Setter Property="Padding" Value="4,1" />
-    </Style>
-
     <!-- ===== Buttons ===== -->
 
     <!-- Primary action: filled with the accent. Used for the one main verb of a page, and for every dialog's

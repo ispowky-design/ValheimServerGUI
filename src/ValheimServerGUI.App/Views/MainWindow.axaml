@@ -18,7 +18,7 @@
     <DockPanel>
         <!-- ===== Top bar ===== -->
         <!-- The app frame's top band: the menu on the left; on the right the server state pill, a label-less profile
-             picker and the Start/Restart/Stop group, turning the bar into a single-window multi-profile control
+             picker and the Start/Restart/Stop buttons, turning the bar into a single-window multi-profile control
              panel. The controls bind the same VM commands as the Server Controls tab and the tray, so their
              enablement is derived from the selected server. -->
         <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource AppBorderBrush}"
@@ -37,13 +37,20 @@
                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
             <c:DropdownFormField x:Name="ProfileDropdown" Width="180" VerticalAlignment="Center"
                                  ItemsSource="{Binding Profiles}" />
-            <Border Classes="buttonGroup" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" Spacing="2">
-                    <c:IconButton IconName="Run_16x" ToolTip.Tip="{x:Static loc:Strings.ServerAction_Start}" Command="{Binding StartCommand}" />
-                    <c:IconButton IconName="Restart_16x" ToolTip.Tip="{x:Static loc:Strings.ServerAction_Restart}" Command="{Binding RestartCommand}" />
-                    <c:IconButton IconName="Stop_16x" ToolTip.Tip="{x:Static loc:Strings.ServerAction_Stop}" Command="{Binding StopCommand}" />
-                </StackPanel>
-            </Border>
+            <!-- The one place the server is started and stopped (the tray menu aside). Force stop is offered only once
+                 a stop has run past the Preferences delay; never automatic. -->
+            <c:IconTextButton x:Name="StartButton" Classes="primary" Glyph="{StaticResource Glyph.Play}"
+                              Text="{x:Static loc:Strings.Dashboard_Start}" ToolTip.Tip="{x:Static loc:Strings.ServerAction_Start}"
+                              Command="{Binding StartCommand}" />
+            <c:IconTextButton x:Name="RestartButton" Glyph="{StaticResource Glyph.Restart}"
+                              Text="{x:Static loc:Strings.Dashboard_Restart}" ToolTip.Tip="{x:Static loc:Strings.ServerAction_Restart}"
+                              Command="{Binding RestartCommand}" />
+            <c:IconTextButton x:Name="StopButton" Glyph="{StaticResource Glyph.Stop}"
+                              Text="{x:Static loc:Strings.Dashboard_Stop}" ToolTip.Tip="{x:Static loc:Strings.ServerAction_Stop}"
+                              Command="{Binding StopCommand}" />
+            <c:IconTextButton x:Name="ForceStopButton" Glyph="{StaticResource Glyph.ForceStop}"
+                              Text="{x:Static loc:Strings.ServerAction_ForceStop}" ToolTip.Tip="{x:Static loc:Strings.ServerAction_ForceStop_Tip}"
+                              Command="{Binding ForceStopCommand}" IsVisible="{Binding ForceStopAvailable}" />
         </StackPanel>
         <Menu VerticalAlignment="Center" Margin="6,0,0,0">
             <MenuItem Header="{x:Static loc:Strings.MainWindow_Menu_File}" AutomationProperties.AutomationId="Menu_File">
@@ -131,12 +138,7 @@
         <Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" Background="{DynamicResource LayerDarkest}"
                 BorderBrush="{DynamicResource AppBorderBrush}" Padding="12,5">
             <Grid ColumnDefinitions="*,Auto">
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                    <Image Width="16" Height="16" VerticalAlignment="Center"
-                           RenderOptions.BitmapInterpolationMode="HighQuality"
-                           Source="{Binding ServerStatus, Converter={x:Static conv:ServerStatusToIconConverter.Instance}}" />
-                    <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
-                </StackPanel>
+                <!-- The server state is the top bar's pill; the footer only carries the update readout. -->
                 <!-- Icon + text always render at full contrast; only the text turns into a clickable link
                      when there is somewhere to go (UpdateIsLink). Don't wrap the readout in a Button: a
                      disabled Button dims the icon and text to near-invisibility. -->
@@ -159,12 +161,6 @@
             </TabItem>
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_ServerControls}" Tag="{StaticResource NavIcon.Server}" x:Name="ServerControlsTab">
                 <tabs:ServerControlsView />
-            </TabItem>
-            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_AdvancedControls}" Tag="{StaticResource NavIcon.Advanced}">
-                <tabs:AdvancedControlsView />
-            </TabItem>
-            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_ServerDetails}" Tag="{StaticResource NavIcon.Details}" x:Name="DetailsTab">
-                <tabs:ServerDetailsView />
             </TabItem>
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Players}" Tag="{StaticResource NavIcon.Players}" x:Name="PlayersTab">
                 <tabs:PlayersView />
