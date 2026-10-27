@@ -250,6 +250,26 @@ public class DialogViewModelTests
         Directory.Delete(dir);
     }
 
+    [Fact]
+    public void Directories_paths_with_environment_variables_are_expanded()
+    {
+        var dir = Directory.CreateTempSubdirectory().FullName;
+        Environment.SetEnvironmentVariable("VSG_TEST_SAVE_DIR", dir);
+        try
+        {
+            var vm = Directories(new FakeUserPreferencesProvider(AppPaths()), Profiles(new ServerPreferences { ProfileName = "P" }), "P");
+
+            vm.SaveDataFolderPath = "%VSG_TEST_SAVE_DIR%";
+
+            Assert.False(vm.HasMissingPath);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("VSG_TEST_SAVE_DIR", null);
+            Directory.Delete(dir);
+        }
+    }
+
     // An unmodded server has no BepInEx files, so their (default) paths only count as missing once the user sets them.
     [Fact]
     public void Directories_missing_bepinex_paths_count_only_when_changed()
