@@ -20,4 +20,9 @@ Clique sur « Mise à jour … prête à installer » dans la barre d'état : el
 Elle refuse de s'installer tant qu'un serveur tourne. Depuis une version plus ancienne, lance une fois le nouvel
 installateur par-dessus (ou remplace l'exe portable).
 
+**Numérotation :** l'application est en alpha et ses versions s'appellent désormais 0.0.x-alpha. Elles
+remplacent l'ancienne numérotation 3.x : la mise à jour automatique les considère comme plus récentes que
+n'importe quelle 3.x. Une copie restée sur une 3.x antérieure à la 3.9.0 ne les voit pas : lance une fois le
+nouvel installateur par-dessus.
+
 `SHA256SUMS.txt` donne l'empreinte de chaque fichier ; la mise à jour automatique la vérifie avant d'installer.

@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release, without the v (e.g. 3.1.0). Creates the tag v<version> on the selected branch."
+        description: "Version to release, without the v (e.g. 0.0.2-alpha). Creates the tag v<version> on the selected branch."
         required: true
         type: string
 
@@ -168,7 +168,9 @@ jobs:
           ls -la dist
           (cd dist && sha256sum * > SHA256SUMS.txt)
           prerelease=()
-          [[ "$VERSION" == *-* ]] && prerelease=(--prerelease)
+          # The whole app is in alpha: an "-alpha" version is the normal release (it must be the latest release for
+          # the updater), any other suffix (rc, ci...) is a GitHub pre-release.
+          [[ "$VERSION" == *-* && "$VERSION" != *-alpha ]] && prerelease=(--prerelease)
           gh release create "v$VERSION" dist/* \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
             --title "ValheimServerGUI $VERSION" --notes-file packaging/release-notes.md "${prerelease[@]}"

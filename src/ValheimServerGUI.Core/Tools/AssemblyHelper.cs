@@ -60,6 +60,8 @@ namespace ValheimServerGUI.Tools
         /// ...using semantic-version precedence, in which a stable release outranks its own
         /// pre-releases (e.g. 2.4.0 is newer than 2.4.0-rc.1). Returns -2 if either version could
         /// not be parsed. Both arguments accept an optional leading "v", as GitHub release tags carry.
+        /// The fork's old 3.x numbering ranks below every other version, so the alpha numbering (0.0.x-alpha)
+        /// that replaced it counts as newer (see <see cref="IsLegacyVersion"/>).
         /// </summary>
         public static int CompareVersions(string currentVersion, string otherVersion)
         {
@@ -67,13 +69,21 @@ namespace ValheimServerGUI.Tools
             {
                 var current = SemVersion.Parse(currentVersion, SemVersionStyles.Any);
                 var other = SemVersion.Parse(otherVersion, SemVersionStyles.Any);
-                return SemVersion.CompareSortOrder(other, current);
+                var era = IsLegacyVersion(current).CompareTo(IsLegacyVersion(other));
+                return era != 0 ? era : SemVersion.CompareSortOrder(other, current);
             }
             catch
             {
                 return -2;
             }
         }
+
+        /// <summary>
+        /// True for the fork's releases before the alpha numbering (3.1.0 to 3.9.0). Those copies only update to a
+        /// higher semantic version, so 3.9.0 is the bridge release that carries this rule; from it on 0.0.x-alpha
+        /// and every later version count as newer. Drop the rule before the app's own numbering reaches 3.0.0.
+        /// </summary>
+        internal static bool IsLegacyVersion(SemVersion version) => version.Major == 3;
 
         public static Version GetDotnetRuntimeVersion()
         {
