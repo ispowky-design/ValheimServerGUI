@@ -58,6 +58,7 @@
             <!-- Dashboard cards and the server-status pill. -->
             <SolidColorBrush x:Key="CardBackground" Color="#252931" />
             <SolidColorBrush x:Key="CardBorderBrush" Color="#323741" />
+            <SolidColorBrush x:Key="CardBorderBrushHover" Color="#474E5B" />
             <SolidColorBrush x:Key="StatusRunningBrush" Color="#5CC97A" />
             <SolidColorBrush x:Key="StatusBusyBrush" Color="#E8B339" />
             <SolidColorBrush x:Key="StatusWarningBrush" Color="#E8913A" />
@@ -100,6 +101,7 @@
             <!-- Dashboard cards and the server-status pill. -->
             <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF" />
             <SolidColorBrush x:Key="CardBorderBrush" Color="#DDE1E7" />
+            <SolidColorBrush x:Key="CardBorderBrushHover" Color="#C3CAD4" />
             <SolidColorBrush x:Key="StatusRunningBrush" Color="#2E8B3A" />
             <SolidColorBrush x:Key="StatusBusyBrush" Color="#B7791F" />
             <SolidColorBrush x:Key="StatusWarningBrush" Color="#C0661B" />
@@ -153,6 +155,7 @@
             <!-- Dashboard cards and the server-status pill. -->
             <SolidColorBrush x:Key="CardBackground" Color="#181E26" />
             <SolidColorBrush x:Key="CardBorderBrush" Color="#252E39" />
+            <SolidColorBrush x:Key="CardBorderBrushHover" Color="#5A4A2C" />
             <SolidColorBrush x:Key="StatusRunningBrush" Color="#6CCB7E" />
             <SolidColorBrush x:Key="StatusBusyBrush" Color="#E2A93B" />
             <SolidColorBrush x:Key="StatusWarningBrush" Color="#E8873A" />

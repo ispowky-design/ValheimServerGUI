@@ -1,9 +1,12 @@
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using Microsoft.Extensions.DependencyInjection;
 using ValheimServerGUI.App.Controls;
 using ValheimServerGUI.App.Infrastructure;
@@ -46,7 +49,11 @@ public partial class MainWindow : Window
         viewModel.RemoveProfileRequested += name => _ = HandleRemoveProfileAsync(name);
         viewModel.Dashboard.NavigateRequested += OnDashboardNavigate;
         // The dashboard is the first tab, so it is already selected before the view-model arrives.
-        Opened += (_, _) => RefreshActiveTabs();
+        Opened += (_, _) =>
+        {
+            RefreshActiveTabs();
+            PlayPageEnter();
+        };
         Closed += (_, _) => viewModel.Dashboard.SetActive(false);
         viewModel.Players.ViewDetailsRequested += player => _ = ShowManagePlayersAsync(player.Key);
         viewModel.Players.ManagePlayersRequested += () => _ = ShowManagePlayersAsync();
@@ -241,7 +248,23 @@ public partial class MainWindow : Window
 
     // Tab-visible lazy refresh: the Details/Players 1s timers run only while their tab is shown. The dashboard
     // summarises Details and Players, so their timers also run while it is shown.
-    private void OnTabChanged(object? sender, SelectionChangedEventArgs e) => RefreshActiveTabs();
+    private void OnTabChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        RefreshActiveTabs();
+        // SelectionChanged bubbles up from the lists and dropdowns inside the pages; only a page switch animates.
+        if (ReferenceEquals(e.Source, Tabs)) PlayPageEnter();
+    }
+
+    private CancellationTokenSource? _pageMotion;
+
+    // The selected page (title and content) fades and rises in; see Motion and Styles/Sidebar.axaml PART_Page.
+    private void PlayPageEnter()
+    {
+        if (Tabs.GetVisualDescendants().OfType<DockPanel>().FirstOrDefault(d => d.Name == "PART_Page") is not { } page)
+            return;
+        _pageMotion?.Cancel();
+        _pageMotion = Motion.PlayPageEnter(page);
+    }
 
     private void RefreshActiveTabs()
     {

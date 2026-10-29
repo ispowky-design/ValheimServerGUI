@@ -28,8 +28,12 @@
                     VerticalAlignment="Center" Margin="8,0,12,0">
             <Border Classes="pill" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Spacing="7">
-                    <Ellipse Classes="statusDot" Width="8" Height="8" VerticalAlignment="Center"
-                             Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
+                    <Panel Width="8" Height="8" VerticalAlignment="Center">
+                        <Ellipse Classes="statusHalo"
+                                 Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
+                        <Ellipse Classes="statusDot"
+                                 Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
+                    </Panel>
                     <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" FontWeight="SemiBold" />
                 </StackPanel>
             </Border>
