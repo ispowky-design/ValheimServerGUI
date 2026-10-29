@@ -27,9 +27,12 @@
             <!-- ===== Header: server identity and state, with the world shortcuts. Start/Restart/Stop live in the top bar. ===== -->
             <c:DashboardCard Classes="untitled" Padding="18,16" Background="{DynamicResource HeroBackground}">
                 <Grid ColumnDefinitions="Auto,*,Auto">
-                    <Ellipse Grid.Column="0" Width="12" Height="12" Margin="2,0,12,0" VerticalAlignment="Center"
-                             Classes="statusDot"
-                             Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
+                    <Panel Grid.Column="0" Width="12" Height="12" Margin="2,0,12,0" VerticalAlignment="Center">
+                        <Ellipse Classes="statusHalo"
+                                 Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
+                        <Ellipse Classes="statusDot"
+                                 Classes.running="{Binding Dashboard.IsRunning}" Classes.busy="{Binding Dashboard.IsBusy}" />
+                    </Panel>
                     <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Form.Name}" FontSize="22" FontWeight="Bold" TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />

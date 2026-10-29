@@ -194,4 +194,33 @@ public class MainWindowRenderTests
 
         Assert.Equal(PlayerRole.Admin, vm.Form.GetOverride(player.Key));
     }
+
+    // A page switch plays the entrance (Infrastructure/Motion) and it settles: the page and its cards end fully
+    // opaque, so an interrupted or stuck animation can never leave a page invisible.
+    [AvaloniaFact]
+    public void Page_entrance_settles_fully_opaque()
+    {
+        var window = new MainWindow(BuildViewModel());
+        window.Show();
+        var tabs = window.GetVisualDescendants().OfType<TabControl>().Single();
+
+        tabs.SelectedIndex = 1;
+        ForceLayout(window);
+        tabs.SelectedIndex = 0;
+        ForceLayout(window);
+
+        var page = window.GetVisualDescendants().OfType<DockPanel>().Single(d => d.Name == "PART_Page");
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        while (clock.ElapsedMilliseconds < 1000)
+        {
+            Avalonia.Headless.AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
+            System.Threading.Thread.Sleep(20);
+        }
+
+        Assert.Equal(1d, page.Opacity);
+        var cards = window.GetVisualDescendants().OfType<Controls.DashboardCard>().ToList();
+        Assert.NotEmpty(cards);
+        Assert.All(cards, c => Assert.Equal(1d, c.Opacity));
+    }
 }

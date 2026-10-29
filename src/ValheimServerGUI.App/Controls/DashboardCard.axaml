@@ -12,11 +12,17 @@
         <Setter Property="Padding" Value="14,12" />
         <Setter Property="Template">
             <ControlTemplate>
-                <Border Background="{TemplateBinding Background}"
+                <Border Name="PART_Surface"
+                        Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         Padding="{TemplateBinding Padding}">
+                    <Border.Transitions>
+                        <Transitions>
+                            <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+                        </Transitions>
+                    </Border.Transitions>
                     <Grid RowDefinitions="Auto,Auto,Auto,*">
                         <Grid Grid.Row="0" Name="PART_Header" ColumnDefinitions="Auto,*,Auto" MinHeight="18">
                             <Panel Grid.Column="0">
@@ -48,6 +54,12 @@
                 </Border>
             </ControlTemplate>
         </Setter>
+
+        <!-- Hover: the edge warms towards the accent (CardBorderBrushHover), easing in and out. The entrance when a
+             page opens is played from code (Infrastructure/Motion), on the card's own RenderTransform. -->
+        <Style Selector="^:pointerover /template/ Border#PART_Surface">
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrushHover}" />
+        </Style>
 
         <!-- "untitled": a bare panel, with no title row and the content flush with the top. -->
         <Style Selector="^.untitled /template/ Grid#PART_Header">

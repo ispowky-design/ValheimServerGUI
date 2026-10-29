@@ -14,6 +14,11 @@
         <Setter Property="Padding" Value="12,7" />
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
         <Setter Property="Template">
             <ControlTemplate>
                 <Panel Name="PART_LayoutRoot" Background="{TemplateBinding Background}">
@@ -24,7 +29,14 @@
                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
                     <!-- Accent underline below the selected tab. -->
                     <Border Name="PART_Accent" Height="2" VerticalAlignment="Bottom" CornerRadius="1" Margin="6,0"
-                            Background="{DynamicResource SystemAccentColor}" IsVisible="False" />
+                            Background="{DynamicResource SystemAccentColor}" Opacity="0" RenderTransform="scaleX(0)">
+                        <Border.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.25" Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Border.Transitions>
+                    </Border>
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -33,7 +45,8 @@
             <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
         </Style>
         <Style Selector="^:selected /template/ Border#PART_Accent">
-            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scaleX(1)" />
         </Style>
         <Style Selector="^:pointerover:not(:selected)">
             <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />

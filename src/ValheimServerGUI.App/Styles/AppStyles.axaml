@@ -7,6 +7,11 @@
     <Style Selector="c|HyperlinkLabel">
         <!-- Transparent (not null) background so the whole label rect is clickable, not just the glyphs. -->
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
         <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
         <Setter Property="TextDecorations" Value="Underline" />
         <Setter Property="Cursor" Value="Hand" />
@@ -21,15 +26,56 @@
 
     <!-- ===== Shell pieces shared by the main window and the dashboard ===== -->
 
-    <!-- Server state dot (Status* tokens in Palette.axaml): grey when stopped, amber while busy, green running. -->
+    <!-- Server state dot (Status* tokens in Palette.axaml): grey when stopped, amber while busy, green running.
+         The colour eases between states; while busy (starting/stopping) the dot breathes. -->
     <Style Selector="Ellipse.statusDot">
         <Setter Property="Fill" Value="{DynamicResource StatusStoppedBrush}" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Fill" Duration="0:0:0.3" />
+            </Transitions>
+        </Setter>
     </Style>
     <Style Selector="Ellipse.statusDot.running">
         <Setter Property="Fill" Value="{DynamicResource StatusRunningBrush}" />
     </Style>
     <Style Selector="Ellipse.statusDot.busy">
         <Setter Property="Fill" Value="{DynamicResource StatusBusyBrush}" />
+        <Style.Animations>
+            <Animation Duration="0:0:1.1" IterationCount="Infinite" Easing="SineEaseInOut">
+                <KeyFrame Cue="0%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+                <KeyFrame Cue="50%"><Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+    <!-- Halo laid under a status dot (same size, same classes): while the server runs, a soft green ring swells
+         out of the dot and fades, every 2.4 s. Hidden otherwise; never takes clicks or layout space. -->
+    <Style Selector="Ellipse.statusHalo">
+        <Setter Property="Fill" Value="{DynamicResource StatusRunningBrush}" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+    <Style Selector="Ellipse.statusHalo.running:not(.busy)">
+        <Style.Animations>
+            <Animation Duration="0:0:2.4" IterationCount="Infinite" Easing="CubicEaseOut">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.55" />
+                    <Setter Property="ScaleTransform.ScaleX" Value="1" />
+                    <Setter Property="ScaleTransform.ScaleY" Value="1" />
+                </KeyFrame>
+                <KeyFrame Cue="70%">
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="ScaleTransform.ScaleX" Value="2.6" />
+                    <Setter Property="ScaleTransform.ScaleY" Value="2.6" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0" />
+                    <Setter Property="ScaleTransform.ScaleX" Value="2.6" />
+                    <Setter Property="ScaleTransform.ScaleY" Value="2.6" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
     </Style>
 
     <!-- Rounded capsule on the card surface (the top bar's server state). -->
@@ -42,6 +88,27 @@
     </Style>
 
     <!-- ===== Buttons ===== -->
+
+    <!-- Every button eases its fill and edge on hover, and dips a touch while pressed. -->
+    <Style Selector="Button">
+        <Setter Property="RenderTransform" Value="scale(1)" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.09" Easing="CubicEaseOut" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="Button:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.96)" />
+    </Style>
+    <Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.14" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.14" />
+            </Transitions>
+        </Setter>
+    </Style>
 
     <!-- Primary action: filled with the accent. Used for the one main verb of a page, and for every dialog's
          default button. -->
@@ -60,6 +127,16 @@
         <Setter Property="Background" Value="{DynamicResource SystemAccentColorDark1}" />
         <Setter Property="BorderBrush" Value="{DynamicResource SystemAccentColorDark1}" />
         <Setter Property="Foreground" Value="{DynamicResource AccentForeground}" />
+    </Style>
+
+    <!-- ===== Progress ===== -->
+    <!-- Determinate bars glide to each new value instead of jumping (downloads, SteamCMD install, splash). -->
+    <Style Selector="ProgressBar">
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Value" Duration="0:0:0.25" Easing="CubicEaseOut" />
+            </Transitions>
+        </Setter>
     </Style>
 
     <!-- ===== Scroll bars: slim, rounded thumbs that sit quietly on the dark surfaces. ===== -->

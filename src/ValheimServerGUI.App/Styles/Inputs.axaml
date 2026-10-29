@@ -16,6 +16,15 @@
         <Setter Property="Background" Value="{DynamicResource InputBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
     </Style>
+    <!-- Hover and focus ease in rather than snap. -->
+    <Style Selector="TextBox /template/ Border#PART_BorderElement">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.14" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.14" />
+            </Transitions>
+        </Setter>
+    </Style>
     <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
         <Setter Property="Background" Value="{DynamicResource InputBackgroundHover}" />
         <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrushHover}" />
@@ -48,6 +57,12 @@
         <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
         <Setter Property="MinHeight" Value="26" />
         <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.14" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.14" />
+            </Transitions>
+        </Setter>
     </Style>
     <Style Selector="Border.fieldShell:pointerover">
         <Setter Property="Background" Value="{DynamicResource InputBackgroundHover}" />

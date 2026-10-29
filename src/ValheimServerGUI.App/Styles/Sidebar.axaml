@@ -6,7 +6,10 @@
     <!-- The main window's navigation: a TabControl drawn as a left sidebar (brand mark, then one row per page with
          its vector glyph from Styles/NavIcons.axaml, passed in the TabItem's Tag) and a page area that opens with
          the selected page's title. Keyed, so only the main window uses it; dialogs keep the tab strip of
-         Styles/Tabs.axaml. Colours come from Palette.axaml. -->
+         Styles/Tabs.axaml. Colours come from Palette.axaml.
+         Motion: hover and selection ease in (row tint, text and glyph colour), the selected row's accent bar grows
+         from its centre, and the hovered glyph nudges right. The page itself (PART_Page) fades and rises in from
+         MainWindow through Infrastructure/Motion. -->
     <ControlTheme x:Key="SidebarTabItem" TargetType="TabItem">
         <Setter Property="FontSize" Value="13" />
         <Setter Property="FontWeight" Value="Normal" />
@@ -15,16 +18,40 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="MinHeight" Value="36" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
         <Setter Property="Template">
             <ControlTemplate>
                 <Border Name="PART_LayoutRoot" Background="{TemplateBinding Background}" CornerRadius="6"
                         Padding="0,0,10,0" MinHeight="{TemplateBinding MinHeight}">
+                    <Border.Transitions>
+                        <Transitions>
+                            <BrushTransition Property="Background" Duration="0:0:0.15" />
+                        </Transitions>
+                    </Border.Transitions>
                     <Grid ColumnDefinitions="3,Auto,*">
                         <Border Name="PART_Accent" Grid.Column="0" Width="3" Margin="0,8" CornerRadius="2"
-                                Background="{DynamicResource SystemAccentColor}" IsVisible="False" />
+                                Background="{DynamicResource SystemAccentColor}" Opacity="0" RenderTransform="scaleY(0)">
+                            <Border.Transitions>
+                                <Transitions>
+                                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.25" Easing="CubicEaseOut" />
+                                </Transitions>
+                            </Border.Transitions>
+                        </Border>
                         <PathIcon Name="PART_Icon" Grid.Column="1" Width="16" Height="16" Margin="12,0,12,0"
                                   VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}"
-                                  Data="{TemplateBinding Tag}" />
+                                  Data="{TemplateBinding Tag}" RenderTransform="translateX(0px)">
+                            <PathIcon.Transitions>
+                                <Transitions>
+                                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut" />
+                                </Transitions>
+                            </PathIcon.Transitions>
+                        </PathIcon>
                         <ContentPresenter Name="PART_ContentPresenter" Grid.Column="2"
                                           Content="{TemplateBinding Header}"
                                           ContentTemplate="{TemplateBinding HeaderTemplate}"
@@ -43,8 +70,12 @@
             <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
+        <Style Selector="^:pointerover /template/ PathIcon#PART_Icon">
+            <Setter Property="RenderTransform" Value="translateX(2px)" />
+        </Style>
         <Style Selector="^:selected /template/ Border#PART_Accent">
-            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scaleY(1)" />
         </Style>
         <Style Selector="^:selected /template/ PathIcon#PART_Icon">
             <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
@@ -90,7 +121,7 @@
                         </DockPanel>
                     </Border>
                     <Border Background="{TemplateBinding Background}">
-                        <DockPanel>
+                        <DockPanel Name="PART_Page">
                             <!-- Page title: the selected page's glyph and name. -->
                             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="22,16,22,4">
                                 <PathIcon Width="18" Height="18" VerticalAlignment="Center"
