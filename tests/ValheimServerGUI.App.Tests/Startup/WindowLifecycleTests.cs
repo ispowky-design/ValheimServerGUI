@@ -39,7 +39,7 @@ public class WindowLifecycleTests
         var windowManager = new WindowManager(logger);
         var coordinator = new ShellCoordinator(
             serverPrefs, userPrefs, new StartupArgsProvider(Array.Empty<string>()),
-            factory, windowManager, new StartupService(new FakeSoftwareUpdateProvider(), new FakePlayerDataRepository(), TestLog.Silent),
+            factory, windowManager, TestStartupService.Create(),
             logger);
 
         var captured = new List<Exception>();

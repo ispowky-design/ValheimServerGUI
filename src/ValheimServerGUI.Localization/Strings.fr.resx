@@ -1130,7 +1130,7 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
     <value>Clair</value>
   </data>
   <data name="Theme_Valheim" xml:space="preserve">
-    <value>Valheim (bois et or)</value>
+    <value>Valheim (nuit nordique)</value>
   </data>
   <data name="Theme_Dark" xml:space="preserve">
     <value>Sombre</value>
@@ -1834,11 +1834,113 @@ Contacte Runeberry Software pour de l'aide.</value>
   <data name="Update_Checking" xml:space="preserve">
     <value>Recherche de mises à jour…</value>
   </data>
-  <data name="Startup_LoadingPlayerData" xml:space="preserve">
-    <value>Chargement des données des joueurs…</value>
-  </data>
   <data name="Startup_Ready" xml:space="preserve">
     <value>Prêt</value>
+  </data>
+  <data name="Startup_Step_Preferences" xml:space="preserve">
+    <value>Préférences</value>
+  </data>
+  <data name="Startup_Step_Profiles" xml:space="preserve">
+    <value>Profils de serveur</value>
+  </data>
+  <data name="Startup_Step_Server" xml:space="preserve">
+    <value>Serveur dédié</value>
+  </data>
+  <data name="Startup_Step_Plugin" xml:space="preserve">
+    <value>Plugin des positions des joueurs</value>
+  </data>
+  <data name="Startup_Step_World" xml:space="preserve">
+    <value>Monde et carte</value>
+  </data>
+  <data name="Startup_Step_Backups" xml:space="preserve">
+    <value>Sauvegardes du monde</value>
+  </data>
+  <data name="Startup_Step_Players" xml:space="preserve">
+    <value>Données des joueurs</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>Mises à jour de l'appli</value>
+  </data>
+  <data name="Startup_Running" xml:space="preserve">
+    <value>{0}…</value>
+  </data>
+  <data name="Startup_Opening" xml:space="preserve">
+    <value>Ouverture de la fenêtre…</value>
+  </data>
+  <data name="Startup_Percent" xml:space="preserve">
+    <value>{0:F0} %</value>
+  </data>
+  <data name="Startup_StepFailed" xml:space="preserve">
+    <value>Échec : {0}</value>
+  </data>
+  <data name="Startup_Preferences_Detail" xml:space="preserve">
+    <value>Thème : {0}</value>
+  </data>
+  <data name="Startup_Profiles_None" xml:space="preserve">
+    <value>Aucun : un profil par défaut sera créé</value>
+  </data>
+  <data name="Startup_Profiles_One" xml:space="preserve">
+    <value>{0} profil</value>
+  </data>
+  <data name="Startup_Profiles_Other" xml:space="preserve">
+    <value>{0} profils</value>
+  </data>
+  <data name="Startup_Profiles_Detail" xml:space="preserve">
+    <value>{0} · ouverture de {1}</value>
+  </data>
+  <data name="Startup_Server_Found" xml:space="preserve">
+    <value>Trouvé</value>
+  </data>
+  <data name="Startup_Server_FoundBuild" xml:space="preserve">
+    <value>Trouvé (build {0})</value>
+  </data>
+  <data name="Startup_Server_Missing" xml:space="preserve">
+    <value>Introuvable : indiquez son chemin ou installez-le</value>
+  </data>
+  <data name="Startup_Plugin_Installed" xml:space="preserve">
+    <value>Installé</value>
+  </data>
+  <data name="Startup_Plugin_Outdated" xml:space="preserve">
+    <value>Pas à jour : mettez-le à jour depuis la carte</value>
+  </data>
+  <data name="Startup_Plugin_NotInstalled" xml:space="preserve">
+    <value>Non installé</value>
+  </data>
+  <data name="Startup_Plugin_NoBepInEx" xml:space="preserve">
+    <value>BepInEx non installé</value>
+  </data>
+  <data name="Startup_Plugin_NoServer" xml:space="preserve">
+    <value>Pas de serveur</value>
+  </data>
+  <data name="Startup_World_None" xml:space="preserve">
+    <value>Aucun monde choisi</value>
+  </data>
+  <data name="Startup_World_NotCreated" xml:space="preserve">
+    <value>{0} : pas encore créé</value>
+  </data>
+  <data name="Startup_World_Seed" xml:space="preserve">
+    <value>{0} · graine {1}</value>
+  </data>
+  <data name="Startup_Backups_None" xml:space="preserve">
+    <value>Aucune pour l'instant</value>
+  </data>
+  <data name="Startup_Backups_One" xml:space="preserve">
+    <value>{0} sauvegarde</value>
+  </data>
+  <data name="Startup_Backups_Other" xml:space="preserve">
+    <value>{0} sauvegardes</value>
+  </data>
+  <data name="Startup_Players_One" xml:space="preserve">
+    <value>{0} joueur connu</value>
+  </data>
+  <data name="Startup_Players_Other" xml:space="preserve">
+    <value>{0} joueurs connus</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>Désactivées</value>
+  </data>
+  <data name="Startup_Updates_NotChecked" xml:space="preserve">
+    <value>Non vérifiées</value>
   </data>
   <!-- Update check -->
   <data name="Update_StatusFailed" xml:space="preserve">

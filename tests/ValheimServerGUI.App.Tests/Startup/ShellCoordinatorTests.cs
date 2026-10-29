@@ -42,7 +42,7 @@ public class ShellCoordinatorTests
                 Core.GetRequiredService<ValheimServerGUI.Tools.Logging.IApplicationLogger>(),
                 new FakeSoftwareUpdateProvider(), shell, pathResolver,
                 Core.GetRequiredService<IPlayerListImportService>());
-        var startupService = new StartupService(new FakeSoftwareUpdateProvider(), new FakePlayerDataRepository(), TestLog.Silent);
+        var startupService = TestStartupService.Create();
         var logger = Core.GetRequiredService<ValheimServerGUI.Tools.Logging.IApplicationLogger>();
 
         var coordinator = new ShellCoordinator(

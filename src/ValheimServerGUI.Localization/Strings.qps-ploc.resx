@@ -1783,11 +1783,113 @@
   <data name="Update_Checking" xml:space="preserve">
     <value>⟦Update_Checking⟧</value>
   </data>
-  <data name="Startup_LoadingPlayerData" xml:space="preserve">
-    <value>⟦Startup_LoadingPlayerData⟧</value>
-  </data>
   <data name="Startup_Ready" xml:space="preserve">
     <value>⟦Startup_Ready⟧</value>
+  </data>
+  <data name="Startup_Step_Preferences" xml:space="preserve">
+    <value>⟦Startup_Step_Preferences⟧</value>
+  </data>
+  <data name="Startup_Step_Profiles" xml:space="preserve">
+    <value>⟦Startup_Step_Profiles⟧</value>
+  </data>
+  <data name="Startup_Step_Server" xml:space="preserve">
+    <value>⟦Startup_Step_Server⟧</value>
+  </data>
+  <data name="Startup_Step_Plugin" xml:space="preserve">
+    <value>⟦Startup_Step_Plugin⟧</value>
+  </data>
+  <data name="Startup_Step_World" xml:space="preserve">
+    <value>⟦Startup_Step_World⟧</value>
+  </data>
+  <data name="Startup_Step_Backups" xml:space="preserve">
+    <value>⟦Startup_Step_Backups⟧</value>
+  </data>
+  <data name="Startup_Step_Players" xml:space="preserve">
+    <value>⟦Startup_Step_Players⟧</value>
+  </data>
+  <data name="Startup_Step_Updates" xml:space="preserve">
+    <value>⟦Startup_Step_Updates⟧</value>
+  </data>
+  <data name="Startup_Running" xml:space="preserve">
+    <value>⟦Startup_Running {0}⟧</value>
+  </data>
+  <data name="Startup_Opening" xml:space="preserve">
+    <value>⟦Startup_Opening⟧</value>
+  </data>
+  <data name="Startup_Percent" xml:space="preserve">
+    <value>⟦Startup_Percent {0:F0}⟧</value>
+  </data>
+  <data name="Startup_StepFailed" xml:space="preserve">
+    <value>⟦Startup_StepFailed {0}⟧</value>
+  </data>
+  <data name="Startup_Preferences_Detail" xml:space="preserve">
+    <value>⟦Startup_Preferences_Detail {0}⟧</value>
+  </data>
+  <data name="Startup_Profiles_None" xml:space="preserve">
+    <value>⟦Startup_Profiles_None⟧</value>
+  </data>
+  <data name="Startup_Profiles_One" xml:space="preserve">
+    <value>⟦Startup_Profiles_One {0}⟧</value>
+  </data>
+  <data name="Startup_Profiles_Other" xml:space="preserve">
+    <value>⟦Startup_Profiles_Other {0}⟧</value>
+  </data>
+  <data name="Startup_Profiles_Detail" xml:space="preserve">
+    <value>⟦Startup_Profiles_Detail {0} {1}⟧</value>
+  </data>
+  <data name="Startup_Server_Found" xml:space="preserve">
+    <value>⟦Startup_Server_Found⟧</value>
+  </data>
+  <data name="Startup_Server_FoundBuild" xml:space="preserve">
+    <value>⟦Startup_Server_FoundBuild {0}⟧</value>
+  </data>
+  <data name="Startup_Server_Missing" xml:space="preserve">
+    <value>⟦Startup_Server_Missing⟧</value>
+  </data>
+  <data name="Startup_Plugin_Installed" xml:space="preserve">
+    <value>⟦Startup_Plugin_Installed⟧</value>
+  </data>
+  <data name="Startup_Plugin_Outdated" xml:space="preserve">
+    <value>⟦Startup_Plugin_Outdated⟧</value>
+  </data>
+  <data name="Startup_Plugin_NotInstalled" xml:space="preserve">
+    <value>⟦Startup_Plugin_NotInstalled⟧</value>
+  </data>
+  <data name="Startup_Plugin_NoBepInEx" xml:space="preserve">
+    <value>⟦Startup_Plugin_NoBepInEx⟧</value>
+  </data>
+  <data name="Startup_Plugin_NoServer" xml:space="preserve">
+    <value>⟦Startup_Plugin_NoServer⟧</value>
+  </data>
+  <data name="Startup_World_None" xml:space="preserve">
+    <value>⟦Startup_World_None⟧</value>
+  </data>
+  <data name="Startup_World_NotCreated" xml:space="preserve">
+    <value>⟦Startup_World_NotCreated {0}⟧</value>
+  </data>
+  <data name="Startup_World_Seed" xml:space="preserve">
+    <value>⟦Startup_World_Seed {0} {1}⟧</value>
+  </data>
+  <data name="Startup_Backups_None" xml:space="preserve">
+    <value>⟦Startup_Backups_None⟧</value>
+  </data>
+  <data name="Startup_Backups_One" xml:space="preserve">
+    <value>⟦Startup_Backups_One {0}⟧</value>
+  </data>
+  <data name="Startup_Backups_Other" xml:space="preserve">
+    <value>⟦Startup_Backups_Other {0}⟧</value>
+  </data>
+  <data name="Startup_Players_One" xml:space="preserve">
+    <value>⟦Startup_Players_One {0}⟧</value>
+  </data>
+  <data name="Startup_Players_Other" xml:space="preserve">
+    <value>⟦Startup_Players_Other {0}⟧</value>
+  </data>
+  <data name="Startup_Updates_Off" xml:space="preserve">
+    <value>⟦Startup_Updates_Off⟧</value>
+  </data>
+  <data name="Startup_Updates_NotChecked" xml:space="preserve">
+    <value>⟦Startup_Updates_NotChecked⟧</value>
   </data>
   <!-- Update check -->
   <data name="Update_StatusFailed" xml:space="preserve">
