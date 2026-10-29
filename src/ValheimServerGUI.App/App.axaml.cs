@@ -178,6 +178,9 @@ public partial class App : Application
         desktop.Shutdown();
     }
 
+    /// <summary>The shortest time the splash stays up, so its steps can be read even when they all finish at once.</summary>
+    private static readonly TimeSpan SplashMinimumTime = TimeSpan.FromSeconds(1.2);
+
     // Splash → async startup tasks → main window(s) → hide splash → begin serving second-launch forwards.
     private async Task StartShellAsync()
     {
@@ -189,8 +192,15 @@ public partial class App : Application
             var splash = new SplashWindow(splashViewModel);
             splash.Show();
 
+            var shownAt = System.Diagnostics.Stopwatch.StartNew();
             var coordinator = Services.GetRequiredService<ShellCoordinator>();
             await coordinator.RunStartupTasksAsync(splashViewModel);
+
+            // The local steps take milliseconds: hold the finished list a moment so it can be read, not just flashed.
+            var remaining = SplashMinimumTime - shownAt.Elapsed;
+            if (remaining > TimeSpan.Zero) await Task.Delay(remaining);
+            splashViewModel.ReportOpening();
+            await Dispatcher.UIThread.InvokeAsync(() => { }, DispatcherPriority.Background); // paint it before the build
             coordinator.CreateAndShowStartupWindows();
 
             // The exe a portable update replaced, and the downloads, are no longer needed.

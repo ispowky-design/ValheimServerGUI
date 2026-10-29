@@ -4,34 +4,108 @@
         xmlns:app="using:ValheimServerGUI.App"
         x:Class="ValheimServerGUI.App.Views.SplashWindow"
         x:DataType="vm:SplashViewModel"
-        Width="420" Height="200"
+        Width="560" SizeToContent="Height"
         CanResize="False"
         WindowDecorations="None"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False"
         Title="{x:Static app:AppConstants.ProductName}">
 
-    <Border Background="{DynamicResource HeroBackground}" BorderBrush="{DynamicResource CardBorderBrush}"
-            BorderThickness="1" Padding="24">
-        <Grid RowDefinitions="*,Auto,Auto">
-            <!-- Brand: rune mark tile beside the product name and version. -->
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="14"
-                        VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Border Width="52" Height="52" CornerRadius="13" Background="{DynamicResource SystemAccentColor}">
-                    <PathIcon Width="30" Height="30" Data="{StaticResource NavIcon.Brand}"
-                              Foreground="{DynamicResource AccentForeground}" />
-                </Border>
-                <StackPanel VerticalAlignment="Center" Spacing="2">
-                    <TextBlock Text="{x:Static app:AppConstants.ProductName}" FontSize="22" FontWeight="Bold" />
-                    <TextBlock Text="{Binding Version}"
-                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
-                </StackPanel>
-            </StackPanel>
+    <Window.Styles>
+        <!-- The step under way: an accent arc that turns. -->
+        <Style Selector="Arc.spinner">
+            <Setter Property="RenderTransform" Value="rotate(0deg)" />
+            <Style.Animations>
+                <Animation Duration="0:0:0.9" IterationCount="Infinite">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="RotateTransform.Angle" Value="0" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="RotateTransform.Angle" Value="360" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="TextBlock.stepTitle">
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+        </Style>
+        <Style Selector="TextBlock.stepTitle.started">
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+        </Style>
+        <Style Selector="TextBlock.stepTitle.running">
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </Window.Styles>
 
-            <ProgressBar Grid.Row="1" Minimum="0" Maximum="100" CornerRadius="3"
-                         Value="{Binding ProgressPercent}" Height="6" Margin="0,0,0,8" />
-            <TextBlock Grid.Row="2" Text="{Binding StatusText}"
-                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
-        </Grid>
+    <Border Background="{DynamicResource LayerBase}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1">
+        <StackPanel>
+            <!-- Brand: rune mark tile beside the product name and version, on the hero gradient. -->
+            <Border Background="{DynamicResource HeroBackground}" Padding="28,26,28,22">
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <Border Width="60" Height="60" CornerRadius="15" Background="{DynamicResource SystemAccentColor}">
+                        <PathIcon Width="34" Height="34" Data="{StaticResource NavIcon.Brand}"
+                                  Foreground="{DynamicResource AccentForeground}" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Spacing="3">
+                        <TextBlock Text="{x:Static app:AppConstants.ProductName}" FontSize="24" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Version}"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Height="2" Background="{DynamicResource SystemAccentColor}" Opacity="0.55" />
+
+            <!-- One line per startup step: its state glyph, what it loads, and what it found. -->
+            <ItemsControl ItemsSource="{Binding Steps}" Margin="28,18,28,6">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="9" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SplashStepViewModel">
+                        <Grid ColumnDefinitions="20,12,Auto,16,*" MinHeight="20">
+                            <Ellipse Grid.Column="0" Width="10" Height="10" StrokeThickness="1.5"
+                                     Stroke="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                                     IsVisible="{Binding IsPending}" />
+                            <Arc Grid.Column="0" Classes="spinner" Width="16" Height="16" StrokeThickness="2.5"
+                                 StartAngle="0" SweepAngle="270" StrokeLineCap="Round"
+                                 Stroke="{DynamicResource SystemAccentColor}"
+                                 IsVisible="{Binding IsRunning}" />
+                            <PathIcon Grid.Column="0" Width="17" Height="17" Data="{StaticResource Glyph.StepDone}"
+                                      Foreground="{DynamicResource StatusRunningBrush}" IsVisible="{Binding IsDone}" />
+                            <PathIcon Grid.Column="0" Width="17" Height="17" Data="{StaticResource Glyph.StepWarning}"
+                                      Foreground="{DynamicResource StatusWarningBrush}" IsVisible="{Binding IsWarning}" />
+                            <PathIcon Grid.Column="0" Width="17" Height="17" Data="{StaticResource Glyph.StepSkipped}"
+                                      Foreground="{DynamicResource StatusStoppedBrush}" IsVisible="{Binding IsSkipped}" />
+
+                            <TextBlock Grid.Column="2" Classes="stepTitle" VerticalAlignment="Center"
+                                       Classes.started="{Binding !IsPending}" Classes.running="{Binding IsRunning}"
+                                       Text="{Binding Title}" />
+                            <TextBlock Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                       Text="{Binding Detail}" ToolTip.Tip="{Binding Detail}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Overall progress: what runs now, and how far along the steps are. -->
+            <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto" Margin="28,12,28,24">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding StatusText}" Margin="0,0,0,8"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PercentText}" Margin="0,0,0,8"
+                           FontWeight="SemiBold" Foreground="{DynamicResource SystemAccentColor}" />
+                <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Minimum="0" Maximum="100" CornerRadius="3" Height="6"
+                             Value="{Binding ProgressPercent}">
+                    <ProgressBar.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="Value" Duration="0:0:0.25" Easing="CubicEaseOut" />
+                        </Transitions>
+                    </ProgressBar.Transitions>
+                </ProgressBar>
+            </Grid>
+        </StackPanel>
     </Border>
 </Window>
