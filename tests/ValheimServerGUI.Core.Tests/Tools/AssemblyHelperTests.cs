@@ -1,4 +1,4 @@
-using ValheimServerGUI.Tools;
+﻿using ValheimServerGUI.Tools;
 using Xunit;
 
 namespace ValheimServerGUI.Core.Tests.Tools
@@ -34,6 +34,15 @@ namespace ValheimServerGUI.Core.Tests.Tools
         [InlineData("2.4.0-rc.1", "2.4.0-rc.2")]
         // Release tags carry a leading "v"; it must still parse and be recognized as newer.
         [InlineData("2.3.1", "v2.4.0-rc.1")]
+        // The alpha numbering replaced the fork's 3.x line: it is newer than every 3.x release, including the bridge.
+        [InlineData("3.9.0", "v0.0.1-alpha")]
+        [InlineData("3.8.1", "0.0.1-alpha")]
+        [InlineData("0.0.1-alpha", "0.0.2-alpha")]
+        [InlineData("0.0.9-alpha", "0.0.10-alpha")]
+        [InlineData("0.0.9-alpha", "0.1.0-alpha")]
+        [InlineData("0.0.9-alpha", "1.0.0")]
+        // The bridge release itself is still a plain update for the old 3.x copies.
+        [InlineData("3.8.1", "v3.9.0")]
         public void CompareVersions_NewerOther_ReturnsOne(string current, string other)
         {
             Assert.Equal(1, AssemblyHelper.CompareVersions(current, other));
@@ -45,6 +54,9 @@ namespace ValheimServerGUI.Core.Tests.Tools
         [InlineData("2.4.0-rc.1", "2.3.1")]
         // Running the final while an rc is (incorrectly) reported as latest.
         [InlineData("2.4.0", "2.4.0-rc.1")]
+        // An alpha copy never goes back to the old 3.x numbering.
+        [InlineData("0.0.1-alpha", "v3.9.0")]
+        [InlineData("1.0.0", "3.8.1")]
         public void CompareVersions_OlderOther_ReturnsNegativeOne(string current, string other)
         {
             Assert.Equal(-1, AssemblyHelper.CompareVersions(current, other));

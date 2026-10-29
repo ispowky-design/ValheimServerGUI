@@ -282,7 +282,7 @@ public class MainWindowViewModelTests
     {
         var vm = Build(out var update);
         // A latest older than the running (pre-release) build → "Pre-release build (<current>)".
-        update.RaiseFinished(new SoftwareUpdateEventArgs("0.0.1", ReleasePage, isManualCheck: false));
+        update.RaiseFinished(new SoftwareUpdateEventArgs("0.0.0", ReleasePage, isManualCheck: false));
 
         Assert.Equal(string.Format(Strings.Update_StatusPreRelease, AssemblyHelper.GetApplicationVersion()), vm.UpdateStatusText);
         Assert.Equal(UpdateCheckStatus.PreRelease, vm.UpdateStatus);
