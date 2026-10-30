@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Serilog;
 using ValheimServerGUI.Core.Tests.Fakes;
@@ -77,7 +78,7 @@ namespace ValheimServerGUI.Core.Tests.Tools
         [Fact]
         public async Task An_unreachable_api_fails_the_check()
         {
-            _http.Respond = _ => throw new System.Net.Http.HttpRequestException("no route");
+            _http.Respond = _ => throw new HttpRequestException("no route");
 
             var e = await Assert.ThrowsAsync<Exception>(() => NewClient().GetLatestReleaseAsync());
             Assert.Equal(Strings.Api_UpdateServerUnreachable, e.Message);
@@ -136,6 +137,63 @@ namespace ValheimServerGUI.Core.Tests.Tools
 
             var e = await Assert.ThrowsAsync<Exception>(() => NewKeylessClient().GetLatestReleaseAsync());
             Assert.Equal(Strings.Api_UpdateServerUnreachable, e.Message);
+        }
+
+        // GitHub answers 403 once the 60 keyless API requests an hour of the user's internet address are spent; the
+        // check then reads the same release from the web pages, which have no such limit.
+        private void RateLimitedApiWithPages(string tag, HttpStatusCode sumsStatus, string sums)
+            => _http.Respond = request =>
+            {
+                var url = request.RequestUri!.ToString();
+                if (url == CoreConstants.UrlGitHubLatestRelease)
+                    return new HttpResponseMessage(HttpStatusCode.Forbidden) { Content = new StringContent("{\"message\":\"API rate limit exceeded\"}") };
+                if (url == CoreConstants.UrlGitHubLatestReleasePage)
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        // The client follows the page's redirect, so the answer's request is the tag's page.
+                        RequestMessage = new HttpRequestMessage(HttpMethod.Head, $"{CoreConstants.UrlGitHubReleaseTagPage}/{tag}"),
+                    };
+                if (url == $"{CoreConstants.UrlGitHubReleaseDownload}/{tag}/SHA256SUMS.txt")
+                    return new HttpResponseMessage(sumsStatus) { Content = new StringContent(sums) };
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            };
+
+        [Fact]
+        public async Task Without_a_key_a_rate_limited_api_reads_the_release_pages_instead()
+        {
+            RateLimitedApiWithPages("v0.0.2-alpha", HttpStatusCode.OK,
+                "abc  ValheimServerGUI-0.0.2-alpha-win-x64-setup.exe\ndef *ValheimServerGUI-0.0.2-alpha-win-x64-portable.exe\n");
+
+            var release = await NewKeylessClient().GetLatestReleaseAsync();
+
+            Assert.Equal("v0.0.2-alpha", release!.Version);
+            Assert.Equal($"{CoreConstants.UrlGitHubReleaseTagPage}/v0.0.2-alpha", release.Url);
+            Assert.Equal(
+                new[] { "ValheimServerGUI-0.0.2-alpha-win-x64-setup.exe", "ValheimServerGUI-0.0.2-alpha-win-x64-portable.exe", "SHA256SUMS.txt" },
+                release.Assets!.Select(a => a.Name));
+            Assert.Equal(
+                $"{CoreConstants.UrlGitHubReleaseDownload}/v0.0.2-alpha/ValheimServerGUI-0.0.2-alpha-win-x64-setup.exe",
+                release.Assets![0].DownloadUrl);
+        }
+
+        [Fact]
+        public async Task Without_a_key_a_rate_limited_api_still_reports_a_release_whose_files_cannot_be_read()
+        {
+            RateLimitedApiWithPages("v3.9.0", HttpStatusCode.NotFound, "");
+
+            var release = await NewKeylessClient().GetLatestReleaseAsync();
+
+            Assert.Equal("v3.9.0", release!.Version);
+            Assert.Empty(release.Assets!);
+        }
+
+        [Theory]
+        [InlineData("", new string[0])]
+        [InlineData("abc  a.exe\r\n\r\ndef  b.tar.gz", new[] { "a.exe", "b.tar.gz" })]
+        [InlineData("abc *a.exe\nnoname\nabc  ../evil.exe", new[] { "a.exe" })]
+        public void Reads_the_file_names_from_the_checksums(string checksums, string[] expected)
+        {
+            Assert.Equal(expected, RuneberryApiClient.ParseChecksumFileNames(checksums));
         }
 
         // ---- SoftwareUpdateProvider ----
