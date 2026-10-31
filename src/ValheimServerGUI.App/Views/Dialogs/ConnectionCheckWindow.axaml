@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="using:ValheimServerGUI.Localization"
+        xmlns:c="using:ValheimServerGUI.App.Controls"
+        xmlns:vm="using:ValheimServerGUI.App.ViewModels.Dialogs"
+        x:Class="ValheimServerGUI.App.Views.Dialogs.ConnectionCheckWindow"
+        x:DataType="vm:ConnectionCheckViewModel"
+        Title="{x:Static loc:Strings.Diagnostic_Title}"
+        Width="640" Height="560" MinWidth="480" MinHeight="420"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+
+    <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Top" Spacing="10">
+            <TextBlock Text="{x:Static loc:Strings.Diagnostic_Intro}" TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" FontWeight="SemiBold" />
+            <ProgressBar IsIndeterminate="True" Height="4" MinHeight="4" IsVisible="{Binding IsBusy}" />
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,12,0,0">
+            <Button Content="{x:Static loc:Strings.Diagnostic_Copy}" Command="{Binding CopyCommand}" />
+            <Button Content="{x:Static loc:Strings.Diagnostic_Run}" Command="{Binding RunCommand}" />
+            <Button Content="{x:Static loc:Strings.Common_Close}" MinWidth="80" IsCancel="True" Click="OnClose" />
+        </StackPanel>
+
+        <ScrollViewer Margin="0,12,0,0">
+            <ItemsControl ItemsSource="{Binding Rows}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="8" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:DiagnosticRowViewModel">
+                        <c:DashboardCard Classes="untitled" Padding="12,10">
+                            <Grid ColumnDefinitions="22,10,*,Auto" RowDefinitions="Auto,Auto">
+                                <Panel Grid.RowSpan="2" VerticalAlignment="Top" Margin="0,1,0,0">
+                                    <PathIcon Width="18" Height="18" Data="{StaticResource Glyph.StepDone}"
+                                              Foreground="{DynamicResource StatusRunningBrush}" IsVisible="{Binding IsOk}" />
+                                    <PathIcon Width="18" Height="18" Data="{StaticResource Glyph.Web}"
+                                              Foreground="{DynamicResource SystemAccentColor}" IsVisible="{Binding IsInfo}" />
+                                    <PathIcon Width="18" Height="18" Data="{StaticResource Glyph.StepWarning}"
+                                              Foreground="{DynamicResource StatusWarningBrush}" IsVisible="{Binding IsWarning}" />
+                                    <PathIcon Width="18" Height="18" Data="{StaticResource Glyph.StepWarning}"
+                                              Foreground="{DynamicResource SystemFillColorCriticalBrush}" IsVisible="{Binding IsProblem}" />
+                                    <PathIcon Width="18" Height="18" Data="{StaticResource Glyph.StepSkipped}"
+                                              Foreground="{DynamicResource StatusStoppedBrush}" IsVisible="{Binding IsSkipped}" />
+                                </Panel>
+                                <TextBlock Grid.Column="2" Text="{Binding Title}" FontWeight="SemiBold" />
+                                <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding Detail}" TextWrapping="Wrap" Margin="0,2,0,0"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                <Button Grid.Column="3" Grid.RowSpan="2" VerticalAlignment="Center" Margin="10,0,0,0"
+                                        Content="{x:Static loc:Strings.Diagnostic_Fix_AddFirewallRule}"
+                                        Command="{Binding ApplyFixCommand}" IsVisible="{Binding HasFix}" />
+                            </Grid>
+                        </c:DashboardCard>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

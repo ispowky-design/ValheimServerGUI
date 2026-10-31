@@ -2244,4 +2244,125 @@ Would you like to send an automated crash report to the developer?</value>
   <data name="MapWeb_Players" xml:space="preserve">
     <value>Connected players</value>
   </data>
+  <!-- Connection check -->
+  <data name="Diagnostic_Title" xml:space="preserve">
+    <value>Connection Check</value>
+  </data>
+  <data name="Diagnostic_Intro" xml:space="preserve">
+    <value>Checks what usually stops friends from joining a server hosted at home. Nothing is changed unless you click a fix. Start the server first to test everything.</value>
+  </data>
+  <data name="Diagnostic_Run" xml:space="preserve">
+    <value>Check Again</value>
+  </data>
+  <data name="Diagnostic_Running" xml:space="preserve">
+    <value>Checking…</value>
+  </data>
+  <data name="Diagnostic_Summary_Ok" xml:space="preserve">
+    <value>Everything looks good: your friends should be able to join.</value>
+  </data>
+  <data name="Diagnostic_Summary_Issues" xml:space="preserve">
+    <value>Some checks need your attention; see the details below.</value>
+  </data>
+  <data name="Diagnostic_Summary_Stopped" xml:space="preserve">
+    <value>The server is stopped: only the local checks ran. Start it, then check again.</value>
+  </data>
+  <data name="Diagnostic_Copy" xml:space="preserve">
+    <value>Copy the Results</value>
+  </data>
+  <data name="Diagnostic_Fix_AddFirewallRule" xml:space="preserve">
+    <value>Allow in the Firewall</value>
+  </data>
+  <data name="Diagnostic_Fix_Failed" xml:space="preserve">
+    <value>The firewall rule was not added (administrator rights refused, or netsh failed).</value>
+  </data>
+  <data name="Diagnostic_Check_Crossplay" xml:space="preserve">
+    <value>Crossplay</value>
+  </data>
+  <data name="Diagnostic_Check_PortsFree" xml:space="preserve">
+    <value>Ports</value>
+  </data>
+  <data name="Diagnostic_Check_ServerAnswers" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="Diagnostic_Check_Firewall" xml:space="preserve">
+    <value>Firewall</value>
+  </data>
+  <data name="Diagnostic_Check_PublicAddress" xml:space="preserve">
+    <value>Public address</value>
+  </data>
+  <data name="Diagnostic_Check_SteamListing" xml:space="preserve">
+    <value>Seen from the internet</value>
+  </data>
+  <data name="Diagnostic_PortRange" xml:space="preserve">
+    <value>UDP {0}-{1}</value>
+  </data>
+  <data name="Diagnostic_ThisPc" xml:space="preserve">
+    <value>this PC's local address</value>
+  </data>
+  <data name="Diagnostic_Crossplay_On" xml:space="preserve">
+    <value>Crossplay is on: players join through the invite code and the PlayFab relay, so no router port needs opening.</value>
+  </data>
+  <data name="Diagnostic_Ports_Running" xml:space="preserve">
+    <value>Not tested while the server runs (it holds the ports itself).</value>
+  </data>
+  <data name="Diagnostic_Ports_Free" xml:space="preserve">
+    <value>{0} is free on this PC.</value>
+  </data>
+  <data name="Diagnostic_Ports_Taken" xml:space="preserve">
+    <value>Port(s) {0} already used by another program on this PC (another server?). Choose another port in this profile, for example 2466.</value>
+  </data>
+  <data name="Diagnostic_Server_Stopped" xml:space="preserve">
+    <value>Start the server to run this check.</value>
+  </data>
+  <data name="Diagnostic_Server_Answers" xml:space="preserve">
+    <value>The server answers Steam queries on this PC.</value>
+  </data>
+  <data name="Diagnostic_Server_Silent" xml:space="preserve">
+    <value>The server does not answer on UDP {0} yet. It can take a minute after start; check again shortly.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Allowed" xml:space="preserve">
+    <value>Windows Firewall lets the server in.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Off" xml:space="preserve">
+    <value>Windows Firewall is off for this network.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Blocked" xml:space="preserve">
+    <value>A Windows Firewall rule blocks the server (often from clicking Cancel on Windows' first prompt). Allow it here, or remove the block rule for valheim_server.exe.</value>
+  </data>
+  <data name="Diagnostic_Firewall_NoRule" xml:space="preserve">
+    <value>No Windows Firewall rule allows {0} or valheim_server.exe. Windows may block players from outside.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Unknown" xml:space="preserve">
+    <value>Not checked on this system (check your firewall allows the ports).</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Unknown" xml:space="preserve">
+    <value>Could not find your public IP address (offline?).</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Shared" xml:space="preserve">
+    <value>Your internet address {0} is shared by your provider (CGNAT): players from outside cannot reach you directly. Turn on crossplay, or ask your provider for a full IPv4 address.</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Value" xml:space="preserve">
+    <value>Friends join with {0}:{1}.</value>
+  </data>
+  <data name="Diagnostic_Steam_NoPublicIp" xml:space="preserve">
+    <value>Needs your public address.</value>
+  </data>
+  <data name="Diagnostic_Steam_Unreachable" xml:space="preserve">
+    <value>Could not ask Steam (offline, or Steam is busy). Check again later.</value>
+  </data>
+  <data name="Diagnostic_Steam_Listed" xml:space="preserve">
+    <value>Steam sees your server at {0}:{1}: it is reachable from the internet.</value>
+  </data>
+  <data name="Diagnostic_Steam_NotListed" xml:space="preserve">
+    <value>Steam does not see your server from the internet. On your router, forward {0} to {1}. Right after a start, wait 1 to 2 minutes and check again.</value>
+  </data>
+  <data name="Diagnostic_Steam_NotListedPrivate" xml:space="preserve">
+    <value>Steam does not list your server; with Community listing off this can be normal. If friends cannot join, forward {0} to {1} on your router.</value>
+  </data>
+  <data name="MainWindow_Menu_ConnectionCheck" xml:space="preserve">
+    <value>Connection Check…</value>
+  </data>
+  <data name="Dashboard_Action_ConnectionCheck" xml:space="preserve">
+    <value>Can friends join?</value>
+  </data>
 </root>

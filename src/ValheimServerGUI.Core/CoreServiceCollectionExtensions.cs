@@ -50,6 +50,7 @@ namespace ValheimServerGUI
                 .AddSingleton(RuneberryApiKey.FromClientSecrets())
                 .AddSingleton<IRestClientContext, RestClientContext>()
                 .AddSingleton<IIpAddressProvider, IpAddressProvider>()
+                .AddSingleton<ValheimServerGUI.Game.Network.IConnectionProbe, ValheimServerGUI.Game.Network.ConnectionProbe>()
                 .AddSingleton<ISoftwareUpdateProvider, SoftwareUpdateProvider>()
                 .AddSingleton<IAppUpdater, AppUpdater>()
                 .AddSingleton<UpdateWatcher>()

@@ -15,7 +15,7 @@ public class EnumDisplayConverterTests
     // Every value of every enum the UI displays. A value missing from its switch falls back to ToString(),
     // which under the key-echo test culture is the only way to produce text without the ⟦…⟧ brackets.
     public static IEnumerable<object[]> DisplayedEnumValues()
-        => new[] { typeof(ServerStatus), typeof(PlayerStatus), typeof(PlayerRole), typeof(AppTheme), typeof(AppLanguage), typeof(DurationUnit), typeof(LogView), typeof(WorldBackupKind) }
+        => new[] { typeof(ServerStatus), typeof(PlayerStatus), typeof(PlayerRole), typeof(AppTheme), typeof(AppLanguage), typeof(DurationUnit), typeof(LogView), typeof(WorldBackupKind), typeof(ValheimServerGUI.Game.Network.ConnectionCheck) }
             .SelectMany(t => Enum.GetValues(t).Cast<object>())
             .Select(v => new[] { v });
 

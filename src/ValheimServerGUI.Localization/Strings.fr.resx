@@ -2244,4 +2244,125 @@ Veux-tu envoyer un rapport de plantage automatique au développeur ?</value>
   <data name="MapWeb_Players" xml:space="preserve">
     <value>Joueurs connectés</value>
   </data>
+  <!-- Connection check -->
+  <data name="Diagnostic_Title" xml:space="preserve">
+    <value>Diagnostic de connexion</value>
+  </data>
+  <data name="Diagnostic_Intro" xml:space="preserve">
+    <value>Vérifie ce qui empêche le plus souvent des amis de rejoindre un serveur hébergé chez soi. Rien n'est modifié sauf si tu cliques sur une correction. Démarre le serveur d'abord pour tout tester.</value>
+  </data>
+  <data name="Diagnostic_Run" xml:space="preserve">
+    <value>Relancer le test</value>
+  </data>
+  <data name="Diagnostic_Running" xml:space="preserve">
+    <value>Vérification en cours…</value>
+  </data>
+  <data name="Diagnostic_Summary_Ok" xml:space="preserve">
+    <value>Tout a l'air bon : tes amis devraient pouvoir te rejoindre.</value>
+  </data>
+  <data name="Diagnostic_Summary_Issues" xml:space="preserve">
+    <value>Certains points demandent ton attention ; vois le détail ci-dessous.</value>
+  </data>
+  <data name="Diagnostic_Summary_Stopped" xml:space="preserve">
+    <value>Le serveur est arrêté : seuls les tests locaux ont tourné. Démarre-le, puis relance le test.</value>
+  </data>
+  <data name="Diagnostic_Copy" xml:space="preserve">
+    <value>Copier le résultat</value>
+  </data>
+  <data name="Diagnostic_Fix_AddFirewallRule" xml:space="preserve">
+    <value>Autoriser dans le pare-feu</value>
+  </data>
+  <data name="Diagnostic_Fix_Failed" xml:space="preserve">
+    <value>La règle du pare-feu n'a pas été ajoutée (droits administrateur refusés, ou échec de netsh).</value>
+  </data>
+  <data name="Diagnostic_Check_Crossplay" xml:space="preserve">
+    <value>Crossplay</value>
+  </data>
+  <data name="Diagnostic_Check_PortsFree" xml:space="preserve">
+    <value>Ports</value>
+  </data>
+  <data name="Diagnostic_Check_ServerAnswers" xml:space="preserve">
+    <value>Serveur</value>
+  </data>
+  <data name="Diagnostic_Check_Firewall" xml:space="preserve">
+    <value>Pare-feu</value>
+  </data>
+  <data name="Diagnostic_Check_PublicAddress" xml:space="preserve">
+    <value>Adresse publique</value>
+  </data>
+  <data name="Diagnostic_Check_SteamListing" xml:space="preserve">
+    <value>Vu depuis internet</value>
+  </data>
+  <data name="Diagnostic_PortRange" xml:space="preserve">
+    <value>UDP {0}-{1}</value>
+  </data>
+  <data name="Diagnostic_ThisPc" xml:space="preserve">
+    <value>l'adresse locale de ce PC</value>
+  </data>
+  <data name="Diagnostic_Crossplay_On" xml:space="preserve">
+    <value>Le crossplay est actif : les joueurs rejoignent avec le code d'invitation via le relais PlayFab, donc aucun port n'a besoin d'être ouvert sur la box.</value>
+  </data>
+  <data name="Diagnostic_Ports_Running" xml:space="preserve">
+    <value>Non testé pendant que le serveur tourne (il utilise lui-même les ports).</value>
+  </data>
+  <data name="Diagnostic_Ports_Free" xml:space="preserve">
+    <value>{0} est libre sur ce PC.</value>
+  </data>
+  <data name="Diagnostic_Ports_Taken" xml:space="preserve">
+    <value>Port(s) {0} déjà utilisé(s) par un autre programme sur ce PC (un autre serveur ?). Choisis un autre port dans ce profil, par exemple 2466.</value>
+  </data>
+  <data name="Diagnostic_Server_Stopped" xml:space="preserve">
+    <value>Démarre le serveur pour faire ce test.</value>
+  </data>
+  <data name="Diagnostic_Server_Answers" xml:space="preserve">
+    <value>Le serveur répond aux requêtes Steam sur ce PC.</value>
+  </data>
+  <data name="Diagnostic_Server_Silent" xml:space="preserve">
+    <value>Le serveur ne répond pas encore sur UDP {0}. Ça peut prendre une minute après le démarrage ; relance le test dans un instant.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Allowed" xml:space="preserve">
+    <value>Le pare-feu Windows laisse passer le serveur.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Off" xml:space="preserve">
+    <value>Le pare-feu Windows est désactivé pour ce réseau.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Blocked" xml:space="preserve">
+    <value>Une règle du pare-feu Windows bloque le serveur (souvent après un clic sur Annuler à la première alerte de Windows). Autorise-le ici, ou supprime la règle de blocage de valheim_server.exe.</value>
+  </data>
+  <data name="Diagnostic_Firewall_NoRule" xml:space="preserve">
+    <value>Aucune règle du pare-feu Windows n'autorise {0} ni valheim_server.exe. Windows peut bloquer les joueurs venant de l'extérieur.</value>
+  </data>
+  <data name="Diagnostic_Firewall_Unknown" xml:space="preserve">
+    <value>Non vérifié sur ce système (vérifie que ton pare-feu autorise les ports).</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Unknown" xml:space="preserve">
+    <value>Impossible de trouver ton adresse IP publique (hors ligne ?).</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Shared" xml:space="preserve">
+    <value>Ton adresse internet {0} est partagée par ton fournisseur (CGNAT) : les joueurs extérieurs ne peuvent pas te joindre directement. Active le crossplay, ou demande une IPv4 complète à ton fournisseur.</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Value" xml:space="preserve">
+    <value>Tes amis se connectent avec {0}:{1}.</value>
+  </data>
+  <data name="Diagnostic_Steam_NoPublicIp" xml:space="preserve">
+    <value>Nécessite ton adresse publique.</value>
+  </data>
+  <data name="Diagnostic_Steam_Unreachable" xml:space="preserve">
+    <value>Impossible d'interroger Steam (hors ligne, ou Steam surchargé). Relance le test plus tard.</value>
+  </data>
+  <data name="Diagnostic_Steam_Listed" xml:space="preserve">
+    <value>Steam voit ton serveur à {0}:{1} : il est joignable depuis internet.</value>
+  </data>
+  <data name="Diagnostic_Steam_NotListed" xml:space="preserve">
+    <value>Steam ne voit pas ton serveur depuis internet. Sur ta box, redirige {0} vers {1}. Juste après un démarrage, attends 1 à 2 minutes et relance le test.</value>
+  </data>
+  <data name="Diagnostic_Steam_NotListedPrivate" xml:space="preserve">
+    <value>Steam ne liste pas ton serveur ; c'est parfois normal quand la liste communautaire est désactivée. Si tes amis n'arrivent pas à te rejoindre, redirige {0} vers {1} sur ta box.</value>
+  </data>
+  <data name="MainWindow_Menu_ConnectionCheck" xml:space="preserve">
+    <value>Diagnostic de connexion…</value>
+  </data>
+  <data name="Dashboard_Action_ConnectionCheck" xml:space="preserve">
+    <value>Mes amis peuvent-ils venir ?</value>
+  </data>
 </root>

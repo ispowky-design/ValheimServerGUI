@@ -15,6 +15,7 @@ using ValheimServerGUI.App.ViewModels;
 using ValheimServerGUI.App.ViewModels.Dialogs;
 using ValheimServerGUI.App.Views.Dialogs;
 using ValheimServerGUI.Game;
+using ValheimServerGUI.Game.Network;
 using ValheimServerGUI.Localization;
 using ValheimServerGUI.Tools;
 using ValheimServerGUI.Tools.Logging;
@@ -151,6 +152,10 @@ public partial class MainWindow : Window
                 await new ServerInstallWindow(new ServerInstallViewModel(
                     Svc<ISteamCmdService>(), Svc<IUserPreferencesProvider>(), Svc<IShellLauncher>(),
                     Svc<IApplicationLogger>(), ViewModel.IsServerFolderInUse)).ShowDialog(this);
+                break;
+            case MenuAction.ConnectionCheck:
+                await new ConnectionCheckWindow(new ConnectionCheckViewModel(
+                    Svc<IConnectionProbe>(), Svc<IIpAddressProvider>(), ViewModel.BuildConnectionCheckInput)).ShowDialog(this);
                 break;
         }
     }

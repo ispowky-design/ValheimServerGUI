@@ -4,6 +4,7 @@ using Avalonia.Data.Converters;
 using ValheimServerGUI.App.Controls;
 using ValheimServerGUI.App.ViewModels;
 using ValheimServerGUI.Game;
+using ValheimServerGUI.Game.Network;
 using ValheimServerGUI.Localization;
 
 namespace ValheimServerGUI.App.Converters;
@@ -85,6 +86,17 @@ public sealed class EnumDisplayConverter : IValueConverter
         _ => value.ToString(),
     };
 
+    public static string ToText(ConnectionCheck value) => value switch
+    {
+        ConnectionCheck.Crossplay => Strings.Diagnostic_Check_Crossplay,
+        ConnectionCheck.PortsFree => Strings.Diagnostic_Check_PortsFree,
+        ConnectionCheck.ServerAnswers => Strings.Diagnostic_Check_ServerAnswers,
+        ConnectionCheck.Firewall => Strings.Diagnostic_Check_Firewall,
+        ConnectionCheck.PublicAddress => Strings.Diagnostic_Check_PublicAddress,
+        ConnectionCheck.SteamListing => Strings.Diagnostic_Check_SteamListing,
+        _ => value.ToString(),
+    };
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch
     {
         ServerStatus v => ToText(v),
@@ -95,6 +107,7 @@ public sealed class EnumDisplayConverter : IValueConverter
         DurationUnit v => ToText(v),
         LogView v => ToText(v),
         WorldBackupKind v => ToText(v),
+        ConnectionCheck v => ToText(v),
         _ => value,
     };
 
