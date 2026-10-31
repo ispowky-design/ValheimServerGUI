@@ -26,6 +26,8 @@ public class ServerFormViewModelTests
             ScheduledRestartTimes = "06:00",
             BackupOnScheduledRestart = false,
             RestartOnCrash = false,
+            DiscordWebhookUrl = "https://discord.com/api/webhooks/1/a",
+            DiscordNotifyPlayers = false,
         };
 
         var form = new ServerFormViewModel();
@@ -45,6 +47,9 @@ public class ServerFormViewModelTests
         Assert.Equal("06:00", restored.ScheduledRestartTimes);
         Assert.False(restored.BackupOnScheduledRestart);
         Assert.False(restored.RestartOnCrash);
+        Assert.Equal("https://discord.com/api/webhooks/1/a", restored.DiscordWebhookUrl);
+        Assert.False(restored.DiscordNotifyPlayers);
+        Assert.True(restored.DiscordNotifyServer);
     }
 
     [Fact]

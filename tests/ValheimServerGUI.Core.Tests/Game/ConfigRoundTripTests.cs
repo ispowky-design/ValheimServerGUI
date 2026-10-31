@@ -67,12 +67,17 @@ namespace ValheimServerGUI.Core.Tests.Game
                 ScheduledRestartTimes = "06:00, 18:00",
                 BackupOnScheduledRestart = false,
                 RestartOnCrash = false,
+                DiscordWebhookUrl = "https://discord.com/api/webhooks/1/a",
+                DiscordNotifyPlayers = false,
             };
 
             var restored = ServerPreferences.FromFile(original.ToFile());
             Assert.Equal("06:00, 18:00", restored.ScheduledRestartTimes);
             Assert.False(restored.BackupOnScheduledRestart);
             Assert.False(restored.RestartOnCrash);
+            Assert.Equal("https://discord.com/api/webhooks/1/a", restored.DiscordWebhookUrl);
+            Assert.False(restored.DiscordNotifyPlayers);
+            Assert.True(restored.DiscordNotifyServer);
 
             Assert.Equal("MyProfile", restored.ProfileName);
             Assert.Equal("My Server", restored.Name);

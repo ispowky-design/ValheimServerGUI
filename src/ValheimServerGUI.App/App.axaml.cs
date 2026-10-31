@@ -158,6 +158,7 @@ public partial class App : Application
         // restart may bring a server back up meanwhile.
         Services.GetRequiredService<ScheduledRestartService>().Dispose();
         Services.GetRequiredService<CrashRestartService>().Dispose();
+        Services.GetRequiredService<DiscordNotifier>().Dispose();
         await Task.Run(manager.StopAllAndDispose);
         _shutdownApproved = true;
         Dispatcher.UIThread.Post(() => desktop.Shutdown());
@@ -176,6 +177,7 @@ public partial class App : Application
         Services.GetRequiredService<IApplicationLogger>().Information("Shutting down application to install an update");
         Services.GetRequiredService<ScheduledRestartService>().Dispose();
         Services.GetRequiredService<CrashRestartService>().Dispose();
+        Services.GetRequiredService<DiscordNotifier>().Dispose();
         _shutdownApproved = true;
         desktop.Shutdown();
     }
@@ -213,6 +215,9 @@ public partial class App : Application
 
             // A crashed server is started again by itself (when its profile allows it), whichever window shows it.
             Services.GetRequiredService<CrashRestartService>().Start();
+
+            // Profiles with a Discord webhook tell their channel what their server does.
+            Services.GetRequiredService<DiscordNotifier>().Start();
 
             // The startup check ran above; keep watching for new releases while the app stays open.
             Services.GetRequiredService<UpdateWatcher>().Start();

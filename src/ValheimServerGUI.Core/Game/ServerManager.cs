@@ -43,6 +43,9 @@ public interface IServerManager
     /// them. May be raised off the UI thread.
     /// </summary>
     event EventHandler<PlayerRolesAdoptedEventArgs>? PlayerRolesAdopted;
+
+    /// <summary>Raised when a profile's server is first created (it starts out Stopped).</summary>
+    event EventHandler<ValheimServer>? ServerCreated;
 }
 
 /// <summary>A server's adopted list-file changes, tagged with the profile it runs.</summary>
@@ -79,6 +82,8 @@ public sealed class ServerManager : IServerManager
     }
 
     public event EventHandler<PlayerRolesAdoptedEventArgs>? PlayerRolesAdopted;
+
+    public event EventHandler<ValheimServer>? ServerCreated;
 
     public ValheimServer GetOrCreate(string profileName) => GetEntry(profileName).Server;
 
@@ -166,13 +171,19 @@ public sealed class ServerManager : IServerManager
     }
 
     private ServerEntry GetEntry(string profileName)
-        => _entries.GetOrAdd(profileName, _ =>
+    {
+        var created = false;
+        var entry = _entries.GetOrAdd(profileName, _ =>
         {
             var server = _serverFactory();
             server.PlayerRolesAdopted += (_, result)
                 => PlayerRolesAdopted?.Invoke(this, new PlayerRolesAdoptedEventArgs(profileName, result));
+            created = true;
             return new ServerEntry { Server = server };
         });
+        if (created) ServerCreated?.Invoke(this, entry.Server);
+        return entry;
+    }
 
     private void AppendServerLine(ServerEntry entry, string line)
     {

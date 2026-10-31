@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Serilog;
 using ValheimServerGUI.Core.Tests.Fakes;
 using ValheimServerGUI.Game;
@@ -686,6 +687,138 @@ namespace ValheimServerGUI.Core.Tests.Game
             Assert.Equal(WorldBackupKind.Scheduled, backup.Kind);
         }
 
+        // ---- Discord notifications ----
+
+        private const string Webhook = "https://discord.com/api/webhooks/123/abc-DEF_9";
+
+        private sealed class RecordingWebhook : IDiscordWebhookClient
+        {
+            public System.Collections.Concurrent.ConcurrentQueue<(string Url, string Content)> Posts { get; } = new();
+            public Task<bool> PostAsync(string webhookUrl, string content)
+            {
+                Posts.Enqueue((webhookUrl, content));
+                return Task.FromResult(true);
+            }
+        }
+
+        private (DiscordNotifier, RecordingWebhook) StartNotifier()
+        {
+            var hook = new RecordingWebhook();
+            var notifier = new DiscordNotifier(new SingleServerManager(_server), _repo, hook, _appLogger);
+            notifier.Start();
+            return (notifier, hook);
+        }
+
+        private static List<string> WaitForPosts(RecordingWebhook hook, int count)
+        {
+            WaitFor(() => hook.Posts.Count >= count, 3000);
+            Thread.Sleep(100); // nothing more should arrive
+            return hook.Posts.Select(p => p.Content).ToList();
+        }
+
+        private ValheimServerOptions DiscordOptions(Action<ValheimServerOptions>? customize = null) => Options(o =>
+        {
+            o.DiscordWebhookUrl = Webhook;
+            o.DiscordNotifyServer = true;
+            o.DiscordNotifyPlayers = true;
+            o.DiscordNotifyCrashes = true;
+            customize?.Invoke(o);
+        });
+
+        [Theory]
+        [InlineData("https://discord.com/api/webhooks/123/abc-DEF_9", true)]
+        [InlineData("https://discordapp.com/api/webhooks/123/abc", true)]
+        [InlineData("https://ptb.discord.com/api/webhooks/123/abc/", true)]
+        [InlineData("http://discord.com/api/webhooks/123/abc", false)]
+        [InlineData("https://evil.example/api/webhooks/123/abc", false)]
+        [InlineData("", false)]
+        public void IsWebhookUrl(string url, bool valid) => Assert.Equal(valid, DiscordNotifier.IsWebhookUrl(url));
+
+        [Fact]
+        public void InvalidWebhook_FailsValidation()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => Options(o => o.DiscordWebhookUrl = "https://example.com/hook").Validate());
+            Assert.Equal(ValheimServerGUI.Localization.Strings.Validation_DiscordWebhookInvalid, ex.Message);
+        }
+
+        [Fact]
+        public void Discord_TellsOnlineThenStopped()
+        {
+            var (_, hook) = StartNotifier();
+            _server.Start(DiscordOptions());
+            FeedLog("Game server connected");
+            _server.Stop();
+            _processProvider.SimulateExit();
+
+            var posts = WaitForPosts(hook, 2);
+            Assert.Equal(new[]
+            {
+                string.Format(ValheimServerGUI.Localization.Strings.Discord_Online, "My Server", "MyWorld"),
+                string.Format(ValheimServerGUI.Localization.Strings.Discord_Stopped, "My Server"),
+            }, posts);
+            Assert.All(hook.Posts, p => Assert.Equal(Webhook, p.Url));
+        }
+
+        [Fact]
+        public void Discord_ARestartIsOneMessage()
+        {
+            var (_, hook) = StartNotifier();
+            _server.Start(DiscordOptions());
+            FeedLog("Game server connected");
+            _server.Restart();
+            _processProvider.SimulateExit();
+            WaitFor(() => _server.Status == ServerStatus.Starting);
+            FeedLog("Game server connected");
+
+            var posts = WaitForPosts(hook, 2);
+            Assert.Equal(string.Format(ValheimServerGUI.Localization.Strings.Discord_Restarted, "My Server"), posts[1]);
+            Assert.Equal(2, posts.Count);
+        }
+
+        [Fact]
+        public void Discord_TellsACrash_NotAStop()
+        {
+            var (_, hook) = StartNotifier();
+            _server.Start(DiscordOptions(o => o.RestartOnCrash = false));
+            FeedLog("Game server connected");
+            _processProvider.SimulateExit();
+
+            var posts = WaitForPosts(hook, 2);
+            Assert.Equal(string.Format(ValheimServerGUI.Localization.Strings.Discord_Crashed, "My Server"), posts[1]);
+            Assert.Equal(2, posts.Count);
+        }
+
+        [Fact]
+        public void Discord_TellsPlayersJoiningAndLeaving()
+        {
+            var (_, hook) = StartNotifier();
+            _server.Start(DiscordOptions(o => o.DiscordNotifyServer = false));
+            FeedLog("Game server connected");
+            FeedLog("Got connection SteamID 76561198000000001");
+            FeedLog("Got character ZDOID from Ragnar : 123:1");
+            FeedLog("Closing socket 76561198000000001");
+
+            var posts = WaitForPosts(hook, 2);
+            Assert.Equal(new[]
+            {
+                string.Format(ValheimServerGUI.Localization.Strings.Discord_PlayerJoined, "Ragnar", "My Server"),
+                string.Format(ValheimServerGUI.Localization.Strings.Discord_PlayerLeft, "Ragnar", "My Server"),
+            }, posts);
+        }
+
+        [Fact]
+        public void Discord_PostsNothingWithoutAWebhook()
+        {
+            var (_, hook) = StartNotifier();
+            _server.Start(Options());
+            FeedLog("Game server connected");
+
+            Assert.Empty(WaitForPosts(hook, 1));
+        }
+
+        [Fact]
+        public void Discord_EscapesMarkdown() => Assert.Equal(@"\*bold\* \_x\_", DiscordNotifier.Escape("*bold* _x_"));
+
         private sealed class SingleServerManager : IServerManager
         {
             private readonly ValheimServer _server;
@@ -698,6 +831,7 @@ namespace ValheimServerGUI.Core.Tests.Game
             public void Remove(string profileName) { }
             public void StopAllAndDispose() { }
             public event EventHandler<PlayerRolesAdoptedEventArgs>? PlayerRolesAdopted { add { } remove { } }
+            public event EventHandler<ValheimServer>? ServerCreated { add { } remove { } }
         }
 
         [Fact]

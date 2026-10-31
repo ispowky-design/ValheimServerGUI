@@ -171,6 +171,10 @@ public partial class ServerFormViewModel : ObservableObject
     [ObservableProperty] private string? _scheduledRestartTimes;
     [ObservableProperty] private bool _backupOnScheduledRestart = true;
     [ObservableProperty] private bool _restartOnCrash = true;
+    [ObservableProperty] private string? _discordWebhookUrl;
+    [ObservableProperty] private bool _discordNotifyServer = true;
+    [ObservableProperty] private bool _discordNotifyPlayers = true;
+    [ObservableProperty] private bool _discordNotifyCrashes = true;
 
     /// <summary>Toggles password visibility (the in-field eye button).</summary>
     [RelayCommand]
@@ -216,6 +220,10 @@ public partial class ServerFormViewModel : ObservableObject
             ScheduledRestartTimes = prefs.ScheduledRestartTimes;
             BackupOnScheduledRestart = prefs.BackupOnScheduledRestart;
             RestartOnCrash = prefs.RestartOnCrash;
+            DiscordWebhookUrl = prefs.DiscordWebhookUrl;
+            DiscordNotifyServer = prefs.DiscordNotifyServer;
+            DiscordNotifyPlayers = prefs.DiscordNotifyPlayers;
+            DiscordNotifyCrashes = prefs.DiscordNotifyCrashes;
             UsePermittedList = prefs.UsePermittedList;
 
             _playerRoles.Clear();
@@ -245,6 +253,10 @@ public partial class ServerFormViewModel : ObservableObject
         prefs.ScheduledRestartTimes = ScheduledRestartTimes?.Trim() ?? string.Empty;
         prefs.BackupOnScheduledRestart = BackupOnScheduledRestart;
         prefs.RestartOnCrash = RestartOnCrash;
+        prefs.DiscordWebhookUrl = DiscordWebhookUrl?.Trim() ?? string.Empty;
+        prefs.DiscordNotifyServer = DiscordNotifyServer;
+        prefs.DiscordNotifyPlayers = DiscordNotifyPlayers;
+        prefs.DiscordNotifyCrashes = DiscordNotifyCrashes;
         ApplyRolesTo(prefs);
         return prefs;
     }

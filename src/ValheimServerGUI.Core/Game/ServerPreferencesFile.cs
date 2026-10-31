@@ -75,6 +75,18 @@ namespace ValheimServerGUI.Game
         [JsonProperty("restartOnCrash")]
         public bool? RestartOnCrash { get; set; }
 
+        [JsonProperty("discordWebhookUrl")]
+        public string? DiscordWebhookUrl { get; set; }
+
+        [JsonProperty("discordNotifyServer")]
+        public bool? DiscordNotifyServer { get; set; }
+
+        [JsonProperty("discordNotifyPlayers")]
+        public bool? DiscordNotifyPlayers { get; set; }
+
+        [JsonProperty("discordNotifyCrashes")]
+        public bool? DiscordNotifyCrashes { get; set; }
+
         [JsonProperty("usePermittedList")]
         public bool? UsePermittedList { get; set; }
 
