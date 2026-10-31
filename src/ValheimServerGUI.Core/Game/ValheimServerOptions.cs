@@ -35,6 +35,14 @@ namespace ValheimServerGUI.Game
 
         public bool RestartOnCrash { get; set; }
 
+        public string? DiscordWebhookUrl { get; set; }
+
+        public bool DiscordNotifyServer { get; set; }
+
+        public bool DiscordNotifyPlayers { get; set; }
+
+        public bool DiscordNotifyCrashes { get; set; }
+
         public string? AdditionalArgs { get; set; }
 
         public string? ServerExePath { get; set; }
@@ -104,6 +112,9 @@ namespace ValheimServerGUI.Game
             // Scheduled restarts: throws on the first entry that is not a time of day.
             RestartSchedule.Parse(ScheduledRestartTimes);
 
+            if (!string.IsNullOrWhiteSpace(DiscordWebhookUrl) && !DiscordNotifier.IsWebhookUrl(DiscordWebhookUrl))
+                throw new ArgumentException(Strings.Validation_DiscordWebhookInvalid);
+
             // World generation settings
             if (WorldModifiers != null)
             {
@@ -172,6 +183,18 @@ namespace ValheimServerGUI.Game
 
         /// <summary>Whether a crash is followed by an automatic start (see <see cref="ValheimServer.CrashRestartDueAt"/>).</summary>
         bool RestartOnCrash { get; }
+
+        /// <summary>The Discord webhook events are posted to (empty: none; see <see cref="DiscordNotifier"/>).</summary>
+        string? DiscordWebhookUrl { get; }
+
+        /// <summary>Post when the server comes online, restarts or stops.</summary>
+        bool DiscordNotifyServer { get; }
+
+        /// <summary>Post when a player joins or leaves.</summary>
+        bool DiscordNotifyPlayers { get; }
+
+        /// <summary>Post when the server crashes.</summary>
+        bool DiscordNotifyCrashes { get; }
 
         string? AdditionalArgs { get; }
 

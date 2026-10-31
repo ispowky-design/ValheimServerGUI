@@ -75,7 +75,9 @@ namespace ValheimServerGUI
                 .AddSingleton<Func<ValheimServer>>(sp => sp.GetRequiredService<ValheimServer>)
                 .AddSingleton<IServerManager, ServerManager>()
                 .AddSingleton<ScheduledRestartService>()
-                .AddSingleton<CrashRestartService>();
+                .AddSingleton<CrashRestartService>()
+                .AddSingleton<IDiscordWebhookClient, DiscordWebhookClient>()
+                .AddSingleton<DiscordNotifier>();
 
             return services;
         }

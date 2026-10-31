@@ -2365,4 +2365,68 @@ Would you like to send an automated crash report to the developer?</value>
   <data name="Dashboard_Action_ConnectionCheck" xml:space="preserve">
     <value>Can friends join?</value>
   </data>
+  <!-- Discord notifications -->
+  <data name="AdvancedControls_Discord_Header" xml:space="preserve">
+    <value>Discord Notifications</value>
+  </data>
+  <data name="AdvancedControls_DiscordWebhook_Label" xml:space="preserve">
+    <value>Webhook URL</value>
+  </data>
+  <data name="AdvancedControls_DiscordWebhook_Watermark" xml:space="preserve">
+    <value>https://discord.com/api/webhooks/…</value>
+  </data>
+  <data name="AdvancedControls_DiscordWebhook_Help" xml:space="preserve">
+    <value>Posts this server's events to a Discord channel. In Discord: channel settings &gt; Integrations &gt; Webhooks &gt; New Webhook &gt; Copy Webhook URL, then paste it here. Leave empty for no messages.</value>
+  </data>
+  <data name="AdvancedControls_DiscordNotifyServer_Label" xml:space="preserve">
+    <value>Server online, restarted, stopped</value>
+  </data>
+  <data name="AdvancedControls_DiscordNotifyPlayers_Label" xml:space="preserve">
+    <value>Players joining and leaving</value>
+  </data>
+  <data name="AdvancedControls_DiscordNotifyCrashes_Label" xml:space="preserve">
+    <value>Crashes</value>
+  </data>
+  <data name="AdvancedControls_DiscordTest" xml:space="preserve">
+    <value>Send a Test</value>
+  </data>
+  <data name="Prompt_DiscordTest_Title" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="Prompt_DiscordTest_Sent" xml:space="preserve">
+    <value>Test message sent. Check your Discord channel.</value>
+  </data>
+  <data name="Prompt_DiscordTest_Failed" xml:space="preserve">
+    <value>Discord did not accept the message. Check the webhook URL (it may have been deleted) and your internet connection.</value>
+  </data>
+  <data name="Validation_DiscordWebhookInvalid" xml:space="preserve">
+    <value>The Discord webhook URL is not valid. It looks like https://discord.com/api/webhooks/123456/abcdef.</value>
+  </data>
+  <data name="Discord_Test" xml:space="preserve">
+    <value>✅ Test from Valheim Server GUI: notifications for **{0}** will arrive here.</value>
+  </data>
+  <data name="Discord_Online" xml:space="preserve">
+    <value>🟢 **{0}** is online (world {1}).</value>
+  </data>
+  <data name="Discord_Restarted" xml:space="preserve">
+    <value>🔄 **{0}** has restarted and is online.</value>
+  </data>
+  <data name="Discord_Stopped" xml:space="preserve">
+    <value>🔴 **{0}** is stopped.</value>
+  </data>
+  <data name="Discord_Crashed" xml:space="preserve">
+    <value>💥 **{0}** crashed.</value>
+  </data>
+  <data name="Discord_Crashed_Restarting" xml:space="preserve">
+    <value>💥 **{0}** crashed. Restarting in {1} s.</value>
+  </data>
+  <data name="Discord_Crashed_GaveUp" xml:space="preserve">
+    <value>💥 **{0}** crashed {1} times in a row and stays stopped.</value>
+  </data>
+  <data name="Discord_PlayerJoined" xml:space="preserve">
+    <value>➕ **{0}** joined **{1}**.</value>
+  </data>
+  <data name="Discord_PlayerLeft" xml:space="preserve">
+    <value>➖ **{0}** left **{1}**.</value>
+  </data>
 </root>

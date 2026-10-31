@@ -74,6 +74,9 @@ namespace ValheimServerGUI.Game
         private string? ProcessKey;
         private bool IsRestarting;
 
+        /// <summary>Whether the current stop is part of a restart (the server starts again once stopped).</summary>
+        public bool IsRestartInProgress => IsRestarting;
+
         // Run once while a restart has the server stopped, before it starts again (a scheduled restart's backup).
         private Action<IValheimServerOptions>? WhileStopped;
 

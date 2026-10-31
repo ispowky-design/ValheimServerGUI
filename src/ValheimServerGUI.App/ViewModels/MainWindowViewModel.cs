@@ -35,6 +35,7 @@ public enum MenuAction
     WorldPreferences,
     InstallServer,
     ConnectionCheck,
+    TestDiscordWebhook,
 }
 
 /// <summary>The user's answer to the "host a Steam Cloud world?" import prompt.</summary>
@@ -440,6 +441,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [RelayCommand]
     private void ConnectionCheck() => MenuActionRequested?.Invoke(MenuAction.ConnectionCheck);
+
+    [RelayCommand]
+    private void TestDiscordWebhook() => MenuActionRequested?.Invoke(MenuAction.TestDiscordWebhook);
 
     /// <summary>
     /// What the connection check tests: the running server's own settings while it runs (the form may have changed
@@ -860,6 +864,10 @@ public partial class MainWindowViewModel : ViewModelBase
             ScheduledRestartTimes = serverPrefs.ScheduledRestartTimes,
             BackupOnScheduledRestart = serverPrefs.BackupOnScheduledRestart,
             RestartOnCrash = serverPrefs.RestartOnCrash,
+            DiscordWebhookUrl = serverPrefs.DiscordWebhookUrl,
+            DiscordNotifyServer = serverPrefs.DiscordNotifyServer,
+            DiscordNotifyPlayers = serverPrefs.DiscordNotifyPlayers,
+            DiscordNotifyCrashes = serverPrefs.DiscordNotifyCrashes,
             AdditionalArgs = serverPrefs.AdditionalArgs,
             EnvironmentVariables = serverPrefs.EnvironmentVariables,
             // Directories: the profile's override (set in the Set Directories dialog), else the app-wide path.

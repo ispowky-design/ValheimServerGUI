@@ -127,6 +127,24 @@
                                                  Value="{Binding Form.RestartOnCrash}" IsEnabled="{Binding AllowServerChanges}" />
                         </StackPanel>
                     </c:GroupBox>
+
+                    <c:GroupBox Header="{x:Static loc:Strings.AdvancedControls_Discord_Header}">
+                        <StackPanel Spacing="4">
+                            <c:TextFormField LabelText="{x:Static loc:Strings.AdvancedControls_DiscordWebhook_Label}"
+                                             HelpText="{x:Static loc:Strings.AdvancedControls_DiscordWebhook_Help}"
+                                             Watermark="{x:Static loc:Strings.AdvancedControls_DiscordWebhook_Watermark}"
+                                             Value="{Binding Form.DiscordWebhookUrl}" MaxLength="300"
+                                             IsEnabled="{Binding AllowServerChanges}" />
+                            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_DiscordNotifyServer_Label}"
+                                                 Value="{Binding Form.DiscordNotifyServer}" IsEnabled="{Binding AllowServerChanges}" />
+                            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_DiscordNotifyPlayers_Label}"
+                                                 Value="{Binding Form.DiscordNotifyPlayers}" IsEnabled="{Binding AllowServerChanges}" />
+                            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_DiscordNotifyCrashes_Label}"
+                                                 Value="{Binding Form.DiscordNotifyCrashes}" IsEnabled="{Binding AllowServerChanges}" />
+                            <Button Content="{x:Static loc:Strings.AdvancedControls_DiscordTest}" HorizontalAlignment="Left" Margin="0,4,0,0"
+                                    Command="{Binding TestDiscordWebhookCommand}" />
+                        </StackPanel>
+                    </c:GroupBox>
                 </StackPanel>
 
                 <c:GroupBox Grid.Column="2" Header="{x:Static loc:Strings.AdvancedControls_SavingBackups_Header}" VerticalAlignment="Top">

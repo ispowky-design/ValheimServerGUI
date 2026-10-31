@@ -55,6 +55,15 @@ namespace ValheimServerGUI.Game
         /// <summary>Whether the app starts the server again by itself after it crashes (see <see cref="CrashRestartService"/>).</summary>
         public bool RestartOnCrash { get; set; } = true;
 
+        /// <summary>A Discord channel webhook the server's events are posted to (see <see cref="DiscordNotifier"/>). Empty: none.</summary>
+        public string DiscordWebhookUrl { get; set; } = string.Empty;
+
+        public bool DiscordNotifyServer { get; set; } = true;
+
+        public bool DiscordNotifyPlayers { get; set; } = true;
+
+        public bool DiscordNotifyCrashes { get; set; } = true;
+
         /// <summary>
         /// When true, the server runs in permitted-list mode: only players on <c>permittedlist.txt</c> may
         /// join and the ban list is ignored (see <see cref="PlayerAccessListRules"/>). When false, anyone
@@ -112,6 +121,10 @@ namespace ValheimServerGUI.Game
             prefs.ScheduledRestartTimes = file.ScheduledRestartTimes ?? prefs.ScheduledRestartTimes;
             prefs.BackupOnScheduledRestart = file.BackupOnScheduledRestart ?? prefs.BackupOnScheduledRestart;
             prefs.RestartOnCrash = file.RestartOnCrash ?? prefs.RestartOnCrash;
+            prefs.DiscordWebhookUrl = file.DiscordWebhookUrl ?? prefs.DiscordWebhookUrl;
+            prefs.DiscordNotifyServer = file.DiscordNotifyServer ?? prefs.DiscordNotifyServer;
+            prefs.DiscordNotifyPlayers = file.DiscordNotifyPlayers ?? prefs.DiscordNotifyPlayers;
+            prefs.DiscordNotifyCrashes = file.DiscordNotifyCrashes ?? prefs.DiscordNotifyCrashes;
             prefs.UsePermittedList = file.UsePermittedList ?? prefs.UsePermittedList;
 
             if (file.PlayerRoles != null)
@@ -155,6 +168,10 @@ namespace ValheimServerGUI.Game
                 ScheduledRestartTimes = ScheduledRestartTimes,
                 BackupOnScheduledRestart = BackupOnScheduledRestart,
                 RestartOnCrash = RestartOnCrash,
+                DiscordWebhookUrl = DiscordWebhookUrl,
+                DiscordNotifyServer = DiscordNotifyServer,
+                DiscordNotifyPlayers = DiscordNotifyPlayers,
+                DiscordNotifyCrashes = DiscordNotifyCrashes,
                 UsePermittedList = UsePermittedList,
             };
 

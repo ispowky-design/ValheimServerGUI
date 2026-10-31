@@ -153,11 +153,29 @@ public partial class MainWindow : Window
                     Svc<ISteamCmdService>(), Svc<IUserPreferencesProvider>(), Svc<IShellLauncher>(),
                     Svc<IApplicationLogger>(), ViewModel.IsServerFolderInUse)).ShowDialog(this);
                 break;
+            case MenuAction.TestDiscordWebhook:
+                await TestDiscordWebhookAsync();
+                break;
             case MenuAction.ConnectionCheck:
                 await new ConnectionCheckWindow(new ConnectionCheckViewModel(
                     Svc<IConnectionProbe>(), Svc<IIpAddressProvider>(), ViewModel.BuildConnectionCheckInput)).ShowDialog(this);
                 break;
         }
+    }
+
+    private async Task TestDiscordWebhookAsync()
+    {
+        if (ViewModel is null) return;
+
+        var url = ViewModel.Form.DiscordWebhookUrl;
+        if (!DiscordNotifier.IsWebhookUrl(url))
+        {
+            await MessageBox.ShowAsync(this, Strings.Prompt_DiscordTest_Title, Strings.Validation_DiscordWebhookInvalid);
+            return;
+        }
+
+        var sent = await Svc<DiscordNotifier>().SendTestAsync(url!, ViewModel.Form.Name);
+        await MessageBox.ShowAsync(this, Strings.Prompt_DiscordTest_Title, sent ? Strings.Prompt_DiscordTest_Sent : Strings.Prompt_DiscordTest_Failed);
     }
 
     private async Task ShowDirectoriesAsync(string? profileName)
