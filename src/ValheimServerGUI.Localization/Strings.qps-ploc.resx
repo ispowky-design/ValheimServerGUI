@@ -2182,4 +2182,125 @@
   <data name="MapWeb_Players" xml:space="preserve">
     <value>⟦MapWeb_Players⟧</value>
   </data>
+  <!-- Connection check -->
+  <data name="Diagnostic_Title" xml:space="preserve">
+    <value>⟦Diagnostic_Title⟧</value>
+  </data>
+  <data name="Diagnostic_Intro" xml:space="preserve">
+    <value>⟦Diagnostic_Intro⟧</value>
+  </data>
+  <data name="Diagnostic_Run" xml:space="preserve">
+    <value>⟦Diagnostic_Run⟧</value>
+  </data>
+  <data name="Diagnostic_Running" xml:space="preserve">
+    <value>⟦Diagnostic_Running⟧</value>
+  </data>
+  <data name="Diagnostic_Summary_Ok" xml:space="preserve">
+    <value>⟦Diagnostic_Summary_Ok⟧</value>
+  </data>
+  <data name="Diagnostic_Summary_Issues" xml:space="preserve">
+    <value>⟦Diagnostic_Summary_Issues⟧</value>
+  </data>
+  <data name="Diagnostic_Summary_Stopped" xml:space="preserve">
+    <value>⟦Diagnostic_Summary_Stopped⟧</value>
+  </data>
+  <data name="Diagnostic_Copy" xml:space="preserve">
+    <value>⟦Diagnostic_Copy⟧</value>
+  </data>
+  <data name="Diagnostic_Fix_AddFirewallRule" xml:space="preserve">
+    <value>⟦Diagnostic_Fix_AddFirewallRule⟧</value>
+  </data>
+  <data name="Diagnostic_Fix_Failed" xml:space="preserve">
+    <value>⟦Diagnostic_Fix_Failed⟧</value>
+  </data>
+  <data name="Diagnostic_Check_Crossplay" xml:space="preserve">
+    <value>⟦Diagnostic_Check_Crossplay⟧</value>
+  </data>
+  <data name="Diagnostic_Check_PortsFree" xml:space="preserve">
+    <value>⟦Diagnostic_Check_PortsFree⟧</value>
+  </data>
+  <data name="Diagnostic_Check_ServerAnswers" xml:space="preserve">
+    <value>⟦Diagnostic_Check_ServerAnswers⟧</value>
+  </data>
+  <data name="Diagnostic_Check_Firewall" xml:space="preserve">
+    <value>⟦Diagnostic_Check_Firewall⟧</value>
+  </data>
+  <data name="Diagnostic_Check_PublicAddress" xml:space="preserve">
+    <value>⟦Diagnostic_Check_PublicAddress⟧</value>
+  </data>
+  <data name="Diagnostic_Check_SteamListing" xml:space="preserve">
+    <value>⟦Diagnostic_Check_SteamListing⟧</value>
+  </data>
+  <data name="Diagnostic_PortRange" xml:space="preserve">
+    <value>⟦Diagnostic_PortRange {0} {1}⟧</value>
+  </data>
+  <data name="Diagnostic_ThisPc" xml:space="preserve">
+    <value>⟦Diagnostic_ThisPc⟧</value>
+  </data>
+  <data name="Diagnostic_Crossplay_On" xml:space="preserve">
+    <value>⟦Diagnostic_Crossplay_On⟧</value>
+  </data>
+  <data name="Diagnostic_Ports_Running" xml:space="preserve">
+    <value>⟦Diagnostic_Ports_Running⟧</value>
+  </data>
+  <data name="Diagnostic_Ports_Free" xml:space="preserve">
+    <value>⟦Diagnostic_Ports_Free {0}⟧</value>
+  </data>
+  <data name="Diagnostic_Ports_Taken" xml:space="preserve">
+    <value>⟦Diagnostic_Ports_Taken {0}⟧</value>
+  </data>
+  <data name="Diagnostic_Server_Stopped" xml:space="preserve">
+    <value>⟦Diagnostic_Server_Stopped⟧</value>
+  </data>
+  <data name="Diagnostic_Server_Answers" xml:space="preserve">
+    <value>⟦Diagnostic_Server_Answers⟧</value>
+  </data>
+  <data name="Diagnostic_Server_Silent" xml:space="preserve">
+    <value>⟦Diagnostic_Server_Silent {0}⟧</value>
+  </data>
+  <data name="Diagnostic_Firewall_Allowed" xml:space="preserve">
+    <value>⟦Diagnostic_Firewall_Allowed⟧</value>
+  </data>
+  <data name="Diagnostic_Firewall_Off" xml:space="preserve">
+    <value>⟦Diagnostic_Firewall_Off⟧</value>
+  </data>
+  <data name="Diagnostic_Firewall_Blocked" xml:space="preserve">
+    <value>⟦Diagnostic_Firewall_Blocked⟧</value>
+  </data>
+  <data name="Diagnostic_Firewall_NoRule" xml:space="preserve">
+    <value>⟦Diagnostic_Firewall_NoRule {0}⟧</value>
+  </data>
+  <data name="Diagnostic_Firewall_Unknown" xml:space="preserve">
+    <value>⟦Diagnostic_Firewall_Unknown⟧</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Unknown" xml:space="preserve">
+    <value>⟦Diagnostic_PublicIp_Unknown⟧</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Shared" xml:space="preserve">
+    <value>⟦Diagnostic_PublicIp_Shared {0}⟧</value>
+  </data>
+  <data name="Diagnostic_PublicIp_Value" xml:space="preserve">
+    <value>⟦Diagnostic_PublicIp_Value {0} {1}⟧</value>
+  </data>
+  <data name="Diagnostic_Steam_NoPublicIp" xml:space="preserve">
+    <value>⟦Diagnostic_Steam_NoPublicIp⟧</value>
+  </data>
+  <data name="Diagnostic_Steam_Unreachable" xml:space="preserve">
+    <value>⟦Diagnostic_Steam_Unreachable⟧</value>
+  </data>
+  <data name="Diagnostic_Steam_Listed" xml:space="preserve">
+    <value>⟦Diagnostic_Steam_Listed {0} {1}⟧</value>
+  </data>
+  <data name="Diagnostic_Steam_NotListed" xml:space="preserve">
+    <value>⟦Diagnostic_Steam_NotListed {0} {1}⟧</value>
+  </data>
+  <data name="Diagnostic_Steam_NotListedPrivate" xml:space="preserve">
+    <value>⟦Diagnostic_Steam_NotListedPrivate {0} {1}⟧</value>
+  </data>
+  <data name="MainWindow_Menu_ConnectionCheck" xml:space="preserve">
+    <value>⟦MainWindow_Menu_ConnectionCheck⟧</value>
+  </data>
+  <data name="Dashboard_Action_ConnectionCheck" xml:space="preserve">
+    <value>⟦Dashboard_Action_ConnectionCheck⟧</value>
+  </data>
 </root>

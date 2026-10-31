@@ -12,6 +12,7 @@ using ValheimServerGUI.App.Converters;
 using ValheimServerGUI.App.ViewModels.Dialogs;
 using ValheimServerGUI.App.Views.Dialogs;
 using ValheimServerGUI.Game;
+using ValheimServerGUI.Game.Network;
 using ValheimServerGUI.Game.WorldMap;
 using ValheimServerGUI.Localization;
 using ValheimServerGUI.Tools;
@@ -33,6 +34,7 @@ public enum MenuAction
     About,
     WorldPreferences,
     InstallServer,
+    ConnectionCheck,
 }
 
 /// <summary>The user's answer to the "host a Steam Cloud world?" import prompt.</summary>
@@ -435,6 +437,26 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [RelayCommand]
     private void InstallServer() => MenuActionRequested?.Invoke(MenuAction.InstallServer);
+
+    [RelayCommand]
+    private void ConnectionCheck() => MenuActionRequested?.Invoke(MenuAction.ConnectionCheck);
+
+    /// <summary>
+    /// What the connection check tests: the running server's own settings while it runs (the form may have changed
+    /// since), else the form's.
+    /// </summary>
+    public ConnectionDiagnosticInput BuildConnectionCheckInput(string? externalIp, string? internalIp)
+    {
+        var server = _currentServer is { Status: ServerStatus.Starting or ServerStatus.Running } s ? s : null;
+        return new ConnectionDiagnosticInput(
+            Port: server?.Options.Port ?? Form.Port,
+            Crossplay: server?.Options.Crossplay ?? Form.Crossplay,
+            Public: server?.Options.Public ?? Form.IsPublic,
+            ServerRunning: server is not null,
+            ServerExePath: CurrentServerExePath(),
+            ExternalIp: externalIp,
+            InternalIp: internalIp);
+    }
 
     /// <summary>Whether a server that is not stopped (any profile, any window) runs an executable inside <paramref name="folder"/>.</summary>
     public bool IsServerFolderInUse(string folder)

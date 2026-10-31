@@ -108,6 +108,7 @@
                 <MenuItem Header="{x:Static loc:Strings.MainWindow_Menu_InstallServer}" Command="{Binding InstallServerCommand}">
                     <MenuItem.Icon><c:IconImage IconName="UnsyncedCommits_16x_Horiz" /></MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="{x:Static loc:Strings.MainWindow_Menu_ConnectionCheck}" Command="{Binding ConnectionCheckCommand}" />
                 <MenuItem Header="{x:Static loc:Strings.MainWindow_Menu_OpenSettingsDirectory}" Command="{Binding OpenSettingsDirectoryCommand}">
                     <MenuItem.Icon><c:IconImage IconName="OpenFolder_16x" /></MenuItem.Icon>
                 </MenuItem>
