@@ -411,6 +411,12 @@
   <data name="AdvancedControls_RestartBackup_Help" xml:space="preserve">
     <value>⟦AdvancedControls_RestartBackup_Help⟧</value>
   </data>
+  <data name="AdvancedControls_RestartOnCrash_Label" xml:space="preserve">
+    <value>⟦AdvancedControls_RestartOnCrash_Label⟧</value>
+  </data>
+  <data name="AdvancedControls_RestartOnCrash_Help" xml:space="preserve">
+    <value>⟦AdvancedControls_RestartOnCrash_Help⟧</value>
+  </data>
   <!-- Server Details tab -->
   <data name="ServerDetails_Connection_Header" xml:space="preserve">
     <value>⟦ServerDetails_Connection_Header⟧</value>
@@ -1082,6 +1088,9 @@
   </data>
   <data name="ServerStatus_Stopping" xml:space="preserve">
     <value>⟦ServerStatus_Stopping⟧</value>
+  </data>
+  <data name="ServerStatus_CrashRestartPending" xml:space="preserve">
+    <value>⟦ServerStatus_CrashRestartPending⟧</value>
   </data>
   <!-- Player status -->
   <data name="PlayerStatus_Offline" xml:space="preserve">

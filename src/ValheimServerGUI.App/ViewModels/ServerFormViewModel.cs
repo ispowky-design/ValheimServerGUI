@@ -170,6 +170,7 @@ public partial class ServerFormViewModel : ObservableObject
     [ObservableProperty] private int _backupIntervalLong = CoreConstants.DefaultBackupIntervalLong;
     [ObservableProperty] private string? _scheduledRestartTimes;
     [ObservableProperty] private bool _backupOnScheduledRestart = true;
+    [ObservableProperty] private bool _restartOnCrash = true;
 
     /// <summary>Toggles password visibility (the in-field eye button).</summary>
     [RelayCommand]
@@ -214,6 +215,7 @@ public partial class ServerFormViewModel : ObservableObject
             WriteServerLogsToFile = prefs.WriteServerLogsToFile;
             ScheduledRestartTimes = prefs.ScheduledRestartTimes;
             BackupOnScheduledRestart = prefs.BackupOnScheduledRestart;
+            RestartOnCrash = prefs.RestartOnCrash;
             UsePermittedList = prefs.UsePermittedList;
 
             _playerRoles.Clear();
@@ -242,6 +244,7 @@ public partial class ServerFormViewModel : ObservableObject
         prefs.WriteServerLogsToFile = WriteServerLogsToFile;
         prefs.ScheduledRestartTimes = ScheduledRestartTimes?.Trim() ?? string.Empty;
         prefs.BackupOnScheduledRestart = BackupOnScheduledRestart;
+        prefs.RestartOnCrash = RestartOnCrash;
         ApplyRolesTo(prefs);
         return prefs;
     }

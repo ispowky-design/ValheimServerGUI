@@ -33,6 +33,8 @@ namespace ValheimServerGUI.Game
 
         public bool BackupOnScheduledRestart { get; set; }
 
+        public bool RestartOnCrash { get; set; }
+
         public string? AdditionalArgs { get; set; }
 
         public string? ServerExePath { get; set; }
@@ -167,6 +169,9 @@ namespace ValheimServerGUI.Game
         string? ScheduledRestartTimes { get; }
 
         bool BackupOnScheduledRestart { get; }
+
+        /// <summary>Whether a crash is followed by an automatic start (see <see cref="ValheimServer.CrashRestartDueAt"/>).</summary>
+        bool RestartOnCrash { get; }
 
         string? AdditionalArgs { get; }
 

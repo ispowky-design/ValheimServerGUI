@@ -417,6 +417,12 @@ Les joueurs sont déconnectés pendant le redémarrage, qui prend environ une mi
   <data name="AdvancedControls_RestartBackup_Help" xml:space="preserve">
     <value>Pendant que le serveur est arrêté pour un redémarrage planifié, le monde est compressé dans une sauvegarde (affichée comme « Planifiée » dans l'onglet Sauvegardes). Les 10 sauvegardes planifiées les plus récentes de chaque monde sont gardées ; tes sauvegardes manuelles ne sont jamais supprimées.</value>
   </data>
+  <data name="AdvancedControls_RestartOnCrash_Label" xml:space="preserve">
+    <value>Relancer après un plantage</value>
+  </data>
+  <data name="AdvancedControls_RestartOnCrash_Help" xml:space="preserve">
+    <value>Si le serveur s'arrête sans qu'on le lui demande (un plantage), il est relancé après 10 s, puis 30 s, puis 90 s. Après 3 plantages d'affilée, il reste arrêté. Le monde est sauvegardé avant chaque relance (affiché comme « Planifiée » dans l'onglet Sauvegardes). Appuie sur Arrêter pour annuler une relance en attente.</value>
+  </data>
   <!-- Server Details tab -->
   <data name="ServerDetails_Connection_Header" xml:space="preserve">
     <value>Connexion</value>
@@ -1092,6 +1098,9 @@ Le monde actuel est sauvegardé d'abord, tu pourras donc annuler.</value>
   </data>
   <data name="ServerStatus_Stopping" xml:space="preserve">
     <value>Arrêt en cours</value>
+  </data>
+  <data name="ServerStatus_CrashRestartPending" xml:space="preserve">
+    <value>Relance après plantage…</value>
   </data>
   <!-- Player status -->
   <data name="PlayerStatus_Offline" xml:space="preserve">

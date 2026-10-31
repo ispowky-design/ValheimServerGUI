@@ -52,6 +52,9 @@ namespace ValheimServerGUI.Game
         /// <summary>Whether a scheduled restart backs up the world while the server is stopped.</summary>
         public bool BackupOnScheduledRestart { get; set; } = true;
 
+        /// <summary>Whether the app starts the server again by itself after it crashes (see <see cref="CrashRestartService"/>).</summary>
+        public bool RestartOnCrash { get; set; } = true;
+
         /// <summary>
         /// When true, the server runs in permitted-list mode: only players on <c>permittedlist.txt</c> may
         /// join and the ban list is ignored (see <see cref="PlayerAccessListRules"/>). When false, anyone
@@ -108,6 +111,7 @@ namespace ValheimServerGUI.Game
             prefs.WriteServerLogsToFile = file.WriteServerLogsToFile ?? prefs.WriteServerLogsToFile;
             prefs.ScheduledRestartTimes = file.ScheduledRestartTimes ?? prefs.ScheduledRestartTimes;
             prefs.BackupOnScheduledRestart = file.BackupOnScheduledRestart ?? prefs.BackupOnScheduledRestart;
+            prefs.RestartOnCrash = file.RestartOnCrash ?? prefs.RestartOnCrash;
             prefs.UsePermittedList = file.UsePermittedList ?? prefs.UsePermittedList;
 
             if (file.PlayerRoles != null)
@@ -150,6 +154,7 @@ namespace ValheimServerGUI.Game
                 WriteServerLogsToFile = WriteServerLogsToFile,
                 ScheduledRestartTimes = ScheduledRestartTimes,
                 BackupOnScheduledRestart = BackupOnScheduledRestart,
+                RestartOnCrash = RestartOnCrash,
                 UsePermittedList = UsePermittedList,
             };
 

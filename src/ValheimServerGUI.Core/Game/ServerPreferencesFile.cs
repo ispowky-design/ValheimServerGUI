@@ -72,6 +72,9 @@ namespace ValheimServerGUI.Game
         [JsonProperty("backupOnScheduledRestart")]
         public bool? BackupOnScheduledRestart { get; set; }
 
+        [JsonProperty("restartOnCrash")]
+        public bool? RestartOnCrash { get; set; }
+
         [JsonProperty("usePermittedList")]
         public bool? UsePermittedList { get; set; }
 
