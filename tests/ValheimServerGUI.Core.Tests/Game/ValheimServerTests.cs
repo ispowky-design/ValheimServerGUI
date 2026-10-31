@@ -543,6 +543,149 @@ namespace ValheimServerGUI.Core.Tests.Game
             Assert.Empty(backups.GetBackups(new DirectoryInfo(_saveDir), "MyWorld"));
         }
 
+        // ---- crash restarts ----
+
+        [Fact]
+        public void Crash_WhileRunning_SchedulesARestart_AndRaisesCrashed()
+        {
+            _server.Clock = () => new DateTime(2026, 10, 31, 12, 0, 0);
+            _server.Start(Options(o => o.RestartOnCrash = true));
+            FeedLog("Game server connected");
+            ServerCrash? crash = null;
+            _server.Crashed += (_, c) => crash = c;
+
+            _processProvider.SimulateExit();
+
+            Assert.Equal(ServerStatus.Stopped, _server.Status);
+            Assert.Equal(new DateTime(2026, 10, 31, 12, 0, 10), _server.CrashRestartDueAt);
+            Assert.NotNull(crash);
+            Assert.Equal(1, crash!.ConsecutiveCrashes);
+            Assert.Equal(_server.CrashRestartDueAt, crash.RestartDueAt);
+        }
+
+        [Fact]
+        public void Crash_WhileStarting_CountsAsACrash()
+        {
+            _server.Start(Options(o => o.RestartOnCrash = true));
+
+            _processProvider.SimulateExit();
+
+            Assert.NotNull(_server.CrashRestartDueAt);
+        }
+
+        [Fact]
+        public void Crash_WithRestartOff_RaisesCrashed_ButSchedulesNothing()
+        {
+            _server.Start(Options(o => o.RestartOnCrash = false));
+            FeedLog("Game server connected");
+            ServerCrash? crash = null;
+            _server.Crashed += (_, c) => crash = c;
+
+            _processProvider.SimulateExit();
+
+            Assert.NotNull(crash);
+            Assert.Null(crash!.RestartDueAt);
+            Assert.Null(_server.CrashRestartDueAt);
+        }
+
+        [Fact]
+        public void Stop_ThenExit_IsNotACrash()
+        {
+            _server.Start(Options(o => o.RestartOnCrash = true));
+            FeedLog("Game server connected");
+            var crashed = false;
+            _server.Crashed += (_, _) => crashed = true;
+
+            _server.Stop();
+            _processProvider.SimulateExit();
+
+            Assert.False(crashed);
+            Assert.Null(_server.CrashRestartDueAt);
+        }
+
+        [Fact]
+        public void Restart_ThenExit_IsNotACrash()
+        {
+            _server.Start(Options(o => o.RestartOnCrash = true));
+            FeedLog("Game server connected");
+            var crashed = false;
+            _server.Crashed += (_, _) => crashed = true;
+
+            _server.Restart();
+            _processProvider.SimulateExit();
+
+            WaitFor(() => _server.Status == ServerStatus.Starting);
+            Assert.False(crashed);
+        }
+
+        [Fact]
+        public void CrashRestarts_WaitLonger_ThenGiveUpAfterThree()
+        {
+            var now = new DateTime(2026, 10, 31, 12, 0, 0);
+            _server.Clock = () => now;
+            _server.Start(Options(o => o.RestartOnCrash = true));
+
+            var delays = new List<TimeSpan?>();
+            for (var i = 0; i < 4; i++)
+            {
+                _processProvider.SimulateExit();
+                delays.Add(_server.CrashRestartDueAt - now);
+                _server.RestartAfterCrash(null);
+            }
+
+            Assert.Equal(new TimeSpan?[] { TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(90), null }, delays);
+            Assert.Equal(4, _server.ConsecutiveCrashes);
+            Assert.Equal(ServerStatus.Stopped, _server.Status);
+        }
+
+        [Fact]
+        public void ManualStart_ClearsTheCrashStreak_AndThePendingRestart()
+        {
+            _server.Start(Options(o => o.RestartOnCrash = true));
+            _processProvider.SimulateExit();
+            Assert.NotNull(_server.CrashRestartDueAt);
+
+            _server.Start(Options(o => o.RestartOnCrash = true));
+
+            Assert.Null(_server.CrashRestartDueAt);
+            Assert.Equal(0, _server.ConsecutiveCrashes);
+            Assert.Equal(ServerStatus.Starting, _server.Status);
+        }
+
+        [Fact]
+        public void CancelCrashRestart_LeavesTheServerStopped()
+        {
+            _server.Start(Options(o => o.RestartOnCrash = true));
+            _processProvider.SimulateExit();
+
+            _server.CancelCrashRestart();
+            _server.RestartAfterCrash(null);
+
+            Assert.Null(_server.CrashRestartDueAt);
+            Assert.Equal(ServerStatus.Stopped, _server.Status);
+        }
+
+        [Fact]
+        public void CrashRestartService_StartsADueServer_AndBacksUpItsWorld()
+        {
+            var world = Directory.CreateDirectory(Path.Join(_saveDir, "worlds_local", "MyWorld"));
+            File.WriteAllText(Path.Join(world.FullName, "_main.1.fwl2"), "w");
+            _server.Clock = () => new DateTime(2026, 10, 31, 12, 0, 0);
+            _server.Start(Options(o => o.RestartOnCrash = true));
+            FeedLog("Game server connected");
+            _processProvider.SimulateExit();
+            var backups = new WorldBackupService();
+            var service = new CrashRestartService(new SingleServerManager(_server), backups, _appLogger);
+
+            service.CheckDue(new DateTime(2026, 10, 31, 12, 0, 5));
+            Assert.Equal(ServerStatus.Stopped, _server.Status); // not yet due
+
+            service.CheckDue(new DateTime(2026, 10, 31, 12, 0, 10));
+            Assert.Equal(ServerStatus.Starting, _server.Status);
+            var backup = Assert.Single(backups.GetBackups(new DirectoryInfo(_saveDir), "MyWorld"));
+            Assert.Equal(WorldBackupKind.Scheduled, backup.Kind);
+        }
+
         private sealed class SingleServerManager : IServerManager
         {
             private readonly ValheimServer _server;

@@ -73,7 +73,8 @@ namespace ValheimServerGUI
                 // the factory lets it build a fresh transient ValheimServer on first ask for a profile.
                 .AddSingleton<Func<ValheimServer>>(sp => sp.GetRequiredService<ValheimServer>)
                 .AddSingleton<IServerManager, ServerManager>()
-                .AddSingleton<ScheduledRestartService>();
+                .AddSingleton<ScheduledRestartService>()
+                .AddSingleton<CrashRestartService>();
 
             return services;
         }

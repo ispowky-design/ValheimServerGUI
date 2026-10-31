@@ -417,6 +417,12 @@ Players are disconnected during the restart, which takes about a minute. A chang
   <data name="AdvancedControls_RestartBackup_Help" xml:space="preserve">
     <value>While the server is stopped for a scheduled restart, the world is zipped into a backup (shown as "Scheduled" on the Backups tab). The 10 most recent scheduled backups of each world are kept; your manual backups are never deleted.</value>
   </data>
+  <data name="AdvancedControls_RestartOnCrash_Label" xml:space="preserve">
+    <value>Restart after a crash</value>
+  </data>
+  <data name="AdvancedControls_RestartOnCrash_Help" xml:space="preserve">
+    <value>If the server stops without being asked to (a crash), it is started again after 10 s, then 30 s, then 90 s. After 3 crashes in a row it stays stopped. The world is backed up before each new start (shown as "Scheduled" on the Backups tab). Press Stop to cancel a pending start.</value>
+  </data>
   <!-- Server Details tab -->
   <data name="ServerDetails_Connection_Header" xml:space="preserve">
     <value>Connection Details</value>
@@ -1092,6 +1098,9 @@ The world as it is now is backed up first, so you can undo this.</value>
   </data>
   <data name="ServerStatus_Stopping" xml:space="preserve">
     <value>Stopping</value>
+  </data>
+  <data name="ServerStatus_CrashRestartPending" xml:space="preserve">
+    <value>Restarting after a crash…</value>
   </data>
   <!-- Player status -->
   <data name="PlayerStatus_Offline" xml:space="preserve">

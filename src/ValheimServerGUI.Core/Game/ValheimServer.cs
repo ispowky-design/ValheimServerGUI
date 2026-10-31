@@ -55,6 +55,22 @@ namespace ValheimServerGUI.Game
         /// <summary>Clock seam for the restart schedule; tests pin the time.</summary>
         internal Func<DateTime> Clock { get; set; } = () => DateTime.Now;
 
+        /// <summary>The waits before each automatic start after a crash in a row; past the last one, the app gives up.</summary>
+        public static readonly IReadOnlyList<TimeSpan> CrashRestartDelays =
+            new[] { TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(90) };
+
+        /// <summary>A server that ran at least this long before crashing counts as stable: the crash count starts over.</summary>
+        public static readonly TimeSpan CrashCountResetUptime = TimeSpan.FromMinutes(10);
+
+        /// <summary>
+        /// When <see cref="CrashRestartService"/> starts this server again after a crash (null when no such start is
+        /// pending: no crash, the profile turned it off, the app gave up, or the server was started since).
+        /// </summary>
+        public DateTime? CrashRestartDueAt { get; private set; }
+
+        /// <summary>Crashes in a row since the last manual start or stable run (see <see cref="CrashCountResetUptime"/>).</summary>
+        public int ConsecutiveCrashes { get; private set; }
+
         private string? ProcessKey;
         private bool IsRestarting;
 
@@ -62,6 +78,12 @@ namespace ValheimServerGUI.Game
         private Action<IValheimServerOptions>? WhileStopped;
 
         public event EventHandler<ServerStatus>? StatusChanged;
+
+        /// <summary>
+        /// Raised when the server process exits while it was starting or running, without the app asking it to stop.
+        /// Raised after the status becomes <see cref="ServerStatus.Stopped"/>. May be raised off the UI thread.
+        /// </summary>
+        public event EventHandler<ServerCrash>? Crashed;
         public event EventHandler<decimal>? WorldSaved;
         public event EventHandler<string>? InviteCodeReady;
 
@@ -184,7 +206,50 @@ namespace ValheimServerGUI.Game
         /// <summary>
         /// Starts the Valheim server as a background process with the provided options.
         /// </summary>
-        public void Start(IValheimServerOptions options) => StartCore(options, adoptExternalChanges: false);
+        public void Start(IValheimServerOptions options)
+        {
+            if (!CanStart) return;
+
+            // A start by the user ends any crash streak and cancels a pending automatic start.
+            ConsecutiveCrashes = 0;
+            CrashRestartDueAt = null;
+            StartCore(options, adoptExternalChanges: false);
+        }
+
+        /// <summary>
+        /// The automatic start after a crash (<see cref="CrashRestartService"/>): <paramref name="beforeStart"/> runs
+        /// first (a backup; a failure there is logged and the server still starts), then the server starts with the
+        /// options it crashed with. Does nothing unless the start is pending and the server is stopped.
+        /// </summary>
+        public void RestartAfterCrash(Action<IValheimServerOptions>? beforeStart)
+        {
+            if (!CanStart || CrashRestartDueAt is null) return;
+
+            CrashRestartDueAt = null;
+            ApplicationLogger.Information("Starting server {name} again after a crash (attempt {attempt} of {max})",
+                Options.Name, ConsecutiveCrashes, CrashRestartDelays.Count);
+
+            try
+            {
+                beforeStart?.Invoke(Options);
+            }
+            catch (Exception ex)
+            {
+                ApplicationLogger.Error(ex, "Task before the crash restart failed: {message}", ex.Message);
+            }
+
+            StartCore(Options, adoptExternalChanges: true);
+        }
+
+        /// <summary>Cancels a pending automatic start after a crash (the user stays in control).</summary>
+        public void CancelCrashRestart()
+        {
+            if (CrashRestartDueAt is null) return;
+
+            ApplicationLogger.Information("Automatic start after the crash of server {name} cancelled", Options.Name);
+            CrashRestartDueAt = null;
+            StatusChanged?.Invoke(this, Status);
+        }
 
         private void StartCore(IValheimServerOptions options, bool adoptExternalChanges)
         {
@@ -246,8 +311,12 @@ namespace ValheimServerGUI.Game
             process.Exited += (obj, e) =>
             {
                 bepInExLog?.Complete();
+                // Starting or Running means nobody asked it to stop (a stop or restart sets Stopping first).
+                var crashed = Status is ServerStatus.Starting or ServerStatus.Running;
+                var uptime = StartedAt is { } started ? DateTimeOffset.Now - started : TimeSpan.Zero;
                 ProcessKey = null;
                 Status = ServerStatus.Stopped;
+                if (crashed) OnCrashed(process, uptime);
             };
 
             ServerLogger = new ValheimServerLogger(options, PathResolver);
@@ -371,6 +440,40 @@ namespace ValheimServerGUI.Game
         #endregion
 
         #region Event handlers
+
+        private void OnCrashed(Process process, TimeSpan uptime)
+        {
+            int? exitCode = null;
+            try { exitCode = process.ExitCode; }
+            catch (Exception ex) when (ex is InvalidOperationException or NotSupportedException) { }
+
+            if (uptime >= CrashCountResetUptime) ConsecutiveCrashes = 0;
+            ConsecutiveCrashes++;
+
+            DateTime? dueAt = null;
+            if (!Options.RestartOnCrash)
+            {
+                ApplicationLogger.Error("Server {name} crashed (exit code {code}) after {uptime}; automatic restart is off",
+                    Options.Name, exitCode, uptime);
+            }
+            else if (ConsecutiveCrashes > CrashRestartDelays.Count)
+            {
+                ApplicationLogger.Error("Server {name} crashed (exit code {code}) {count} times in a row; not starting it again",
+                    Options.Name, exitCode, ConsecutiveCrashes);
+            }
+            else
+            {
+                var delay = CrashRestartDelays[ConsecutiveCrashes - 1];
+                dueAt = Clock() + delay;
+                ApplicationLogger.Error("Server {name} crashed (exit code {code}) after {uptime}; starting it again in {delay:F0}s",
+                    Options.Name, exitCode, uptime, delay.TotalSeconds);
+            }
+
+            CrashRestartDueAt = dueAt;
+            Crashed?.Invoke(this, new ServerCrash(DateTimeOffset.Now, uptime, exitCode, ConsecutiveCrashes, dueAt));
+            // Status is already Stopped; a second notice lets views pick up the pending start.
+            StatusChanged?.Invoke(this, Status);
+        }
 
         private void OnServerConnected(object? sender, EventArgs e)
         {

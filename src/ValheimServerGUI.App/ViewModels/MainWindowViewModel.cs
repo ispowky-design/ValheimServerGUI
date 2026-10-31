@@ -267,7 +267,15 @@ public partial class MainWindowViewModel : ViewModelBase
     private ServerStatus _serverStatus;
 
     public bool CanStart => ServerStatus == ServerStatus.Stopped;
-    public bool CanStop => ServerStatus is ServerStatus.Starting or ServerStatus.Running;
+    public bool CanStop => ServerStatus is ServerStatus.Starting or ServerStatus.Running || CrashRestartPending;
+
+    /// <summary>
+    /// The selected server crashed and the app starts it again shortly. Stop cancels that start; Start starts it now.
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanStop), nameof(StatusText))]
+    [NotifyCanExecuteChangedFor(nameof(StopCommand))]
+    private bool _crashRestartPending;
     public bool CanRestart => ServerStatus == ServerStatus.Running;
 
     /// <summary>The single "server changes allowed" gate: fields are editable only while Stopped.</summary>
@@ -277,7 +285,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// with no worlds it shows a disabled "-- No worlds --" empty state.</summary>
     public bool CanSelectExistingWorld => AllowServerChanges && Form.Worlds.Count > 0;
 
-    public string StatusText => EnumDisplayConverter.ToText(ServerStatus);
+    public string StatusText => CrashRestartPending ? Strings.ServerStatus_CrashRestartPending : EnumDisplayConverter.ToText(ServerStatus);
 
     // --- force stop (offered, never automatic) ---
     private readonly DispatcherTimer _forceStopTimer;
@@ -363,6 +371,13 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand(CanExecute = nameof(CanStop))]
     private void Stop()
     {
+        if (CrashRestartPending && ServerStatus == ServerStatus.Stopped)
+        {
+            _logger.Information("Cancelling the crash restart for profile '{profile}'", CurrentProfile?.ProfileName);
+            _currentServer?.CancelCrashRestart();
+            return;
+        }
+
         _logger.Information("Stopping server for profile '{profile}'", CurrentProfile?.ProfileName);
         _currentServer?.Stop();
     }
@@ -640,6 +655,7 @@ public partial class MainWindowViewModel : ViewModelBase
         // Mandatory: re-seed the single status gate from the newly selected server so Can*/AllowServerChanges
         // and the Start/Stop/Restart command CanExecute reflect that server immediately, with no event.
         ServerStatus = _currentServer.Status;
+        CrashRestartPending = _currentServer.CrashRestartDueAt is not null && _currentServer.Status == ServerStatus.Stopped;
 
         // A switch between two stopping servers raises no status change, so re-read the offer for this one.
         TrackForceStopOffer();
@@ -821,6 +837,7 @@ public partial class MainWindowViewModel : ViewModelBase
             BackupLong = serverPrefs.BackupIntervalLong,
             ScheduledRestartTimes = serverPrefs.ScheduledRestartTimes,
             BackupOnScheduledRestart = serverPrefs.BackupOnScheduledRestart,
+            RestartOnCrash = serverPrefs.RestartOnCrash,
             AdditionalArgs = serverPrefs.AdditionalArgs,
             EnvironmentVariables = serverPrefs.EnvironmentVariables,
             // Directories: the profile's override (set in the Set Directories dialog), else the app-wide path.
@@ -1176,6 +1193,7 @@ public partial class MainWindowViewModel : ViewModelBase
         => RunOnUi(() =>
         {
             ServerStatus = status;
+            CrashRestartPending = _currentServer?.CrashRestartDueAt is not null && status == ServerStatus.Stopped;
             Backups.RefreshWorldInUse();
         });
 

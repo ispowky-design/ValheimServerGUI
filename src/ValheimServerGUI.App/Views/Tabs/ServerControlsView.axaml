@@ -122,6 +122,9 @@
                             <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_RestartBackup_Label}"
                                                  HelpText="{x:Static loc:Strings.AdvancedControls_RestartBackup_Help}"
                                                  Value="{Binding Form.BackupOnScheduledRestart}" IsEnabled="{Binding AllowServerChanges}" />
+                            <c:CheckBoxFormField LabelText="{x:Static loc:Strings.AdvancedControls_RestartOnCrash_Label}"
+                                                 HelpText="{x:Static loc:Strings.AdvancedControls_RestartOnCrash_Help}"
+                                                 Value="{Binding Form.RestartOnCrash}" IsEnabled="{Binding AllowServerChanges}" />
                         </StackPanel>
                     </c:GroupBox>
                 </StackPanel>

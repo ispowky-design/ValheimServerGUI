@@ -157,6 +157,7 @@ public partial class App : Application
         // completes; returning early loses the save), then approve and re-trigger the shutdown. No scheduled
         // restart may bring a server back up meanwhile.
         Services.GetRequiredService<ScheduledRestartService>().Dispose();
+        Services.GetRequiredService<CrashRestartService>().Dispose();
         await Task.Run(manager.StopAllAndDispose);
         _shutdownApproved = true;
         Dispatcher.UIThread.Post(() => desktop.Shutdown());
@@ -174,6 +175,7 @@ public partial class App : Application
         Services.GetRequiredService<IAppUpdater>().LaunchInstall(downloadedFile);
         Services.GetRequiredService<IApplicationLogger>().Information("Shutting down application to install an update");
         Services.GetRequiredService<ScheduledRestartService>().Dispose();
+        Services.GetRequiredService<CrashRestartService>().Dispose();
         _shutdownApproved = true;
         desktop.Shutdown();
     }
@@ -208,6 +210,9 @@ public partial class App : Application
 
             // Profiles' daily restart times apply to every running server, whichever window shows it.
             Services.GetRequiredService<ScheduledRestartService>().Start();
+
+            // A crashed server is started again by itself (when its profile allows it), whichever window shows it.
+            Services.GetRequiredService<CrashRestartService>().Start();
 
             // The startup check ran above; keep watching for new releases while the app stays open.
             Services.GetRequiredService<UpdateWatcher>().Start();
