@@ -67,17 +67,23 @@ namespace ValheimServerGUI
         public const string UrlGitHubLatestRelease = "https://api.github.com/repos/ispowky-design/ValheimServerGUI/releases/latest";
 
         /// <summary>
-        /// The fork's latest-release web page. It redirects to <c>…/releases/tag/&lt;tag&gt;</c>, so a request to it tells the
-        /// newest tag without using the GitHub API and its 60-requests-an-hour limit.
-        /// </summary>
-        /// <summary>
         /// The ntfy.sh topic the release workflow posts to as soon as it publishes a release (.github/workflows/build.yml).
         /// The open app listens to it and checks GitHub at once. Anyone can post to a public topic, so a message is only
         /// a hint to check: what gets installed always comes from the GitHub release and its checksums.
         /// </summary>
         public const string UrlReleasePushTopic = "https://ntfy.sh/valheimservergui-ispowky-releases";
 
+        /// <summary>
+        /// The fork's latest-release web page. It redirects to <c>…/releases/tag/&lt;tag&gt;</c>, so a request to it tells the
+        /// newest tag without using the GitHub API and its 60-requests-an-hour limit.
+        /// </summary>
         public const string UrlGitHubLatestReleasePage = "https://github.com/ispowky-design/ValheimServerGUI/releases/latest";
+
+        /// <summary>A release's web page is this followed by <c>/&lt;tag&gt;</c>.</summary>
+        public const string UrlGitHubReleaseTagPage = "https://github.com/ispowky-design/ValheimServerGUI/releases/tag";
+
+        /// <summary>A release's file is downloaded from this followed by <c>/&lt;tag&gt;/&lt;file name&gt;</c> (no API limit).</summary>
+        public const string UrlGitHubReleaseDownload = "https://github.com/ispowky-design/ValheimServerGUI/releases/download";
 
         /// <summary>
         /// Public IPv4-only lookup (<c>{"ip":…}</c>) used for the external IP by builds without a Runeberry API key.
