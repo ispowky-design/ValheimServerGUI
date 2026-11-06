@@ -65,6 +65,8 @@ public partial class MainWindow : Window
             MessageBox.ConfirmAsync(this, Strings.Prompt_ForceStop_Title, body, Strings.ServerAction_ForceStop, Strings.Common_Cancel);
         viewModel.Backups.ConfirmPrompt = (title, body) => MessageBox.ConfirmAsync(this, title, body);
         viewModel.Backups.ErrorReported = msg => _ = ShowMessageAsync(Strings.Prompt_BackupFailed_Title, msg);
+        viewModel.Mods.ConfirmPrompt = (title, body) => MessageBox.ConfirmAsync(this, title, body);
+        viewModel.Mods.ErrorReported = msg => _ = ShowMessageAsync(Strings.Prompt_ModFailed_Title, msg);
         viewModel.ImportConfirmPrompt = body =>
             MessageBox.ConfirmAsync(this, Strings.Import_Title, body, Strings.Common_Continue, Strings.Common_Cancel);
         viewModel.WorldSettingsChangePrompt = body =>
@@ -297,6 +299,7 @@ public partial class MainWindow : Window
         ViewModel.Players.SetActive(PlayersTab.IsSelected || dashboard);
         ViewModel.Backups.SetActive(BackupsTab.IsSelected);
         ViewModel.WorldMap.SetActive(WorldMapTab.IsSelected);
+        ViewModel.Mods.SetActive(ModsTab.IsSelected);
         ViewModel.Dashboard.SetActive(dashboard);
     }
 

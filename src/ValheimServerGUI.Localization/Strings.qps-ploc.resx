@@ -2367,4 +2367,239 @@
   <data name="Discord_PlayerLeft" xml:space="preserve">
     <value>⟦Discord_PlayerLeft {0} {1}⟧</value>
   </data>
+  <!-- Server mods (Thunderstore) -->
+  <data name="MainWindow_Tab_Mods" xml:space="preserve">
+    <value>⟦MainWindow_Tab_Mods⟧</value>
+  </data>
+  <data name="Mods_Rule_Title" xml:space="preserve">
+    <value>⟦Mods_Rule_Title⟧</value>
+  </data>
+  <data name="Mods_Rule_Text" xml:space="preserve">
+    <value>⟦Mods_Rule_Text⟧</value>
+  </data>
+  <data name="Mods_Server_Label" xml:space="preserve">
+    <value>⟦Mods_Server_Label⟧</value>
+  </data>
+  <data name="Mods_Server_None" xml:space="preserve">
+    <value>⟦Mods_Server_None⟧</value>
+  </data>
+  <data name="Mods_BepInEx_Installed" xml:space="preserve">
+    <value>⟦Mods_BepInEx_Installed⟧</value>
+  </data>
+  <data name="Mods_BepInEx_Missing" xml:space="preserve">
+    <value>⟦Mods_BepInEx_Missing⟧</value>
+  </data>
+  <data name="Mods_InUse" xml:space="preserve">
+    <value>⟦Mods_InUse⟧</value>
+  </data>
+  <data name="Mods_Installed_Header" xml:space="preserve">
+    <value>⟦Mods_Installed_Header⟧</value>
+  </data>
+  <data name="Mods_Installed_Empty" xml:space="preserve">
+    <value>⟦Mods_Installed_Empty⟧</value>
+  </data>
+  <data name="Mods_Column_Name" xml:space="preserve">
+    <value>⟦Mods_Column_Name⟧</value>
+  </data>
+  <data name="Mods_Column_Author" xml:space="preserve">
+    <value>⟦Mods_Column_Author⟧</value>
+  </data>
+  <data name="Mods_Column_Version" xml:space="preserve">
+    <value>⟦Mods_Column_Version⟧</value>
+  </data>
+  <data name="Mods_Column_State" xml:space="preserve">
+    <value>⟦Mods_Column_State⟧</value>
+  </data>
+  <data name="Mods_Column_Safety" xml:space="preserve">
+    <value>⟦Mods_Column_Safety⟧</value>
+  </data>
+  <data name="Mods_Column_Downloads" xml:space="preserve">
+    <value>⟦Mods_Column_Downloads⟧</value>
+  </data>
+  <data name="Mods_State_Enabled" xml:space="preserve">
+    <value>⟦Mods_State_Enabled⟧</value>
+  </data>
+  <data name="Mods_State_Disabled" xml:space="preserve">
+    <value>⟦Mods_State_Disabled⟧</value>
+  </data>
+  <data name="Mods_State_Loader" xml:space="preserve">
+    <value>⟦Mods_State_Loader⟧</value>
+  </data>
+  <data name="Mods_State_Dependency" xml:space="preserve">
+    <value>⟦Mods_State_Dependency⟧</value>
+  </data>
+  <data name="Mods_State_UpdateAvailable" xml:space="preserve">
+    <value>⟦Mods_State_UpdateAvailable {0} {1}⟧</value>
+  </data>
+  <data name="Mods_NowRefused" xml:space="preserve">
+    <value>⟦Mods_NowRefused {0}⟧</value>
+  </data>
+  <data name="Mods_Unmanaged" xml:space="preserve">
+    <value>⟦Mods_Unmanaged {0}⟧</value>
+  </data>
+  <data name="Mods_Catalog_Header" xml:space="preserve">
+    <value>⟦Mods_Catalog_Header⟧</value>
+  </data>
+  <data name="Mods_Search_Label" xml:space="preserve">
+    <value>⟦Mods_Search_Label⟧</value>
+  </data>
+  <data name="Mods_Search_Watermark" xml:space="preserve">
+    <value>⟦Mods_Search_Watermark⟧</value>
+  </data>
+  <data name="Mods_ShowRefused_Label" xml:space="preserve">
+    <value>⟦Mods_ShowRefused_Label⟧</value>
+  </data>
+  <data name="Mods_ShowRefused_Help" xml:space="preserve">
+    <value>⟦Mods_ShowRefused_Help⟧</value>
+  </data>
+  <data name="Mods_Catalog_Loading" xml:space="preserve">
+    <value>⟦Mods_Catalog_Loading⟧</value>
+  </data>
+  <data name="Mods_Catalog_Status" xml:space="preserve">
+    <value>⟦Mods_Catalog_Status {0} {1} {2:g}⟧</value>
+  </data>
+  <data name="Mods_Catalog_Stale" xml:space="preserve">
+    <value>⟦Mods_Catalog_Stale {0:g}⟧</value>
+  </data>
+  <data name="Mods_Catalog_Failed" xml:space="preserve">
+    <value>⟦Mods_Catalog_Failed {0}⟧</value>
+  </data>
+  <data name="Mods_Catalog_Empty" xml:space="preserve">
+    <value>⟦Mods_Catalog_Empty⟧</value>
+  </data>
+  <data name="Mods_Catalog_NotLoaded" xml:space="preserve">
+    <value>⟦Mods_Catalog_NotLoaded⟧</value>
+  </data>
+  <data name="Mods_Results_Truncated" xml:space="preserve">
+    <value>⟦Mods_Results_Truncated {0}⟧</value>
+  </data>
+  <data name="Mods_Verdict_ServerOnly" xml:space="preserve">
+    <value>⟦Mods_Verdict_ServerOnly⟧</value>
+  </data>
+  <data name="Mods_Verdict_Loader" xml:space="preserve">
+    <value>⟦Mods_Verdict_Loader⟧</value>
+  </data>
+  <data name="Mods_Verdict_ClientRequired" xml:space="preserve">
+    <value>⟦Mods_Verdict_ClientRequired⟧</value>
+  </data>
+  <data name="Mods_Reason_ServerSideTag" xml:space="preserve">
+    <value>⟦Mods_Reason_ServerSideTag⟧</value>
+  </data>
+  <data name="Mods_Reason_Loader" xml:space="preserve">
+    <value>⟦Mods_Reason_Loader⟧</value>
+  </data>
+  <data name="Mods_Reason_ClientSideTag" xml:space="preserve">
+    <value>⟦Mods_Reason_ClientSideTag⟧</value>
+  </data>
+  <data name="Mods_Reason_NoServerSideTag" xml:space="preserve">
+    <value>⟦Mods_Reason_NoServerSideTag⟧</value>
+  </data>
+  <data name="Mods_Reason_DescriptionMentionsClients" xml:space="preserve">
+    <value>⟦Mods_Reason_DescriptionMentionsClients {0}⟧</value>
+  </data>
+  <data name="Mods_Reason_Modpack" xml:space="preserve">
+    <value>⟦Mods_Reason_Modpack⟧</value>
+  </data>
+  <data name="Mods_Reason_Deprecated" xml:space="preserve">
+    <value>⟦Mods_Reason_Deprecated⟧</value>
+  </data>
+  <data name="Mods_Reason_DependencyMissing" xml:space="preserve">
+    <value>⟦Mods_Reason_DependencyMissing {0}⟧</value>
+  </data>
+  <data name="Mods_Reason_DependencyClientRequired" xml:space="preserve">
+    <value>⟦Mods_Reason_DependencyClientRequired {0}⟧</value>
+  </data>
+  <data name="Mods_Details_None" xml:space="preserve">
+    <value>⟦Mods_Details_None⟧</value>
+  </data>
+  <data name="Mods_Details_Byline" xml:space="preserve">
+    <value>⟦Mods_Details_Byline {0} {1} {2:N0}⟧</value>
+  </data>
+  <data name="Mods_Details_Dependencies" xml:space="preserve">
+    <value>⟦Mods_Details_Dependencies {0}⟧</value>
+  </data>
+  <data name="Mods_Details_NoDependencies" xml:space="preserve">
+    <value>⟦Mods_Details_NoDependencies⟧</value>
+  </data>
+  <data name="Mods_Details_Categories" xml:space="preserve">
+    <value>⟦Mods_Details_Categories {0}⟧</value>
+  </data>
+  <data name="Mods_Install" xml:space="preserve">
+    <value>⟦Mods_Install⟧</value>
+  </data>
+  <data name="Mods_Install_Tip" xml:space="preserve">
+    <value>⟦Mods_Install_Tip⟧</value>
+  </data>
+  <data name="Mods_OpenPage" xml:space="preserve">
+    <value>⟦Mods_OpenPage⟧</value>
+  </data>
+  <data name="Mods_Update" xml:space="preserve">
+    <value>⟦Mods_Update⟧</value>
+  </data>
+  <data name="Mods_UpdateAll" xml:space="preserve">
+    <value>⟦Mods_UpdateAll⟧</value>
+  </data>
+  <data name="Mods_Enable" xml:space="preserve">
+    <value>⟦Mods_Enable⟧</value>
+  </data>
+  <data name="Mods_Disable" xml:space="preserve">
+    <value>⟦Mods_Disable⟧</value>
+  </data>
+  <data name="Mods_Remove" xml:space="preserve">
+    <value>⟦Mods_Remove⟧</value>
+  </data>
+  <data name="Mods_OpenFolder_Tip" xml:space="preserve">
+    <value>⟦Mods_OpenFolder_Tip⟧</value>
+  </data>
+  <data name="Mods_Refresh_Tip" xml:space="preserve">
+    <value>⟦Mods_Refresh_Tip⟧</value>
+  </data>
+  <data name="Mods_Status_Working" xml:space="preserve">
+    <value>⟦Mods_Status_Working⟧</value>
+  </data>
+  <data name="Mods_Status_Downloading" xml:space="preserve">
+    <value>⟦Mods_Status_Downloading {0}⟧</value>
+  </data>
+  <data name="Mods_Status_Installed" xml:space="preserve">
+    <value>⟦Mods_Status_Installed {0}⟧</value>
+  </data>
+  <data name="Mods_Status_Updated" xml:space="preserve">
+    <value>⟦Mods_Status_Updated {0}⟧</value>
+  </data>
+  <data name="Mods_Status_UpToDate" xml:space="preserve">
+    <value>⟦Mods_Status_UpToDate⟧</value>
+  </data>
+  <data name="Mods_Status_Removed" xml:space="preserve">
+    <value>⟦Mods_Status_Removed {0}⟧</value>
+  </data>
+  <data name="Mods_Status_Enabled" xml:space="preserve">
+    <value>⟦Mods_Status_Enabled {0}⟧</value>
+  </data>
+  <data name="Mods_Status_Disabled" xml:space="preserve">
+    <value>⟦Mods_Status_Disabled {0}⟧</value>
+  </data>
+  <data name="Mods_Refused" xml:space="preserve">
+    <value>⟦Mods_Refused {0} {1}⟧</value>
+  </data>
+  <data name="Mods_NotInCatalog" xml:space="preserve">
+    <value>⟦Mods_NotInCatalog {0}⟧</value>
+  </data>
+  <data name="Prompt_InstallMod_Title" xml:space="preserve">
+    <value>⟦Prompt_InstallMod_Title⟧</value>
+  </data>
+  <data name="Prompt_InstallMod_Message" xml:space="preserve">
+    <value>⟦Prompt_InstallMod_Message {0} {1}⟧</value>
+  </data>
+  <data name="Prompt_InstallMod_Also" xml:space="preserve">
+    <value>⟦Prompt_InstallMod_Also {0}⟧</value>
+  </data>
+  <data name="Prompt_RemoveMod_Title" xml:space="preserve">
+    <value>⟦Prompt_RemoveMod_Title⟧</value>
+  </data>
+  <data name="Prompt_RemoveMod_Message" xml:space="preserve">
+    <value>⟦Prompt_RemoveMod_Message {0}⟧</value>
+  </data>
+  <data name="Prompt_ModFailed_Title" xml:space="preserve">
+    <value>⟦Prompt_ModFailed_Title⟧</value>
+  </data>
 </root>

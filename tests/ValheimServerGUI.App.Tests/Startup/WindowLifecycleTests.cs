@@ -42,6 +42,11 @@ public class WindowLifecycleTests
             factory, windowManager, TestStartupService.Create(),
             logger);
 
+        // Faulted tasks orphaned by earlier tests in this process (their network calls fail in a sandbox) surface on
+        // the finalizer thread whenever a GC runs; flush them before listening, so only this test's own count.
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+
         var captured = new List<Exception>();
         void OnUnobserved(object? _, UnobservedTaskExceptionEventArgs e) { captured.Add(e.Exception); e.SetObserved(); }
         void OnDispatcher(object? _, DispatcherUnhandledExceptionEventArgs e) { captured.Add(e.Exception); e.Handled = true; }

@@ -2429,4 +2429,239 @@ Would you like to send an automated crash report to the developer?</value>
   <data name="Discord_PlayerLeft" xml:space="preserve">
     <value>➖ **{0}** left **{1}**.</value>
   </data>
+  <!-- Server mods (Thunderstore) -->
+  <data name="MainWindow_Tab_Mods" xml:space="preserve">
+    <value>Mods</value>
+  </data>
+  <data name="Mods_Rule_Title" xml:space="preserve">
+    <value>Server-side mods only</value>
+  </data>
+  <data name="Mods_Rule_Text" xml:space="preserve">
+    <value>Only mods that run on the server alone are offered. Players install nothing, keep an unmodded game and keep their Steam achievements. Mods that players would also need, or that the app cannot be sure about, are refused.</value>
+  </data>
+  <data name="Mods_Server_Label" xml:space="preserve">
+    <value>Server folder</value>
+  </data>
+  <data name="Mods_Server_None" xml:space="preserve">
+    <value>No server set up for this profile.</value>
+  </data>
+  <data name="Mods_BepInEx_Installed" xml:space="preserve">
+    <value>BepInEx is installed.</value>
+  </data>
+  <data name="Mods_BepInEx_Missing" xml:space="preserve">
+    <value>BepInEx is not installed yet: it comes with the first mod.</value>
+  </data>
+  <data name="Mods_InUse" xml:space="preserve">
+    <value>A server is running from this folder: stop it to install, update or remove mods.</value>
+  </data>
+  <data name="Mods_Installed_Header" xml:space="preserve">
+    <value>Installed mods</value>
+  </data>
+  <data name="Mods_Installed_Empty" xml:space="preserve">
+    <value>No mod installed by the app on this server.</value>
+  </data>
+  <data name="Mods_Column_Name" xml:space="preserve">
+    <value>Mod</value>
+  </data>
+  <data name="Mods_Column_Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Mods_Column_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Mods_Column_State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Mods_Column_Safety" xml:space="preserve">
+    <value>Verdict</value>
+  </data>
+  <data name="Mods_Column_Downloads" xml:space="preserve">
+    <value>Downloads</value>
+  </data>
+  <data name="Mods_State_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Mods_State_Disabled" xml:space="preserve">
+    <value>Disabled</value>
+  </data>
+  <data name="Mods_State_Loader" xml:space="preserve">
+    <value>Mod loader</value>
+  </data>
+  <data name="Mods_State_Dependency" xml:space="preserve">
+    <value>Enabled (needed by another mod)</value>
+  </data>
+  <data name="Mods_State_UpdateAvailable" xml:space="preserve">
+    <value>{0} (update: {1})</value>
+  </data>
+  <data name="Mods_NowRefused" xml:space="preserve">
+    <value>Thunderstore no longer lists it as server-only: {0}</value>
+  </data>
+  <data name="Mods_Unmanaged" xml:space="preserve">
+    <value>Also in BepInEx/plugins, not installed by the app and not checked: {0}</value>
+  </data>
+  <data name="Mods_Catalog_Header" xml:space="preserve">
+    <value>Thunderstore catalog</value>
+  </data>
+  <data name="Mods_Search_Label" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Mods_Search_Watermark" xml:space="preserve">
+    <value>Name, author or description</value>
+  </data>
+  <data name="Mods_ShowRefused_Label" xml:space="preserve">
+    <value>Also show refused mods</value>
+  </data>
+  <data name="Mods_ShowRefused_Help" xml:space="preserve">
+    <value>Lists the mods the app will not install, with the reason, so you can see why a mod is missing. They cannot be installed.</value>
+  </data>
+  <data name="Mods_Catalog_Loading" xml:space="preserve">
+    <value>Reading the Thunderstore catalog…</value>
+  </data>
+  <data name="Mods_Catalog_Status" xml:space="preserve">
+    <value>{0} server-only mods out of {1} on Thunderstore (list of {2:g}).</value>
+  </data>
+  <data name="Mods_Catalog_Stale" xml:space="preserve">
+    <value>Thunderstore cannot be reached: showing the list saved on {0:g}.</value>
+  </data>
+  <data name="Mods_Catalog_Failed" xml:space="preserve">
+    <value>Could not read the Thunderstore catalog: {0}</value>
+  </data>
+  <data name="Mods_Catalog_Empty" xml:space="preserve">
+    <value>No mod matches.</value>
+  </data>
+  <data name="Mods_Catalog_NotLoaded" xml:space="preserve">
+    <value>The Thunderstore catalog is not loaded.</value>
+  </data>
+  <data name="Mods_Results_Truncated" xml:space="preserve">
+    <value>Showing the {0} most downloaded: narrow the search to see the others.</value>
+  </data>
+  <data name="Mods_Verdict_ServerOnly" xml:space="preserve">
+    <value>Server only</value>
+  </data>
+  <data name="Mods_Verdict_Loader" xml:space="preserve">
+    <value>Loader (server)</value>
+  </data>
+  <data name="Mods_Verdict_ClientRequired" xml:space="preserve">
+    <value>Refused: client-side</value>
+  </data>
+  <data name="Mods_Reason_ServerSideTag" xml:space="preserve">
+    <value>Tagged "Server-side" only, nothing says players need it, and its dependencies are server-only too.</value>
+  </data>
+  <data name="Mods_Reason_Loader" xml:space="preserve">
+    <value>BepInEx, the mod loader. It goes on the server only: players do not need it.</value>
+  </data>
+  <data name="Mods_Reason_ClientSideTag" xml:space="preserve">
+    <value>Its author tagged it "Client-side": players would have to install it.</value>
+  </data>
+  <data name="Mods_Reason_NoServerSideTag" xml:space="preserve">
+    <value>Not tagged "Server-side": the app cannot be sure that players do not need it.</value>
+  </data>
+  <data name="Mods_Reason_DescriptionMentionsClients" xml:space="preserve">
+    <value>Its description says players need it: "{0}".</value>
+  </data>
+  <data name="Mods_Reason_Modpack" xml:space="preserve">
+    <value>A modpack, made for players' games.</value>
+  </data>
+  <data name="Mods_Reason_Deprecated" xml:space="preserve">
+    <value>Deprecated on Thunderstore.</value>
+  </data>
+  <data name="Mods_Reason_DependencyMissing" xml:space="preserve">
+    <value>Needs {0}, which is not on Thunderstore.</value>
+  </data>
+  <data name="Mods_Reason_DependencyClientRequired" xml:space="preserve">
+    <value>Needs {0}, which is not server-only.</value>
+  </data>
+  <data name="Mods_Details_None" xml:space="preserve">
+    <value>Select a mod to see its details.</value>
+  </data>
+  <data name="Mods_Details_Byline" xml:space="preserve">
+    <value>by {0} · version {1} · {2:N0} downloads</value>
+  </data>
+  <data name="Mods_Details_Dependencies" xml:space="preserve">
+    <value>Needs: {0}</value>
+  </data>
+  <data name="Mods_Details_NoDependencies" xml:space="preserve">
+    <value>No dependency.</value>
+  </data>
+  <data name="Mods_Details_Categories" xml:space="preserve">
+    <value>Categories: {0}</value>
+  </data>
+  <data name="Mods_Install" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="Mods_Install_Tip" xml:space="preserve">
+    <value>Downloads the mod and its dependencies from Thunderstore into the server's BepInEx folder. It loads at the next server start.</value>
+  </data>
+  <data name="Mods_OpenPage" xml:space="preserve">
+    <value>Thunderstore page</value>
+  </data>
+  <data name="Mods_Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Mods_UpdateAll" xml:space="preserve">
+    <value>Update all</value>
+  </data>
+  <data name="Mods_Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="Mods_Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="Mods_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Mods_OpenFolder_Tip" xml:space="preserve">
+    <value>Open the BepInEx plugins folder</value>
+  </data>
+  <data name="Mods_Refresh_Tip" xml:space="preserve">
+    <value>Read the catalog again from Thunderstore</value>
+  </data>
+  <data name="Mods_Status_Working" xml:space="preserve">
+    <value>Working…</value>
+  </data>
+  <data name="Mods_Status_Downloading" xml:space="preserve">
+    <value>Downloading {0}…</value>
+  </data>
+  <data name="Mods_Status_Installed" xml:space="preserve">
+    <value>{0} installed. It loads at the next server start.</value>
+  </data>
+  <data name="Mods_Status_Updated" xml:space="preserve">
+    <value>{0} updated.</value>
+  </data>
+  <data name="Mods_Status_UpToDate" xml:space="preserve">
+    <value>Everything is up to date.</value>
+  </data>
+  <data name="Mods_Status_Removed" xml:space="preserve">
+    <value>{0} removed.</value>
+  </data>
+  <data name="Mods_Status_Enabled" xml:space="preserve">
+    <value>{0} enabled.</value>
+  </data>
+  <data name="Mods_Status_Disabled" xml:space="preserve">
+    <value>{0} disabled.</value>
+  </data>
+  <data name="Mods_Refused" xml:space="preserve">
+    <value>{0} was not installed: it is not a server-only mod. {1}</value>
+  </data>
+  <data name="Mods_NotInCatalog" xml:space="preserve">
+    <value>{0} is not in the Thunderstore catalog.</value>
+  </data>
+  <data name="Prompt_InstallMod_Title" xml:space="preserve">
+    <value>Install a mod</value>
+  </data>
+  <data name="Prompt_InstallMod_Message" xml:space="preserve">
+    <value>Install {0} on the server in {1}?</value>
+  </data>
+  <data name="Prompt_InstallMod_Also" xml:space="preserve">
+    <value>This also installs: {0}</value>
+  </data>
+  <data name="Prompt_RemoveMod_Title" xml:space="preserve">
+    <value>Remove a mod</value>
+  </data>
+  <data name="Prompt_RemoveMod_Message" xml:space="preserve">
+    <value>Remove {0} from the server? Its config files are kept.</value>
+  </data>
+  <data name="Prompt_ModFailed_Title" xml:space="preserve">
+    <value>Mods</value>
+  </data>
 </root>
