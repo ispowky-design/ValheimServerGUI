@@ -4,6 +4,7 @@ using Avalonia.Data.Converters;
 using ValheimServerGUI.App.Controls;
 using ValheimServerGUI.App.ViewModels;
 using ValheimServerGUI.Game;
+using ValheimServerGUI.Game.Mods;
 using ValheimServerGUI.Game.Network;
 using ValheimServerGUI.Localization;
 
@@ -97,6 +98,14 @@ public sealed class EnumDisplayConverter : IValueConverter
         _ => value.ToString(),
     };
 
+    public static string ToText(ModSafetyVerdict value) => value switch
+    {
+        ModSafetyVerdict.ServerOnly => Strings.Mods_Verdict_ServerOnly,
+        ModSafetyVerdict.Loader => Strings.Mods_Verdict_Loader,
+        ModSafetyVerdict.ClientRequired => Strings.Mods_Verdict_ClientRequired,
+        _ => value.ToString(),
+    };
+
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch
     {
         ServerStatus v => ToText(v),
@@ -108,6 +117,7 @@ public sealed class EnumDisplayConverter : IValueConverter
         LogView v => ToText(v),
         WorldBackupKind v => ToText(v),
         ConnectionCheck v => ToText(v),
+        ModSafetyVerdict v => ToText(v),
         _ => value,
     };
 

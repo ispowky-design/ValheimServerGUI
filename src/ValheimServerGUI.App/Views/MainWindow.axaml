@@ -176,6 +176,9 @@
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_WorldMap}" Tag="{StaticResource NavIcon.Map}" x:Name="WorldMapTab">
                 <tabs:WorldMapView />
             </TabItem>
+            <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Mods}" Tag="{StaticResource NavIcon.Mods}" x:Name="ModsTab">
+                <tabs:ModsView />
+            </TabItem>
             <TabItem Header="{x:Static loc:Strings.MainWindow_Tab_Logs}" Tag="{StaticResource NavIcon.Logs}" x:Name="LogsTab">
                 <tabs:LogsView />
             </TabItem>
