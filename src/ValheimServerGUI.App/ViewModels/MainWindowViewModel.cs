@@ -13,6 +13,7 @@ using ValheimServerGUI.App.ViewModels.Dialogs;
 using ValheimServerGUI.App.Views.Dialogs;
 using ValheimServerGUI.Game;
 using ValheimServerGUI.Game.Network;
+using ValheimServerGUI.Game.Mods;
 using ValheimServerGUI.Game.WorldMap;
 using ValheimServerGUI.Localization;
 using ValheimServerGUI.Tools;
@@ -102,7 +103,9 @@ public partial class MainWindowViewModel : ViewModelBase
         IValheimPathResolver pathResolver,
         IPlayerListImportService import,
         IWorldBackupService? worldBackups = null,
-        IAppUpdater? appUpdater = null)
+        IAppUpdater? appUpdater = null,
+        IThunderstoreCatalog? thunderstore = null,
+        ServerModManager? modManager = null)
     {
         _serverManager = serverManager;
         _userPrefs = userPrefs;
@@ -137,6 +140,10 @@ public partial class MainWindowViewModel : ViewModelBase
             () => Form.IsSelectedWorldCloud || Form.UseNewWorld ? null : Form.SelectedWorldName,
             WorldMapWebServer.Shared, userPrefs, () => _ipProvider.ExternalIpAddress, shell.OpenWebAddress,
             CurrentServerExePath);
+        // The app always gets the registered catalog; a view-model built by hand (tests) stays off the network.
+        thunderstore ??= UnavailableThunderstoreCatalog.Instance;
+        Mods = new ModsViewModel(thunderstore, modManager ?? new ServerModManager(thunderstore, appLogger), shell, appLogger,
+            CurrentServerExePath, folder => IsServerFolderInUse(folder) || ServerModManager.IsServerRunningFrom(folder));
         Dashboard = new DashboardViewModel(Players, Backups);
         Form.PropertyChanged += (_, e) =>
         {
@@ -236,6 +243,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
     /// <summary>World Map tab.</summary>
     public WorldMapViewModel WorldMap { get; }
+
+    /// <summary>Mods tab: server-only Thunderstore mods for the selected profile's server.</summary>
+    public ModsViewModel Mods { get; }
 
     /// <summary>The Dashboard tab: the selected server's status, resources, players and shortcuts at a glance.</summary>
     public DashboardViewModel Dashboard { get; }
@@ -652,6 +662,7 @@ public partial class MainWindowViewModel : ViewModelBase
         // The same world name can live in another profile's save folder, so a switch always re-reads the list.
         Backups.OnSelectionChanged();
         WorldMap.OnSelectionChanged();
+        Mods.OnSelectionChanged();
     }
 
     /// <summary>
@@ -1225,6 +1236,7 @@ public partial class MainWindowViewModel : ViewModelBase
             ServerStatus = status;
             CrashRestartPending = _currentServer?.CrashRestartDueAt is not null && status == ServerStatus.Stopped;
             Backups.RefreshWorldInUse();
+            Mods.RefreshFolderInUse();
         });
 
     // A just-started new world now exists; switch the picker back to Existing and select it.
@@ -1547,6 +1559,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Details.Dispose();
         Backups.Dispose();
         WorldMap.Dispose();
+        Mods.Dispose();
         Players.Dispose();
         Logs.Dispose();
     }

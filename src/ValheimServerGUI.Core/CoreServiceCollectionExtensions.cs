@@ -66,6 +66,8 @@ namespace ValheimServerGUI
                 .AddSingleton<ISteamCloudWorldProvider, SteamCloudWorldProvider>()
                 .AddSingleton<IWorldBackupService, WorldBackupService>()
                 .AddSingleton<ISteamCmdService, SteamCmdService>()
+                .AddSingleton<ValheimServerGUI.Game.Mods.IThunderstoreCatalog, ValheimServerGUI.Game.Mods.ThunderstoreCatalog>()
+                .AddSingleton<ValheimServerGUI.Game.Mods.ServerModManager>()
                 .AddSingleton<IPlayerAccessListService, PlayerAccessListService>()
                 .AddSingleton<IPlayerListImportService, PlayerListImportService>()
                 .AddSingleton<IPlayerListBaselineStore, PlayerListBaselineStore>()

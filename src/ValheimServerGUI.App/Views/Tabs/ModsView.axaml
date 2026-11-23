@@ -1,0 +1,193 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="using:ValheimServerGUI.Localization"
+             xmlns:c="using:ValheimServerGUI.App.Controls"
+             xmlns:vm="using:ValheimServerGUI.App.ViewModels"
+             x:Class="ValheimServerGUI.App.Views.Tabs.ModsView"
+             x:DataType="vm:MainWindowViewModel">
+
+    <DockPanel Margin="8">
+        <!-- The rule this page enforces, always in sight: server-only mods, never mods players must install. -->
+        <Border DockPanel.Dock="Top" Margin="0,0,0,8" Padding="12,8" CornerRadius="6" BorderThickness="1"
+                BorderBrush="{DynamicResource SystemAccentColor}" Background="{DynamicResource LayerDarkest}">
+            <StackPanel Spacing="2">
+                <TextBlock FontWeight="SemiBold" Foreground="{DynamicResource SystemAccentColor}"
+                           Text="{x:Static loc:Strings.Mods_Rule_Title}" />
+                <TextBlock TextWrapping="Wrap" Text="{x:Static loc:Strings.Mods_Rule_Text}" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,0,6">
+            <c:LabelField LabelText="{x:Static loc:Strings.Mods_Server_Label}" Value="{Binding Mods.ServerFolderText}" />
+            <TextBlock TextWrapping="Wrap" Text="{Binding Mods.BepInExText}" IsVisible="{Binding Mods.BepInExText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            <TextBlock TextWrapping="Wrap" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}"
+                       Text="{x:Static loc:Strings.Mods_InUse}" IsVisible="{Binding Mods.IsFolderInUse}" />
+        </StackPanel>
+
+        <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0" TextWrapping="Wrap" FontStyle="Italic"
+                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Text="{Binding Mods.StatusMessage}" />
+
+        <Grid RowDefinitions="Auto,*">
+            <!-- ===== What the app installed on this server ===== -->
+            <c:GroupBox Grid.Row="0" Header="{x:Static loc:Strings.Mods_Installed_Header}">
+                <StackPanel Spacing="4">
+                    <c:DataListView Height="150" ItemsSource="{Binding Mods.Installed}" SelectedItem="{Binding Mods.SelectedInstalled}"
+                                    EmptyText="{Binding Mods.InstalledEmptyText}">
+                        <c:DataListView.RowContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{x:Static loc:Strings.Mods_Update}" Command="{Binding Mods.UpdateCommand}" />
+                                <MenuItem Header="{Binding Mods.ToggleEnabledText}" Command="{Binding Mods.ToggleEnabledCommand}" />
+                                <MenuItem Header="{x:Static loc:Strings.Mods_Remove}" Command="{Binding Mods.RemoveCommand}" />
+                            </ContextMenu>
+                        </c:DataListView.RowContextMenu>
+                        <c:DataListView.Columns>
+                            <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_Name}" Width="2*" SortMemberPath="Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="vm:InstalledModRowViewModel">
+                                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_Author}" Width="*" SortMemberPath="Owner">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="vm:InstalledModRowViewModel">
+                                        <TextBlock Text="{Binding Owner}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_Version}" Width="95" SortMemberPath="Version">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="vm:InstalledModRowViewModel">
+                                        <TextBlock Text="{Binding Version}" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_State}" Width="2*" SortMemberPath="StateText">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="vm:InstalledModRowViewModel">
+                                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                            <c:IconImage IconName="StatusWarning_16x" IsVisible="{Binding HasWarning}" ToolTip.Tip="{Binding WarningText}" />
+                                            <TextBlock Text="{Binding StateText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                                       ToolTip.Tip="{Binding WarningText}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </c:DataListView.Columns>
+                        <c:DataListView.FooterLeft>
+                            <c:OpenButton ToolTip.Tip="{x:Static loc:Strings.Mods_OpenFolder_Tip}" Command="{Binding Mods.OpenFolderCommand}" />
+                        </c:DataListView.FooterLeft>
+                        <c:DataListView.FooterRight>
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Button Content="{x:Static loc:Strings.Mods_Update}" Command="{Binding Mods.UpdateCommand}" />
+                                <Button Content="{x:Static loc:Strings.Mods_UpdateAll}" Command="{Binding Mods.UpdateAllCommand}" />
+                                <Button Content="{Binding Mods.ToggleEnabledText}" Command="{Binding Mods.ToggleEnabledCommand}" />
+                                <Button Content="{x:Static loc:Strings.Mods_Remove}" Command="{Binding Mods.RemoveCommand}" />
+                            </StackPanel>
+                        </c:DataListView.FooterRight>
+                    </c:DataListView>
+                    <TextBlock TextWrapping="Wrap" FontStyle="Italic" Text="{Binding Mods.UnmanagedText}"
+                               IsVisible="{Binding Mods.UnmanagedText, Converter={x:Static ObjectConverters.IsNotNull}}"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                </StackPanel>
+            </c:GroupBox>
+
+            <!-- ===== The Thunderstore catalog: server-only mods (refused ones on request, greyed, never installable) ===== -->
+            <c:GroupBox Grid.Row="1" Header="{x:Static loc:Strings.Mods_Catalog_Header}" Margin="0,6,0,0">
+                <Grid ColumnDefinitions="*,280">
+                    <DockPanel Grid.Column="0">
+                        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,4">
+                            <c:TextFormField Grid.Column="0" LabelText="{x:Static loc:Strings.Mods_Search_Label}"
+                                             Watermark="{x:Static loc:Strings.Mods_Search_Watermark}" Value="{Binding Mods.SearchText}" MaxLength="100" />
+                            <c:CheckBoxFormField Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center"
+                                                 LabelText="{x:Static loc:Strings.Mods_ShowRefused_Label}" HelpText="{x:Static loc:Strings.Mods_ShowRefused_Help}"
+                                                 Value="{Binding Mods.ShowRefused}" />
+                            <c:RefreshButton Grid.Column="2" Margin="4,0,0,0" VerticalAlignment="Center"
+                                             ToolTip.Tip="{x:Static loc:Strings.Mods_Refresh_Tip}" Command="{Binding Mods.RefreshCatalogCommand}" />
+                        </Grid>
+                        <TextBlock DockPanel.Dock="Bottom" Margin="0,4,0,0" TextWrapping="Wrap" FontStyle="Italic"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Text="{Binding Mods.CatalogStatus}" />
+                        <TextBlock DockPanel.Dock="Bottom" Margin="0,4,0,0" TextWrapping="Wrap" FontStyle="Italic"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" Text="{Binding Mods.ResultsNote}"
+                                   IsVisible="{Binding Mods.ResultsNote, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                        <c:DataListView ItemsSource="{Binding Mods.Results}" SelectedItem="{Binding Mods.SelectedResult}"
+                                        EmptyText="{Binding Mods.ResultsEmptyText}" RowInvokeCommand="{Binding Mods.InstallCommand}">
+                            <c:DataListView.Columns>
+                                <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_Name}" Width="2*" SortMemberPath="Name">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:CatalogModRowViewModel">
+                                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Opacity="{Binding RowOpacity}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_Author}" Width="*" SortMemberPath="Owner">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:CatalogModRowViewModel">
+                                            <TextBlock Text="{Binding Owner}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Opacity="{Binding RowOpacity}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_Downloads}" Width="130" SortMemberPath="Downloads">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:CatalogModRowViewModel">
+                                            <TextBlock Text="{Binding DownloadsText}" VerticalAlignment="Center" HorizontalAlignment="Right" Opacity="{Binding RowOpacity}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="{x:Static loc:Strings.Mods_Column_Safety}" Width="1.5*" SortMemberPath="VerdictText">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="vm:CatalogModRowViewModel">
+                                            <TextBlock Text="{Binding VerdictText}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                                                       FontWeight="SemiBold" ToolTip.Tip="{Binding ReasonText}"
+                                                       Classes.allowed="{Binding IsAllowed}" Classes.refused="{Binding !IsAllowed}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </c:DataListView.Columns>
+                        </c:DataListView>
+                    </DockPanel>
+
+                    <!-- Details of the selected mod and its verdict. -->
+                    <Border Grid.Column="1" Margin="10,0,0,0" Padding="10" CornerRadius="6" BorderThickness="1"
+                            BorderBrush="{DynamicResource AppBorderBrush}" Background="{DynamicResource LayerDarkest}">
+                        <Panel>
+                            <TextBlock TextWrapping="Wrap" FontStyle="Italic" Text="{x:Static loc:Strings.Mods_Details_None}"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" IsVisible="{Binding !Mods.HasSelectedResult}" />
+                            <ScrollViewer IsVisible="{Binding Mods.HasSelectedResult}">
+                                <StackPanel Spacing="6">
+                                    <TextBlock FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding Mods.SelectedResult.Name, FallbackValue={x:Null}}" />
+                                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                               Text="{Binding Mods.SelectedResult.BylineText, FallbackValue={x:Null}}" />
+                                    <TextBlock TextWrapping="Wrap" FontWeight="SemiBold" Text="{Binding Mods.SelectedResult.VerdictText, FallbackValue={x:Null}}"
+                                               Classes.allowed="{Binding Mods.SelectedResult.IsAllowed, FallbackValue=False}"
+                                               Classes.refused="{Binding !Mods.SelectedResult.IsAllowed, FallbackValue=False}" />
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Mods.SelectedResult.ReasonText, FallbackValue={x:Null}}" />
+                                    <TextBlock TextWrapping="Wrap" Text="{Binding Mods.SelectedResult.Description, FallbackValue={x:Null}}" />
+                                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                               Text="{Binding Mods.SelectedResult.DependenciesText, FallbackValue={x:Null}}" />
+                                    <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                               Text="{Binding Mods.SelectedResult.CategoriesText, FallbackValue={x:Null}}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,4,0,0">
+                                        <Button Classes="primary" Content="{x:Static loc:Strings.Mods_Install}" ToolTip.Tip="{x:Static loc:Strings.Mods_Install_Tip}"
+                                                Command="{Binding Mods.InstallCommand}" />
+                                        <c:HyperlinkLabel Text="{x:Static loc:Strings.Mods_OpenPage}" Command="{Binding Mods.OpenPageCommand}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Panel>
+                    </Border>
+                </Grid>
+            </c:GroupBox>
+        </Grid>
+    </DockPanel>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.allowed">
+            <Setter Property="Foreground" Value="{DynamicResource StatusRunningBrush}" />
+        </Style>
+        <Style Selector="TextBlock.refused">
+            <Setter Property="Foreground" Value="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+        </Style>
+    </UserControl.Styles>
+</UserControl>
